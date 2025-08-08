@@ -56,13 +56,10 @@ def get_students():
 # president will get demographic information about all students
 @student.route('/student', methods=['GET'])
 def get_student_demographics ():
-    query = f'''SELECT college,
-                race,
-                COUNT(*) AS num_students,
-                ROUND(AVG(income), 2) AS avg_income, housingStatus, origin
-                FROM students
-                GROUP BY college, race, housingStatus, origin
-                ORDER BY college;
+    query = f'''SELECT 'origin' as type,
+                origin as category,
+                count(*) as num_students,
+                round (100* count(*)/sum(count(*)) )
     '''
     
     # logging the query for debugging purposes.  
