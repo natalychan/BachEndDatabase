@@ -22,21 +22,23 @@ def get_advisor_email():
         JOIN students s ON a.userId = s.advisor
     '''
     
-    # get a cursor object from the database
+   # logging the query for debugging purposes.  
+    # The output will appear in the Docker logs output
+    # This line has nothing to do with actually executing the query...
+    # It is only for debugging purposes. 
+    current_app.logger.info(f'GET /advisors query={query}')
+
+    # get the database connection, execute the query, and 
+    # fetch the results as a Python Dictionary
     cursor = db.get_db().cursor()
-
-    # use cursor to query the database for a list of products
     cursor.execute(query)
-
-    # fetch all the data from the cursor
-    # The cursor will return the data as a 
-    # Python Dictionary
     theData = cursor.fetchall()
-
-    # Create a HTTP Response object and add results of the query to it
-    # after "jasonify"-ing it.
+    
+    # Another example of logging for debugging purposes.
+    # You can see if the data you're getting back is what you expect. 
+    current_app.logger.info(f'GET /advisors Result of query = {theData}')
+    
     response = make_response(jsonify(theData))
-    # set the proper HTTP Status code of 200 (meaning all good)
     response.status_code = 200
-    # send the response back to the client
     return response
+    
