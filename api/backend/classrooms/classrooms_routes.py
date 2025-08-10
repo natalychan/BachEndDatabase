@@ -16,8 +16,8 @@ from backend.db_connection import db
 classrooms = Blueprint('classrooms', __name__)
 
 #------------------------------------------------------------
-# Get all the students from the database, package them up,
-# and return them to the client
+# GET /api/classrooms
+# Purpose: List all classrooms that were not maintained in the last 2 months
 @classrooms.route('/classrooms', methods=['GET'])
 def get_students():
     query = '''
