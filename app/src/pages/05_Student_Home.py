@@ -15,7 +15,6 @@ st.write('')
 st.write('### What would you like to do today?')
 
 
-#change all of these to be appropriate for the student
 
 #page shows student schedule, and there's gpa under each class
 if st.button('Schedule', 

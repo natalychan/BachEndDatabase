@@ -6,8 +6,9 @@ from modules.nav import SideBarLinks
 
 st.set_page_config(layout = 'wide')
 
-# Show appropriate sidebar links for the role of the currently logged in user
+# Call the SideBarLinks from the nav module in the modules directory
 SideBarLinks()
+
 
 st.title(f"Welcome President, {st.session_state['first_name']}.")
 st.write('')
