@@ -24,7 +24,8 @@ def get_clubs():
         SELECT name AS club_name
         FROM clubs ORDER BY name
     '''
-    
+
+
     # get a cursor object from the database
     cursor = db.get_db().cursor()
 
