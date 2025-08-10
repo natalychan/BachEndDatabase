@@ -8,7 +8,6 @@ st.set_page_config(layout = 'wide')
 
 # Call the SideBarLinks from the nav module in the modules directory
 SideBarLinks()
-SideBarLinks(show_home=True)
 
 
 st.title(f"Welcome President, {st.session_state['first_name']}.")
