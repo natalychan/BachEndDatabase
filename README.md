@@ -1,3 +1,51 @@
+Update the ReadME file to describe your project, any information the user needs to build/start the containers (such as adding the secrets passwords files), etc.  Include each team member’s name somewhere in the README. 
+
+# BackEndDatabase 
+Authors: Nataly Chan, Xiangru (Dorian) Lin, Brian Mack, Juri Okamoto, Owen Sweetman
+
+## What is BachEndDatabase?
+
+The Bach-End Database is a centralized data platform designed for Join U, streamlining access to detailed information and analytics for every role within the university. By consolidating data into a single, unified system, it eliminates the inefficiencies of current decentralized solutions, where information is stored in separate systems that make cross-departmental analysis slow, tedious, and incomplete.
+
+Unlike existing tools, the BachEnd Database connects related datasets and provides both high-level overviews and granular insights, ensuring that important lower-level details aren't overlooked. This comprehensive approach enables faster, more informed decision-making across the institution.
+
+The system supports a diverse range of users, including the university president, college deans, professors, students, and maintenance staff. All users can access role-specific dashboards and analytics from the same interface, reducing digital clutter and simplifying workflows. 
+
+- The university president can compare academic performance and resource usage across colleges.
+- Students can easily view grades, enrollment information, and course details.
+- Maintenance staff can track work orders, monitor room usage, and prioritize tasks efficiently.
+
+By integrating these perspectives into one platform, the Bach-End Database empowers the university to identify trends, address problems promptly, and improve overall institutional performance.
+
+## Secret Stuff
+idk what exatly to put here,,, env stuff???
+
+
+if you want to see stuff he put here, you can scroll down a bit. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Spring 2025 CS 3200 Project Template Repository
 
 This repo is a template for your semester project. It includes most of the infrastructure setup (containers), sample databases, and example UI pages. Explore it fully and ask questions!
