@@ -13,7 +13,7 @@ from backend.db_connection import db
 #------------------------------------------------------------
 # Create a new Blueprint object, which is a collection of 
 # routes.
-classrooms = Blueprint('classrooms', __name__)
+classrooms = Blueprint('classrooms_api', __name__)
 
 #------------------------------------------------------------
 # GET /api/classrooms

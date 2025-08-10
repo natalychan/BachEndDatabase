@@ -13,7 +13,7 @@ from backend.db_connection import db
 #------------------------------------------------------------
 # Create a new Blueprint object, which is a collection of 
 # routes.
-alumni = Blueprint('alumni', __name__)
+alumni = Blueprint('alumni_api', __name__)
 
 #------------------------------------------------------------
 # Get all the students from the database, package them up,
