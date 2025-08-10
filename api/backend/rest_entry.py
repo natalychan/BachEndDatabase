@@ -4,7 +4,7 @@ from backend.db_connection import db
 import os
 from dotenv import load_dotenv
 
-from backend.advisors_routes import advisors_api
+from backend.advisors.advisors_routes import advisors_api
 from backend.alumni.alumni_routes import alumni_api
 from backend.classrooms.classroom_routes import classrooms_api
 from backend.metrics.metrics_routes import metrics_api
