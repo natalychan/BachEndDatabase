@@ -45,7 +45,7 @@ def get_students():
 
     # Another example of logging for debugging purposes.
     # You can see if the data you're getting back is what you expect. 
-    current_app.logger.info(f'GET /classrooms/<userId> Result of query = {theData}')
+    current_app.logger.info(f'GET /classrooms/<roomNumber> Result of query = {theData}')
 
     # Create a HTTP Response object and add results of the query to it
     # after "jasonify"-ing it.
