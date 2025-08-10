@@ -8,7 +8,7 @@ from backend.db_connection import db
 #------------------------------------------------------------
 # Create a new Blueprint object, which is a collection of 
 # routes.
-advisors = Blueprint('advisors', __name__)
+advisors = Blueprint('advisors_api', __name__)
 
 #------------------------------------------------------------
 # Get all the club from the database, package them up,

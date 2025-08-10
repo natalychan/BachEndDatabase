@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify, make_response, current_app
 from backend.db_connection import db
 
 # Blueprint for classroom availability and reservations
-reserves_api = Blueprint('reserves_api', __name__)
+reserves_api = Blueprint('reservations_api', __name__)
 
 # ------------------------------------------------------------
 # GET /api/classrooms[?status=true|false]

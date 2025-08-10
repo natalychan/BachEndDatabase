@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify, make_response, current_app
 from backend.db_connection import db
 
 # Blueprint for metrics and college-wide reporting
-metrics = Blueprint('metrics', __name__)
+metrics = Blueprint('metrics_api', __name__)
 
 # ------------------------------------------------------------
 # GET /api/colleges/averages/gpa
