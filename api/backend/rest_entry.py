@@ -1,11 +1,18 @@
 from flask import Flask
 
 from backend.db_connection import db
-from backend.customers.customer_routes import customers
-from backend.products.products_routes import products
-from backend.simple.simple_routes import simple_routes
 import os
 from dotenv import load_dotenv
+
+from backend.metrics.metrics_routes import metrics
+from backend.clubs.clubs_routes import clubs_api
+from backend.colleges.colleges_routes import colleges_api
+from backend.students.students_routes import students_api
+from backend.instruments.instruments_routes import instruments_api
+from backend.rentals.rentals_routes import rentals_api
+from backend.reserves.reserves_routes import reserves_api
+from backend.maintenance_request.maintenance_routes import maintenance_api
+from backend.school_rankings.rankings_routes import rankings_api
 
 def create_app():
     app = Flask(__name__)
@@ -39,9 +46,19 @@ def create_app():
     # Register the routes from each Blueprint with the app object
     # and give a url prefix to each
     app.logger.info('current_app(): registering blueprints with Flask app object.')   
-    app.register_blueprint(simple_routes)
-    app.register_blueprint(customers,   url_prefix='/c')
-    app.register_blueprint(products,    url_prefix='/p')
+    app.register_blueprint(simple_routes,  url_prefix='/api')
+    app.register_blueprint(products,       url_prefix='/api')
+    app.register_blueprint(customers,      url_prefix='/api')
+
+    app.register_blueprint(metrics,        url_prefix='/api')
+    app.register_blueprint(clubs_api,      url_prefix='/api')
+    app.register_blueprint(colleges_api,   url_prefix='/api')
+    app.register_blueprint(students_api,   url_prefix='/api')
+    app.register_blueprint(instruments_api,url_prefix='/api')
+    app.register_blueprint(rentals_api,    url_prefix='/api')
+    app.register_blueprint(reserves_api,   url_prefix='/api')
+    app.register_blueprint(maintenance_api,url_prefix='/api')
+    app.register_blueprint(rankings_api,   url_prefix='/api')
 
     # Don't forget to return the app object
     return app
