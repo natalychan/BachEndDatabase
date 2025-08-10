@@ -1,177 +1,66 @@
-########################################################
-# Sample customers blueprint of endpoints
-# Remove this file if you are not using it in your project
-########################################################
-
-from flask import Blueprint
-from flask import request
-from flask import jsonify
-from flask import make_response
-from flask import current_app
+from flask import Blueprint, request, jsonify, make_response, current_app
 from backend.db_connection import db
 
-#------------------------------------------------------------
-# Create a new Blueprint object, which is a collection of 
-# routes.
-students = Blueprint('students', __name__)
+# Blueprint for student-centric endpoints
+students_api = Blueprint('students_api', __name__)
 
-#------------------------------------------------------------
-# Get all the students from the database, package them up,
-# and return them to the client
-@student.route('/students', methods=['GET'])
-def get_students():
-    query = '''
-        SELECT  userId, 
-                gpa, 
-                year, 
-                housingStatus, 
-                race,
-                income,
-                origin,
-                advisor,
-                college 
-        FROM students
-    '''
-    
-    # get a cursor object from the database
+# ------------------------------------------------------------
+# GET /api/students/<studentId>/gpa
+# Purpose: Fetch a single student's GPA
+@students_api.route('/students/<int:studentId>/gpa', methods=['GET'])
+def student_gpa(studentId):
+    query = "SELECT gpa FROM students WHERE userId = %s"
+    current_app.logger.info("GET /students/%s/gpa", studentId)
     cursor = db.get_db().cursor()
-
-    # use cursor to query the database for a list of products
-    cursor.execute(query)
-
-    # fetch all the data from the cursor
-    # The cursor will return the data as a 
-    # Python Dictionary
+    cursor.execute(query, (studentId,))
     theData = cursor.fetchall()
-
-    # Create a HTTP Response object and add results of the query to it
-    # after "jasonify"-ing it.
-    response = make_response(jsonify(theData))
-    # set the proper HTTP Status code of 200 (meaning all good)
+    current_app.logger.info("GET /students/%s/gpa : rows=%d", studentId, len(theData))
+    response = make_response(jsonify(theData[0] if theData else {'gpa': None}))
     response.status_code = 200
-    # send the response back to the client
     return response
 
 # ------------------------------------------------------------
-
-# ------------------------------------------------------------
-# Get the top 5 most expensive products from the database
-@products.route('/mostExpensive')
-def get_most_pop_products():
-
+# GET /api/students/<studentId>/schedule
+# Purpose: Class schedule for a student (courses, time, room)
+@students_api.route('/students/<int:studentId>/schedule', methods=['GET'])
+def student_schedule(studentId):
     query = '''
-        SELECT product_code, 
-               product_name, 
-               list_price, 
-               reorder_level
-        FROM products
-        ORDER BY list_price DESC
-        LIMIT 5
+        SELECT c.name AS course_name,
+               c.id   AS course_id,
+               c.time,
+               c.roomNumber,
+               c.enrollment
+        FROM students_courses sc
+        JOIN courses c ON sc.courseId = c.id
+        WHERE sc.studentId = %s
+        ORDER BY c.time
     '''
-    
-    # Same process as handler above
+    current_app.logger.info("GET /students/%s/schedule", studentId)
     cursor = db.get_db().cursor()
-    cursor.execute(query)
+    cursor.execute(query, (studentId,))
     theData = cursor.fetchall()
- 
+    current_app.logger.info("GET /students/%s/schedule : rows=%d", studentId, len(theData))
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response
 
 # ------------------------------------------------------------
-# Route to get the 10 most expensive items from the 
-# database.
-@products.route('/tenMostExpensive', methods=['GET'])
-def get_10_most_expensive_products():
-    
+# GET /api/students/<studentId>/advisor
+# Purpose: Get a student's advisor email address
+@students_api.route('/students/<int:studentId>/advisor', methods=['GET'])
+def student_advisor(studentId):
     query = '''
-        SELECT product_code, 
-               product_name, 
-               list_price, 
-               reorder_level
-        FROM products
-        ORDER BY list_price DESC
-        LIMIT 10
+        SELECT u.emailAddress AS advisor_email
+        FROM advisors a
+        JOIN users u ON a.userId = u.userId
+        JOIN students s ON a.userId = s.advisor
+        WHERE s.userId = %s
     '''
-    
-    # Same process as above
+    current_app.logger.info("GET /students/%s/advisor", studentId)
     cursor = db.get_db().cursor()
-    cursor.execute(query)
+    cursor.execute(query, (studentId,))
     theData = cursor.fetchall()
-    
-    response = make_response(jsonify(theData))
+    current_app.logger.info("GET /students/%s/advisor : rows=%d", studentId, len(theData))
+    response = make_response(jsonify(theData[0] if theData else {'advisor_email': None}))
     response.status_code = 200
     return response
-    
-
-# ------------------------------------------------------------
-# This is a POST route to add a new product.
-# Remember, we are using POST routes to create new entries
-# in the database. 
-@products.route('/product', methods=['POST'])
-def add_new_product():
-    
-    # In a POST request, there is a 
-    # collecting data from the request object 
-    the_data = request.json
-    current_app.logger.info(the_data)
-
-    #extracting the variable
-    name = the_data['product_name']
-    description = the_data['product_description']
-    price = the_data['product_price']
-    category = the_data['product_category']
-    
-    query = f'''
-        INSERT INTO products (product_name,
-                              description,
-                              category, 
-                              list_price)
-        VALUES ('{name}', '{description}', '{category}', {str(price)})
-    '''
-    # TODO: Make sure the version of the query above works properly
-    # Constructing the query
-    # query = 'insert into products (product_name, description, category, list_price) values ("'
-    # query += name + '", "'
-    # query += description + '", "'
-    # query += category + '", '
-    # query += str(price) + ')'
-    current_app.logger.info(query)
-
-    # executing and committing the insert statement 
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    db.get_db().commit()
-    
-    response = make_response("Successfully added product")
-    response.status_code = 200
-    return response
-
-# ------------------------------------------------------------
-### Get all product categories
-@products.route('/categories', methods = ['GET'])
-def get_all_categories():
-    query = '''
-        SELECT DISTINCT category AS label, category as value
-        FROM products
-        WHERE category IS NOT NULL
-        ORDER BY category
-    '''
-
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    theData = cursor.fetchall()
-        
-    response = make_response(jsonify(theData))
-    response.status_code = 200
-    return response
-
-# ------------------------------------------------------------
-# This is a stubbed route to update a product in the catalog
-# The SQL query would be an UPDATE. 
-@products.route('/product', methods = ['PUT'])
-def update_product():
-    product_info = request.json
-    current_app.logger.info(product_info)
-
-    return "Success"
