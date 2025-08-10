@@ -71,7 +71,7 @@ if st.button('Act as John, a Maintenance worker',
     st.session_state['authenticated'] = True
     st.session_state['role'] = 'maintenance_worker'
     st.session_state['first_name'] = 'John'
-    st.switch_page('pages/10_Maintenance_IT_Worker_Home.py')
+    st.switch_page('pages/10_Maintenance_Worker_Home.py')
 
 if st.button('Act as Octavius, a Student at the University', 
             type = 'primary', 
