@@ -6,7 +6,7 @@ from modules.nav import SideBarLinks
 # Initialize sidebar
 SideBarLinks()
 
-st.title("Add New NGO")
+st.title("Submit a Maintenance Request")
 
 # API endpoint
 API_URL = "http://web-api:4000/Maintenance-Requests"
