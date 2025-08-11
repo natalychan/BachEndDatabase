@@ -28,7 +28,7 @@ with st.echo(code_location='above'):
     st.pyplot(test_plot)
 
 
-API_URL = "http://web-api:4000/metrics/metrics_routes"
+API_URL = "http://web-api:4000/colleges/averages/gpa"
 with st.echo(code_location='above'):
     try:
         response = requests.get(API_URL)
