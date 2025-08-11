@@ -15,12 +15,15 @@ st.write('')
 st.write('')
 st.write('### What would you like to do today?')
 
+if st.button('View Student Performance Data Visualization', 
+             type='primary',
+             use_container_width=True):
+  st.switch_page('pages/01_Student Performance.py')
+
+
 if st.button('View Demographic Data Visualization', 
              type='primary',
              use_container_width=True):
   st.switch_page('pages/01_World_Bank_Viz.py')
 
-if st.button('View Student Performance Data Visualization', 
-             type='primary',
-             use_container_width=True):
-  st.switch_page('pages/02_Map_Demo.py')
+
