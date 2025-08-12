@@ -2,45 +2,46 @@ import streamlit as st
 import requests
 from streamlit_extras.app_logo import add_logo
 from modules.nav import SideBarLinks
+from datetime import datetime
 
 # Initialize sidebar
 SideBarLinks()
 
-st.title("Submit a Maintenance Request")
+st.title("Instrument Rentals")
 
 # API endpoint
-API_URL = "http://web-api:4000/Maintenance-Requests"
+API_URL = "http://web-api:4000/rentals"
 
 # Create a form for NGO details
-with st.form("submit_maintenance_request_form"):
-    st.subheader("Maintenance Information")
+with st.form("instrument_rental_form"):
+    st.subheader("Instrument Rental")
 
     # Required fields
-    address = st.text_input("Maintenace Location Address *")
-    problemType = st.text_input("Briefly Describe Maintenance Issue *")
-    studentId = st.number_input("Student ID *")
+    studentId = st.text_input("Student ID *")
+    instrumentId = st.text_input("Instrument ID *")
+    startDate = st.number_input("Date of Rental *")
 
     # Form submission button
     submitted = st.form_submit_button("Submit Maintenance Request")
 
     if submitted:
         # Validate required fields
-        if not all([address, problemType, studentId]):
+        if not all([startDate, instrumentId, studentId]):
             st.error("Please fill in all required fields marked with *")
         else:
             # Prepare the data for API
-            maintenance_req_data = {
-                "Address": address,
-                "Problem Type": problemType,
+            rental_data = {
                 "Student ID": int(studentId),
+                "Instrument ID": int(instrumentId),
+                "Start Date": datetime(startDate),
             }
 
             try:
                 # Send POST request to API
-                response = requests.post(API_URL, json=maintenance_req_data)
+                response = requests.post(API_URL, json=rental_data)
 
                 if response.status_code == 201:
-                    st.success("Maintenance request submitted successfully!")
+                    st.success("Instrument Rental submitted successfully!")
                     # Clear the form
                     st.rerun()
                 else:
