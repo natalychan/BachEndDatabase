@@ -46,3 +46,9 @@ if st.button('Clubs',
              type='primary',
              use_container_width=True):
   st.switch_page('pages/22_Student_Clubs.py')    
+
+#page shows clubs info
+if st.button('Maintenance Requests', 
+             type='primary',
+             use_container_width=True):
+  st.switch_page('pages/21_Maintenance_Requests.py')    
