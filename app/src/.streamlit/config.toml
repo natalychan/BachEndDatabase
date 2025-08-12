@@ -21,3 +21,6 @@ primaryColor="#6d4281ff"
 borderColor="#ec9f8aff"
 font="sans-serif"
 textColor="#fff7f5ff"
+
+[theme.sidebar]
+showWidgetBorder=true
