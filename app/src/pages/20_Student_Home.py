@@ -27,7 +27,7 @@ if st.button('View Schedule',
 if st.button('Rent Instrument', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/19_Instrument_Rental.py')
+  st.switch_page('pages/32_Student_Instrument_Rental.py')
 
 #page shows classroom booking info and classroom vacancy
 if st.button('Make Classroom Booking', 

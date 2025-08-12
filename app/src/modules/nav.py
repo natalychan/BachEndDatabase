@@ -63,12 +63,12 @@ def StudentHomeNav():
 
 def StudentScheduleNav():
     st.sidebar.page_link(
-        "pages/19_Student_Schedule.py", label="Schedule", icon="📅"
+        "pages/24_Student_Schedule.py", label="Schedule", icon="📅"
     )
 
 def InstrumentNav():
     st.sidebar.page_link(
-        "pages/18_Instrument_Rental.py", label="Instruments", icon="🎷"
+        "pages/23_Instrument_Rental.py", label="Instruments", icon="🎷"
     )    
 
 def MaintenanceRequestNav():
