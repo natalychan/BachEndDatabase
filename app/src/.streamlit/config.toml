@@ -19,6 +19,8 @@ backgroundColor="#2f2434ff"
 secondaryBackgroundColor="#51325fff"
 primaryColor="#6d4281ff"
 borderColor="#ec9f8aff"
-showWidgetborder=true
 font="sans-serif"
 textColor="#fff7f5ff"
+
+[theme.sidebar]
+showWidgetBorder=true
