@@ -25,6 +25,26 @@ def DeanHomeNav():
         "pages/30_Dean_Home.py", label="Dean Home", icon="📈"
     )
 
+def DeanBudgetNav():
+    st.sidebar.page_link(
+        "pages/30_Dean_Home.py", label="Dean - Budget Overview", icon="📈"
+    )
+
+def DeanStudentsNav():
+    st.sidebar.page_link(
+        "pages/30_Dean_Home.py", label="Dean - Student Overview", icon="📈"
+    )
+
+def DeanCoursesNav():
+    st.sidebar.page_link(
+        "pages/30_Dean_Home.py", label="Dean - Courses Overview", icon="📈"
+    )
+
+def DeanAlumniNav():
+    st.sidebar.page_link(
+        "pages/30_Dean_Home.py", label="Dean - Alumni Overview", icon="📈"
+    )
+
 def WorldBankVizNav():
     st.sidebar.page_link(
         "pages/01_World_Bank_Viz.py", label="World Bank Visualization", icon="🏦"
@@ -84,6 +104,10 @@ def SideBarLinks(show_home=False):
         # If the user role is a dean, show the dean homepage
         if st.session_state["role"] == "dean":
             DeanHomeNav()
+            DeanBudgetNav()
+            DeanCoursesNav()
+            DeanStudentsNav()
+            DeanAlumniNav()
             ApiTestNav()
             ClassificationNav()
 
