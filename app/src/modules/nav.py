@@ -78,7 +78,7 @@ def StudentMaintenanceRequestNav():
 
 def ClubNav():
     st.sidebar.page_link(
-        "pages/22_Student_clubs.py", label="Clubs", icon="🎉"
+        "pages/22_Student_Clubs.py", label="Clubs", icon="🎉"
     ) 
 
 #### ------------------------ Examples from Mark Fontenote ------------------------
