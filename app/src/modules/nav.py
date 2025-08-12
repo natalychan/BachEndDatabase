@@ -71,7 +71,7 @@ def InstrumentNav():
         "pages/23_Instrument_Rental.py", label="Instruments", icon="🎷"
     )    
 
-def MaintenanceRequestNav():
+def StudentMaintenanceRequestNav():
     st.sidebar.page_link(
         "pages/21_Maintenance_Requests.py", label="Maintenance Request", icon="🔨"
     ) 
@@ -138,6 +138,10 @@ def SideBarLinks(show_home=False):
         # If the user is an administrator, give them access to the administrator pages
         if st.session_state["role"] == "student":
             StudentHomeNav()
+            StudentScheduleNav()
+            InstrumentNav()
+            StudentMaintenanceRequestNav()
+            ClubNav()
 
     # Always show the About page at the bottom of the list of links
     AboutPageNav()

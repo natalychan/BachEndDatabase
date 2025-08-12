@@ -21,13 +21,13 @@ st.write('### What would you like to do today?')
 if st.button('View Schedule', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/19_Student_Schedule.py')
+  st.switch_page('pages/24_Student_Schedule.py')
 
 #page shows instrument rentals info and instrument vacancy
 if st.button('Rent Instrument', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/32_Student_Instrument_Rental.py')
+  st.switch_page('pages/23_Student_Instrument_Rental.py')
 
 #page shows classroom booking info and classroom vacancy
 if st.button('Make Classroom Booking', 
