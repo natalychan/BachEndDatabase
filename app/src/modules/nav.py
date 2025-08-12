@@ -61,6 +61,26 @@ def StudentHomeNav():
         "pages/20_Student_Home.py", label="Student Home", icon="👤"
     )
 
+def StudentScheduleNav():
+    st.sidebar.page_link(
+        "pages/19_Student_Schedule.py", label="Schedule", icon="📅"
+    )
+
+def InstrumentNav():
+    st.sidebar.page_link(
+        "pages/18_Instrument_Rental.py", label="Instruments", icon="🎷"
+    )    
+
+def MaintenanceRequestNav():
+    st.sidebar.page_link(
+        "pages/21_Maintenance_Requests.py", label="Maintenance Request", icon="🔨"
+    ) 
+
+def ClubNav():
+    st.sidebar.page_link(
+        "pages/22_Student_clubs.py", label="Clubs", icon="🎉"
+    ) 
+
 #### ------------------------ Examples from Mark Fontenote ------------------------
 def WorldBankVizNav():
     st.sidebar.page_link(
