@@ -51,4 +51,4 @@ if st.button('View Clubs',
 if st.button('Submit a Maintenance Request', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/21_Maintenance_Requests.py')    
+  st.switch_page('pages/21_Student_Maintenance_Requests.py')    

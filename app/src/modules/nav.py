@@ -68,12 +68,12 @@ def StudentScheduleNav():
 
 def InstrumentNav():
     st.sidebar.page_link(
-        "pages/23_Instrument_Rental.py", label="Instruments", icon="🎷"
+        "pages/23_Student_Instrument_Rental.py", label="Instruments", icon="🎷"
     )    
 
 def StudentMaintenanceRequestNav():
     st.sidebar.page_link(
-        "pages/21_Maintenance_Requests.py", label="Maintenance Request", icon="🔨"
+        "pages/21_Student_sMaintenance_Requests.py", label="Maintenance Request", icon="🔨"
     ) 
 
 def ClubNav():
