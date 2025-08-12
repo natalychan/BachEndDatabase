@@ -45,4 +45,4 @@ if st.button('Advisor Meetings',
 if st.button('Clubs', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/02_Map_Demo.py')    
+  st.switch_page('pages/22_Student_Clubs.py')    
