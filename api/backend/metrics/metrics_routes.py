@@ -2,12 +2,12 @@ from flask import Blueprint, request, jsonify, make_response, current_app
 from backend.db_connection import db
 
 # Blueprint for metrics and college-wide reporting
-metrics = Blueprint('metrics_api', __name__)
+metrics_api = Blueprint('metrics_api', __name__)
 
 # ------------------------------------------------------------
 # GET /api/colleges/averages/gpa
 # Purpose: Average student GPA by college (President / Lim-1)
-@metrics.route('/colleges/averages/gpa', methods=['GET'])
+@metrics_api.route('/colleges/averages/gpa', methods=['GET'])
 def colleges_avg_gpa():
     query = '''
         SELECT college, ROUND(AVG(gpa), 2) AS average_gpa
@@ -27,7 +27,7 @@ def colleges_avg_gpa():
 # ------------------------------------------------------------
 # GET /api/metrics/demographics
 # Purpose: Overall demographics (origin, housingStatus, race) with percentages of entire student body
-@metrics.route('/metrics/demographics', methods=['GET'])
+@metrics_api.route('/metrics/demographics', methods=['GET'])
 def demographics_overall():
     query = '''
         SELECT 'origin' AS type,
@@ -67,7 +67,7 @@ def demographics_overall():
 # ------------------------------------------------------------
 # GET /api/colleges/<collegeName>/demographics
 # Purpose: Demographics (origin, housingStatus, race) within a single college with within-college percentages
-@metrics.route('/colleges/<string:collegeName>/demographics', methods=['GET'])
+@metrics_api.route('/colleges/<string:collegeName>/demographics', methods=['GET'])
 def demographics_by_college(collegeName):
     query = '''
         SELECT 'origin' AS type,
@@ -110,7 +110,7 @@ def demographics_by_college(collegeName):
 # ------------------------------------------------------------
 # GET /api/courses/vacancies
 # Purpose: List courses with a vacancy flag (no professor assigned) (President / Lim-3)
-@metrics.route('/courses/vacancies', methods=['GET'])
+@metrics_api.route('/courses/vacancies', methods=['GET'])
 def courses_vacancies():
     query = '''
         SELECT c.id      AS course_id,
@@ -133,7 +133,7 @@ def courses_vacancies():
 # ------------------------------------------------------------
 # GET /api/colleges/metrics/student-teacher-ratio
 # Purpose: Student-to-teacher ratio by college (President / Lim-5)
-@metrics.route('/colleges/metrics/student-teacher-ratio', methods=['GET'])
+@metrics_api.route('/colleges/metrics/student-teacher-ratio', methods=['GET'])
 def student_teacher_ratio():
     query = '''
         SELECT s.college,
@@ -158,7 +158,7 @@ def student_teacher_ratio():
 # ------------------------------------------------------------
 # GET /api/rankings/compare
 # Purpose: Compare internal GPA vs national rankings (President / Lim-6)
-@metrics.route('/rankings/compare', methods=['GET'])
+@metrics_api.route('/rankings/compare', methods=['GET'])
 def rankings_compare():
     query = '''
         SELECT sr.schoolName,
@@ -181,7 +181,7 @@ def rankings_compare():
 # ------------------------------------------------------------
 # GET /api/colleges/<collegeName>/enrollment
 # Purpose: Total enrollment for a college (Dean / Yo-1)
-@metrics.route('/colleges/<string:collegeName>/enrollment', methods=['GET'])
+@metrics_api.route('/colleges/<string:collegeName>/enrollment', methods=['GET'])
 def college_enrollment(collegeName):
     query = '''
         SELECT COUNT(*) AS total_enrollment
@@ -200,7 +200,7 @@ def college_enrollment(collegeName):
 # ------------------------------------------------------------
 # GET /api/colleges/<collegeName>/course-enrollments
 # Purpose: Enrollment counts per course in a college (Dean / Yo-2)
-@metrics.route('/colleges/<string:collegeName>/course-enrollments', methods=['GET'])
+@metrics_api.route('/colleges/<string:collegeName>/course-enrollments', methods=['GET'])
 def college_course_enrollments(collegeName):
     query = '''
         SELECT c.name AS course_name,
@@ -224,7 +224,7 @@ def college_course_enrollments(collegeName):
 # ------------------------------------------------------------
 # GET /api/colleges/<collegeName>/budget
 # Purpose: Get budget/status/dean for a college (Dean / Yo-3)
-@metrics.route('/colleges/<string:collegeName>/budget', methods=['GET'])
+@metrics_api.route('/colleges/<string:collegeName>/budget', methods=['GET'])
 def college_budget(collegeName):
     query = '''
         SELECT collegeName, budget, status, dean
@@ -243,7 +243,7 @@ def college_budget(collegeName):
 # ------------------------------------------------------------
 # GET /api/colleges/<collegeName>/performance
 # Purpose: Performance summary for a college (avg GPA + by course + by professor) (Dean / Yo-4)
-@metrics.route('/colleges/<string:collegeName>/performance', methods=['GET'])
+@metrics_api.route('/colleges/<string:collegeName>/performance', methods=['GET'])
 def college_performance(collegeName):
     cursor = db.get_db().cursor()
     current_app.logger.info("GET /colleges/%s/performance : starting", collegeName)
@@ -300,7 +300,7 @@ def college_performance(collegeName):
 # ------------------------------------------------------------
 # GET /api/colleges/<collegeName>/students?gpaMin=
 # Purpose: List high-performing students in a college (Dean / Yo-5)
-@metrics.route('/colleges/<string:collegeName>/students', methods=['GET'])
+@metrics_api.route('/colleges/<string:collegeName>/students', methods=['GET'])
 def high_performers(collegeName):
     gpa_min = request.args.get('gpaMin', default=3.5, type=float)
     query = '''
@@ -327,7 +327,7 @@ def high_performers(collegeName):
 # ------------------------------------------------------------
 # GET /api/colleges/<collegeName>/alumni/placements
 # Purpose: Alumni employment counts & rate (Dean / Yo-6)
-@metrics.route('/colleges/<string:collegeName>/alumni/placements', methods=['GET'])
+@metrics_api.route('/colleges/<string:collegeName>/alumni/placements', methods=['GET'])
 def alumni_placements(collegeName):
     query = '''
         SELECT s.college,

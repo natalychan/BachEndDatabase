@@ -8,12 +8,12 @@ from backend.db_connection import db
 #------------------------------------------------------------
 # Create a new Blueprint object, which is a collection of 
 # routes.
-advisors = Blueprint('advisors_api', __name__)
+advisors_api = Blueprint('advisors_api', __name__)
 
 #------------------------------------------------------------
 # Get all the club from the database, package them up,
 # and return them to the client
-@advisors.route('/advisors', methods=['GET'])
+@advisors_api.route('/advisors', methods=['GET'])
 def get_advisor_email():
     query = '''
         SELECT u.emailAddress

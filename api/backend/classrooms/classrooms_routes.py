@@ -13,12 +13,12 @@ from backend.db_connection import db
 #------------------------------------------------------------
 # Create a new Blueprint object, which is a collection of 
 # routes.
-classrooms = Blueprint('classrooms_api', __name__)
+classrooms_api = Blueprint('classrooms_api', __name__)
 
 #------------------------------------------------------------
 # GET /api/classrooms
 # Purpose: List all classrooms that were not maintained in the last 2 months
-@classrooms.route('/classrooms', methods=['GET'])
+@classrooms_api.route('/classrooms', methods=['GET'])
 def get_students():
     query = '''
         SELECT lastMaintained, roomNumber

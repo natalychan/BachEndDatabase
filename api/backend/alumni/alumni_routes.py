@@ -13,12 +13,12 @@ from backend.db_connection import db
 #------------------------------------------------------------
 # Create a new Blueprint object, which is a collection of 
 # routes.
-alumni = Blueprint('alumni_api', __name__)
+alumni_api = Blueprint('alumni_api', __name__)
 
 #------------------------------------------------------------
 # Get all the students from the database, package them up,
 # and return them to the client
-@alumni.route('/alumni', methods=['GET'])
+@alumni_api.route('/alumni', methods=['GET'])
 def get_students():
     query = '''
         SELECT s.college, 
