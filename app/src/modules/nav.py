@@ -14,12 +14,13 @@ def AboutPageNav():
     st.sidebar.page_link("pages/30_About.py", label="About", icon="🧠")
 
 
-#### ------------------------ Examples for Role of pol_strat_advisor (now it's president!) ------------------------
+#### ------------------------ President ------------------------
 def PresidentHomeNav():
     st.sidebar.page_link(
         "pages/00_President_Home.py", label="President Home", icon="👤"
     )
 
+#### ------------------------ Dean ------------------------
 def DeanHomeNav():
     st.sidebar.page_link(
         "pages/30_Dean_Home.py", label="Dean Home", icon="📈"
@@ -45,26 +46,6 @@ def DeanAlumniNav():
         "pages/30_Dean_Home.py", label="Dean - Alumni Overview", icon="📈"
     )
 
-def WorldBankVizNav():
-    st.sidebar.page_link(
-        "pages/01_World_Bank_Viz.py", label="World Bank Visualization", icon="🏦"
-    )
-
-
-def MapDemoNav():
-    st.sidebar.page_link("pages/02_Map_Demo.py", label="Map Demonstration", icon="🗺️")
-
-
-## ------------------------ Examples for Role of usaid_worker ------------------------
-def ApiTestNav():
-    st.sidebar.page_link("pages/12_API_Test.py", label="Test the API", icon="🛜")
-
-
-def ClassificationNav():
-    st.sidebar.page_link(
-        "pages/13_Classification.py", label="Classification Demo", icon="🌺"
-    )
-
 
 #### ------------------------ System Admin Role (maintenance) ------------------------
 def MaintenancePageNav():
@@ -73,6 +54,29 @@ def MaintenancePageNav():
         "pages/21_ML_Model_Mgmt.py", label="ML Model Management", icon="🏢"
     )
 
+    
+## ------------------------ Student ------------------------
+def StudentHomeNav():
+    st.sidebar.page_link(
+        "pages/20_Student_Home.py", label="Student Home", icon="👤"
+    )
+
+#### ------------------------ Examples from Mark Fontenote ------------------------
+def WorldBankVizNav():
+    st.sidebar.page_link(
+        "pages/01_World_Bank_Viz.py", label="World Bank Visualization", icon="🏦"
+    )
+
+def MapDemoNav():
+    st.sidebar.page_link("pages/02_Map_Demo.py", label="Map Demonstration", icon="🗺️")
+
+def ApiTestNav():
+    st.sidebar.page_link("pages/12_API_Test.py", label="Test the API", icon="🛜")
+
+def ClassificationNav():
+    st.sidebar.page_link(
+        "pages/13_Classification.py", label="Classification Demo", icon="🌺"
+    )
 
 # --------------------------------Links Function -----------------------------------------------
 def SideBarLinks(show_home=False):
@@ -98,8 +102,6 @@ def SideBarLinks(show_home=False):
         # Show World Bank Link and Map Demo Link if the user is a political strategy advisor role.
         if st.session_state["role"] == "president":
             PresidentHomeNav()
-            WorldBankVizNav()
-            MapDemoNav()
 
         # If the user role is a dean, show the dean homepage
         if st.session_state["role"] == "dean":
@@ -108,8 +110,6 @@ def SideBarLinks(show_home=False):
             DeanCoursesNav()
             DeanStudentsNav()
             DeanAlumniNav()
-            ApiTestNav()
-            ClassificationNav()
 
         # If the user is an administrator, give them access to the administrator pages
         if st.session_state["role"] == "maintenance worker":
@@ -117,7 +117,7 @@ def SideBarLinks(show_home=False):
 
         # If the user is an administrator, give them access to the administrator pages
         if st.session_state["role"] == "student":
-            MaintenancePageNav()
+            StudentHomeNav()
 
     # Always show the About page at the bottom of the list of links
     AboutPageNav()
