@@ -20,6 +20,10 @@ def PresidentHomeNav():
         "pages/00_President_Home.py", label="President Home", icon="👤"
     )
 
+def DeanHomeNav():
+    st.sidebar.page_link(
+        "pages/30_Dean_Home.py", label="Dean Home", icon="📈"
+    )
 
 def WorldBankVizNav():
     st.sidebar.page_link(
@@ -34,12 +38,6 @@ def MapDemoNav():
 ## ------------------------ Examples for Role of usaid_worker ------------------------
 def ApiTestNav():
     st.sidebar.page_link("pages/12_API_Test.py", label="Test the API", icon="🛜")
-
-
-def PredictionNav():
-    st.sidebar.page_link(
-        "pages/11_Prediction.py", label="Regression Prediction", icon="📈"
-    )
 
 
 def ClassificationNav():
@@ -83,9 +81,9 @@ def SideBarLinks(show_home=False):
             WorldBankVizNav()
             MapDemoNav()
 
-        # If the user role is usaid worker, show the Api Testing page
+        # If the user role is a dean, show the dean homepage
         if st.session_state["role"] == "dean":
-            PredictionNav()
+            DeanHomeNav()
             ApiTestNav()
             ClassificationNav()
 
