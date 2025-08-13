@@ -22,7 +22,7 @@ with st.form("instrument_rental_form"):
     startDate = st.number_input("Date of Rental *")
 
     # Form submission button
-    submitted = st.form_submit_button("Submit Maintenance Request")
+    submitted = st.form_submit_button("Submit Instrument Rental Request")
 
     if submitted:
         # Validate required fields
