@@ -28,6 +28,8 @@ with st.form("instrument_rental_form"):
         # Validate required fields
         if not all([startDate, instrumentId, studentId]):
             st.error("Please fill in all required fields marked with *")
+        elif studentId < 0: # Assuming studentId should be a positive integer
+            st.error("Student ID must be a positive integer")
         else:
             # Prepare the data for API
             rental_data = {
