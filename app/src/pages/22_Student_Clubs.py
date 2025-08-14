@@ -39,21 +39,22 @@ with main_col:
 
 with right_col:
     try:
-        if "studentId" not in st.session_state:
-            st.session_state["studentId"] = 1
-        studentId = st.session_state.get('studentId')
         st.subheader("Current Membership")
-        API_URL = f"http://web-api:4000/api/club_members?studentId={studentId}"
-        response = requests.get(API_URL)
-        if response.status_code == 200:
-            data = response.json()
-            if data:
-                df = pd.DataFrame(data)
-                st.dataframe(df, use_container_width=True)
+        student_id = st.session_state.get('student_id') 
+        st.write(f"### Student ID: {student_id}")
+        
+        if student_id:
+            API_URL = f"http://web-api:4000/api/club_members/{student_id}"
+            response = requests.get(API_URL)
+            if response.status_code == 200:
+                data = response.json()
+                if data:
+                    df = pd.DataFrame(data)
+                    st.dataframe(df, use_container_width=True)
+                else:
+                    st.info("You are not part of any clubs.")
             else:
-                st.info("You are not part of any clubs.")
-        else:
-            st.error(f"Failed to fetch data: HTTP {response.status_code}")
+                st.error(f"Failed to fetch data: HTTP {response.status_code}")
     except requests.exceptions.RequestException as e:
         st.error(f"Error connecting to API: {str(e)}")
     except Exception as e:

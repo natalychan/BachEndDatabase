@@ -1,7 +1,7 @@
 USE bachEndDatabase;
 
 insert into club_members (studentId, clubName, role) values
-(150, 'chamber ensemble', 'member'),
+(1, 'chamber ensemble', 'member'),
 (151, 'jazz club', 'member'),
 (152, 'rock band', 'member'),
 (153, 'vocal ensemble', 'member'),
