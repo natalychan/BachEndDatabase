@@ -16,7 +16,7 @@ with st.form("submit_maintenance_request_form"):
     st.subheader("Maintenance Information")
 
     # Required fields
-    address = st.text_input("Maintenace Location Address *")
+    address = st.text_input("Maintenance Location Address *")
     problemType = st.text_input("Briefly Describe Maintenance Issue *")
     studentId = st.number_input("Student ID *", step=1, min_value=1, placeholder="Enter Student ID")
 
