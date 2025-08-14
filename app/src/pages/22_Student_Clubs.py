@@ -39,15 +39,14 @@ with main_col:
 
 with right_col:
     try:
-        student_id = st.session_state['studentId'] 
-        API_URL = f"http://web-api:4000/api/club_members"
-                    
+        st.subheader("Current Membership")
+        student_id = st.session_state['userId'] 
+        API_URL = f"http://web-api:4000/api/club_members?studentId={student_id}"
         response = requests.get(API_URL)
         if response.status_code == 200:
             data = response.json()
             if data:
                 df = pd.DataFrame(data)
-                st.subheader("Current Membership")
                 st.dataframe(df, use_container_width=True)
             else:
                 st.info("You are not part of any clubs.")

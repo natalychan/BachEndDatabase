@@ -6,7 +6,8 @@ club_members_api = Blueprint('club_members_api', __name__)
 
 # GET /api/students/<student_id>/clubs
 @club_members_api.route('/club_members', methods=['GET'])
-def club_mems(studentId):
+def club_mems():
+    studentId = request.args.get('studentId', type=int)
     query = """
         SELECT cm.clubName AS club_name
         FROM club_members cm
