@@ -44,35 +44,18 @@ try:
     else:
         st.error(f"Failed to fetch data: HTTP {response.status_code}")
 
-    # Create student
-    st.subheader("Create Student")
-    user_id = st.number_input("User ID", min_value=1, step=1)
-    year = st.text_input("Year")
-    housing_status = st.text_input("Housing Status")
-    race = st.text_input("Race")
-    income = st.text_input("Income")
-    origin = st.text_input("Origin")
-    college = st.text_input("College")
-    advisor = st.text_input("Advisor")
+    # Delete student
+    st.subheader("Delete Student")
+    delete_user_id = st.number_input("User ID to Delete", min_value=1, step=1)
     
-    if st.button("Create Student"):
-        if user_id:
-            student_data = {
-                "userId": user_id,
-                "year": year,
-                "housingStatus": housing_status,
-                "race": race,
-                "income": income,
-                "origin": origin,
-                "college": college,
-                "advisor": advisor
-            }
-            create_response = requests.post(API_URL, json=student_data)
-            if create_response.status_code == 201:
-                st.success("Student created successfully")
+    if st.button("Delete Student"):
+        if delete_user_id:
+            delete_response = requests.delete(f"{API_URL}/{delete_user_id}")
+            if delete_response.status_code == 204:
+                st.success("Student deleted successfully")
                 st.rerun()
             else:
-                st.error(f"Failed to create student: HTTP {create_response.status_code}")
+                st.error(f"Failed to delete student: HTTP {delete_response.status_code}")
         else:
             st.warning("Please enter a user ID")
 
@@ -109,21 +92,39 @@ try:
                 st.warning("No fields to update")
         else:
             st.warning("Please enter a user ID")
+
+    # Create student
+    st.subheader("Create Student")
+    user_id = st.number_input("User ID", min_value=1, step=1)
+    year = st.text_input("Year")
+    housing_status = st.text_input("Housing Status")
+    race = st.text_input("Race")
+    income = st.text_input("Income")
+    origin = st.text_input("Origin")
+    college = st.text_input("College")
+    advisor = st.text_input("Advisor")
     
-    # Delete student
-    st.subheader("Delete Student")
-    delete_user_id = st.number_input("User ID to Delete", min_value=1, step=1)
-    
-    if st.button("Delete Student"):
-        if delete_user_id:
-            delete_response = requests.delete(f"{API_URL}/{delete_user_id}")
-            if delete_response.status_code == 204:
-                st.success("Student deleted successfully")
+    if st.button("Create Student"):
+        if user_id:
+            student_data = {
+                "userId": user_id,
+                "year": year,
+                "housingStatus": housing_status,
+                "race": race,
+                "income": income,
+                "origin": origin,
+                "college": college,
+                "advisor": advisor
+            }
+            create_response = requests.post(API_URL, json=student_data)
+            if create_response.status_code == 201:
+                st.success("Student created successfully")
                 st.rerun()
             else:
-                st.error(f"Failed to delete student: HTTP {delete_response.status_code}")
+                st.error(f"Failed to create student: HTTP {create_response.status_code}")
         else:
             st.warning("Please enter a user ID")
+    
 
 except Exception as e:
     st.error(f"Error: {str(e)}")
