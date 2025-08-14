@@ -18,7 +18,7 @@ st.write(f"### Hi, {st.session_state['first_name']}.")
 # get the student's courses
 with st.echo(code_location='above'):
     try:
-        student_id = st.session_state.get('student_id')  # or however you store the student ID
+        student_id = st.session_state.get('student_id') 
 
         if student_id:
             API_URL = f"http://web-api:4000/students_api/{student_id}/schedule" 

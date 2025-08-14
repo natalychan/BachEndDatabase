@@ -1,6 +1,7 @@
 USE bachEndDatabase;
 
 insert into students (userId, gpa, year, housingStatus, race, income, origin, college, advisor) values
+(4, 1.18, 1, 'off-campus', 'White', 100000, 'in-state', 'College of Composition', 75),
 (150, 3.85, 3, 'on-campus', 'Black', 45000, 'in-state', 'College of Composition', 75),
 (151, 3.60, 2, 'off-campus', 'Asian', 38000, 'out-of-state', 'College of Jazz', 76),
 (152, 3.95, 4, 'on-campus', 'Asian', 50000, 'in-state', 'College of Production', 77),
