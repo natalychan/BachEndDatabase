@@ -25,23 +25,15 @@ with st.echo(code_location='above'):
         response = requests.get('http://web-api:4000/api/colleges/averages/gpa')
         if response.status_code == 200:
             data = response.json()
-            
-            st.write("Raw data from API:", data)
-            st.write("Type of data:", type(data))
-            st.write("Number of items:", len(data))
-            if data:
-                st.write("First item:", data[0])
-                st.write("Type of first item:", type(data[0]))
-        
+
              # convert to pandas dataframe
             df = pd.DataFrame(data)
-            st.write("DataFrame shape:", df.shape)
-            st.write("DataFrame columns:", df.columns.tolist())
-            st.write("First few rows:")
-            st.dataframe(df.head())
             
             # extract the average GPA
-            gpa_values = pd.to_numeric(df['average_gpa']).tolist()
+            gpa_values = []
+            for gpa in df['average_gpa']:
+                gpa_values.append(float(str(gpa).strip()))
+            
             college_names = df['college'].tolist()
             
             # histogram!
@@ -90,7 +82,8 @@ with st.echo(code_location='above'):
 
             # convert to dataframe
             df = pd.DataFrame(data)
-            
+            df['gpa'] = pd.to_numeric(df['gpa'])
+
             # box plot!
             fig, ax = plt.subplots(figsize=(12, 8))
             
