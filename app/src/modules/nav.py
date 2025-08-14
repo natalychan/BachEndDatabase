@@ -150,7 +150,7 @@ def SideBarLinks(show_home=False):
             ClassroomBookingNav()
             StudentMaintenanceRequestNav()
             ClubNav()
-            student_id = 1
+            st.session_state[student_id] = 1
 
     # Always show the About page at the bottom of the list of links
     AboutPageNav()
