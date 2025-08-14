@@ -50,7 +50,7 @@ insert into users (userId, firstName, lastName, emailAddress, dateOfBirth) value
 (47, 'Madison', 'Perry', 'madison.perry@example.com', '1988-07-30'),
 (48, 'Gabriel', 'Wood', 'gabriel.wood@example.com', '1976-10-09'),
 (49, 'Avery', 'Barnes', 'avery.barnes@example.com', '1992-11-25'),
-(50, 'John', 'Doe2', 'john.doe2@example.com', '1980-03-12');
+(50, 'John', 'Doe2', 'john.doe2@example.com', '1980-03-12'),
 (51, 'Lillian', 'Brooks', 'lillian.brooks@example.com', '1993-05-04'),
 (52, 'Ryan', 'Kelly', 'ryan.kelly@example.com', '1982-12-15'),
 (53, 'Scarlett', 'Sanders', 'scarlett.sanders@example.com', '1980-08-21'),
