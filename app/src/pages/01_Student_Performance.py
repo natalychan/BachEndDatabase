@@ -30,7 +30,7 @@ with st.echo(code_location='above'):
             df = pd.DataFrame(data)
             
             # extract the average GPA
-            gpa_values = float(df['average_gpa']).tolist()
+            gpa_values = pd.to_numeric(df['average_gpa']).tolist()
             college_names = df['college'].tolist()
             
             # histogram!
