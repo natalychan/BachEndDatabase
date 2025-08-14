@@ -17,6 +17,7 @@ st.write(f"### Hi, {st.session_state['first_name']}.")
 
 
 try:
+   # Display maintenance requests
     API_URL = "http://web-api:4000/api/maintenance-requests"
     response = requests.get(API_URL)
     
@@ -32,5 +33,40 @@ try:
     else:
         st.error(f"Failed to fetch data: HTTP {response.status_code}")
 
+    # Update request form
+    st.subheader("Update Request")
+    request_id = st.number_input("Request ID", min_value=1, step=1)
+    address = st.text_input("Address")
+    problem_type = st.text_input("Problem Type")
+    description = st.text_area("Description")
+    
+    if st.button("Update Request"):
+        update_data = {}
+        if address: update_data['address'] = address
+        if problem_type: update_data['problemType'] = problem_type
+        if description: update_data['description'] = description
+        
+        if update_data:
+            update_response = requests.patch(f"{API_URL}/{request_id}", json=update_data)
+            if update_response.status_code == 200:
+                st.success("Request updated successfully")
+                st.rerun()
+            else:
+                st.error(f"Failed to update: HTTP {update_response.status_code}")
+        else:
+            st.warning("No fields to update")
+
+    # Delete request
+    st.subheader("Delete Request")
+    delete_id = st.number_input("Request ID to Delete", min_value=1, step=1)
+    
+    if st.button("Delete Request"):
+        delete_response = requests.delete(f"{API_URL}/{delete_id}")
+        if delete_response.status_code == 204:
+            st.success("Request deleted successfully")
+            st.rerun()
+        else:
+            st.error(f"Failed to delete: HTTP {delete_response.status_code}")
+            
 except Exception as e:
     st.error(f"Error: {str(e)}")
