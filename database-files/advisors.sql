@@ -1,3 +1,5 @@
+USE bachEndDatabase;
+
 insert into advisors (userId) values
 (75),
 (76),

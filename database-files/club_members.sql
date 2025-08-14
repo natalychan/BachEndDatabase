@@ -1,3 +1,5 @@
+USE bachEndDatabase;
+
 insert into club_members (studentId, clubName, role) values
 (150, 'chamber ensemble', 'member'),
 (151, 'jazz club', 'member'),

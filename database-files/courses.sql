@@ -1,3 +1,5 @@
+USE bachEndDatabase;
+
 insert into courses (id, name, time, enrollment, college, roomNumber, professorId) values
 (1, 'Intro to Composition', '2025-09-01 09:00:00', 25, 'College of Composition', 101, 40),
 (2, 'Jazz Improvisation', '2025-09-02 10:00:00', 20, 'College of Jazz', 102, 41),

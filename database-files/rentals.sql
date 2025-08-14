@@ -1,3 +1,5 @@
+USE bachEndDatabase;
+
 insert into rentals (studentID, instrumentID, startDate, returnDate) values
 (150, 1, '2025-01-10', '2025-01-20'),
 (151, 2, '2025-01-12', '2025-01-22'),

@@ -1,3 +1,5 @@
+USE bachEndDatabase;
+
 insert into professors_courses (professorId, courseId) values
 (40, 1),
 (41, 2),

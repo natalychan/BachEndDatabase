@@ -1,3 +1,5 @@
+USE bachEndDatabase;
+
 insert into maintenance_staffs (staffId) values
 (4),  
 (110),

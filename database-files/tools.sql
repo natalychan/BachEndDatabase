@@ -1,3 +1,5 @@
+USE bachEndDatabase;
+
 insert into tools (productName, amount) values
 ('Screwdriver', 15),
 ('Hammer', 10),

@@ -1,3 +1,5 @@
+USE bachEndDatabase;
+
 insert into maintenance_request (address, problemType, state, description, maintenanceStaffId, studentId) values
 ('101 music hall', 'broken piano', true, 'keys not responding', 180, 150),
 ('102 jazz room', 'drum set issue', true, 'snare drum broken', 181, 151),

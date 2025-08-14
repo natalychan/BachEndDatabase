@@ -1,3 +1,5 @@
+USE bachEndDatabase;
+
 insert into instruments (name, isAvailable, type) values
 ('Piano', true, 'keyboard'),
 ('Guitar', true, 'string'),

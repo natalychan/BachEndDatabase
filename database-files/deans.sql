@@ -1,3 +1,5 @@
+USE bachEndDatabase;
+
 insert into deans (userId) values
 (3),  
 (5),

@@ -1,3 +1,5 @@
+USE bachEndDatabase;
+
 insert into roles (roleId, title) values
 (1, 'president'),
 (2, 'dean'),

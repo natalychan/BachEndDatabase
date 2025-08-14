@@ -1,3 +1,5 @@
+USE bachEndDatabase;
+
 insert into users (userId, firstName, lastName, emailAddress, dateOfBirth) values
 (1, 'Octavious', 'Treble', 'octavious.treble@example.com', '1995-06-15'),
 (2, 'Lim', 'Jucchese', 'lim.jucchese@example.com', '1965-04-12'),

@@ -1,3 +1,5 @@
+USE bachEndDatabase;
+
 insert into school_rankings (schoolName, ranking) values
 ('college of composition', 1),
 ('college of jazz', 2),

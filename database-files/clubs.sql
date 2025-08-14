@@ -1,3 +1,5 @@
+USE bachEndDatabase;
+
 insert into clubs (name) values
 ('chamber ensemble'),
 ('jazz club'),

@@ -1,3 +1,5 @@
+USE bachEndDatabase;
+
 insert into colleges (collegeName, dean, budget, status) values
 ('College of Composition', 3, 1000000, TRUE),
 ('College of Jazz', 5, 900000, TRUE),

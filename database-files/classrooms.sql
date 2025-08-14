@@ -1,3 +1,5 @@
+USE bachEndDatabase;
+
 insert into classrooms (roomNumber, status, lastMaintained) values
 (101, 'available', '2025-01-12 09:00:00'),
 (102, 'maintenance', '2025-02-05 14:30:00'),

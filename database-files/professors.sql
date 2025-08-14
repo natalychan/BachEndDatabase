@@ -1,3 +1,5 @@
+USE bachEndDatabase;
+
 insert into professors (userId) values
 (40),
 (41),

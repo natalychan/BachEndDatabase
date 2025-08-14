@@ -1,3 +1,5 @@
+USE bachEndDatabase;
+
 insert into alumni (studentId, hasJob) values
 (150, TRUE),
 (152, TRUE),
