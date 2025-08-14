@@ -133,7 +133,7 @@ def SideBarLinks(show_home=False):
             DeanAlumniNav()
 
         # If the user is an administrator, give them access to the administrator pages
-        if st.session_state["role"] == "maintenance worker":
+        if st.session_state["role"] == "maintenance_worker":
             MaintenancePageNav()
 
         # If the user is an administrator, give them access to the administrator pages
