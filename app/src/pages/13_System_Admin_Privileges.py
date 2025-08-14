@@ -10,7 +10,7 @@ import requests
 SideBarLinks()
 
 # set the header of the page
-st.header('Student Clubs and Organizations')
+st.header('System Admin Privileges')
 
 # You can access the session state to make a more customized/personalized app experience
 st.write(f"### Hi, {st.session_state['first_name']}.")
