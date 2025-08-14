@@ -16,28 +16,21 @@ st.header('Maintenance Tasks')
 st.write(f"### Hi, {st.session_state['first_name']}.")
 
 
-with st.echo(code_location='above'):
-    try:
-        API_URL = "http://web-api:4000/clubs_api/clubs"
-        response = requests.get(API_URL)
-        if response.status_code == 200:
-            data = response.json()
-            
-            #convert to pandas dataframe
+try:
+    API_URL = "http://web-api:4000/api/maintenance-requests"
+    response = requests.get(API_URL)
+    
+    if response.status_code == 200:
+        data = response.json()
+        
+        if data:
             df = pd.DataFrame(data)
-            
-            #display table
-            st.subheader("All Clubs")
             st.dataframe(df, use_container_width=True)
-            
-            #shows the total number of clubs
-            st.info(f"Total Clubs: {len(df)}")
-            
+            st.info(f"Total Requests: {len(df)}")
         else:
-            st.error(f"Failed to fetch data: HTTP {response.status_code}")
-            
-    except requests.exceptions.RequestException as e:
-        st.error(f"Error connecting to API: {str(e)}")
-        st.info("Please ensure the API server is running on http://web-api:4000")
-    except Exception as e:
-        st.error(f"Error creating histogram: {str(e)}")
+            st.warning("No maintenance requests found")
+    else:
+        st.error(f"Failed to fetch data: HTTP {response.status_code}")
+
+except Exception as e:
+    st.error(f"Error: {str(e)}")
