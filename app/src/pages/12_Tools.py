@@ -16,28 +16,71 @@ st.header('Maintenance Tasks')
 st.write(f"### Hi, {st.session_state['first_name']}.")
 
 
-with st.echo(code_location='above'):
-    try:
-        API_URL = "http://web-api:4000/clubs_api/clubs"
-        response = requests.get(API_URL)
-        if response.status_code == 200:
-            data = response.json()
-            
-            #convert to pandas dataframe
+try:
+    # Display tools
+    API_URL = "http://web-api:4000/api/tools"
+    response = requests.get(API_URL)
+    
+    if response.status_code == 200:
+        data = response.json()
+        
+        if data:
             df = pd.DataFrame(data)
-            
-            #display table
-            st.subheader("All Clubs")
             st.dataframe(df, use_container_width=True)
-            
-            #shows the total number of clubs
-            st.info(f"Total Clubs: {len(df)}")
-            
+            st.info(f"Total Tools: {len(df)}")
         else:
-            st.error(f"Failed to fetch data: HTTP {response.status_code}")
-            
-    except requests.exceptions.RequestException as e:
-        st.error(f"Error connecting to API: {str(e)}")
-        st.info("Please ensure the API server is running on http://web-api:4000")
-    except Exception as e:
-        st.error(f"Error creating histogram: {str(e)}")
+            st.warning("No tools found")
+    else:
+        st.error(f"Failed to fetch data: HTTP {response.status_code}")
+
+    # Create new tool
+    st.subheader("Create Tool")
+    product_name = st.text_input("Product Name")
+    amount = st.number_input("Amount", min_value=0, step=1)
+    
+    if st.button("Create Tool"):
+        if product_name:
+            tool_data = {"productName": product_name, "amount": amount}
+            create_response = requests.post(API_URL, json=tool_data)
+            if create_response.status_code == 201:
+                st.success("Tool created successfully")
+                st.rerun()
+            else:
+                st.error(f"Failed to create tool: HTTP {create_response.status_code}")
+        else:
+            st.warning("Please enter a product name")
+
+    # Update tool
+    st.subheader("Update Tool")
+    update_product_name = st.text_input("Product Name to Update")
+    new_amount = st.number_input("New Amount", min_value=0, step=1)
+    
+    if st.button("Update Tool"):
+        if update_product_name:
+            update_data = {"amount": new_amount}
+            update_response = requests.patch(f"{API_URL}/{update_product_name}", json=update_data)
+            if update_response.status_code == 200:
+                st.success("Tool updated successfully")
+                st.rerun()
+            else:
+                st.error(f"Failed to update tool: HTTP {update_response.status_code}")
+        else:
+            st.warning("Please enter a product name")
+
+    # Delete tool
+    st.subheader("Delete Tool")
+    delete_product_name = st.text_input("Product Name to Delete")
+    
+    if st.button("Delete Tool"):
+        if delete_product_name:
+            delete_response = requests.delete(f"{API_URL}/{delete_product_name}")
+            if delete_response.status_code == 204:
+                st.success("Tool deleted successfully")
+                st.rerun()
+            else:
+                st.error(f"Failed to delete tool: HTTP {delete_response.status_code}")
+        else:
+            st.warning("Please enter a product name")
+
+except Exception as e:
+    st.error(f"Error: {str(e)}")
