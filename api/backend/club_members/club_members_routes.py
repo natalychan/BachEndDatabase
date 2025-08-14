@@ -7,11 +7,11 @@ def club_mems(userId):
         WHERE cm.userId = %s
     """
     cursor = db.get_db().cursor()
-    cursor.execute(query, (userId,))
+    cursor.execute(query, (userId))
     theData = cursor.fetchall()
     
     # Convert tuples to dicts
-    theDataDict = [{'club_name': row[0], 'role': row[1]} for row in theData]
+    theDataDict = [{'club_name': row[0]} for row in theData]
     
     response = make_response(jsonify(theDataDict))
     response.status_code = 200
