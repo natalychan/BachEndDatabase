@@ -26,7 +26,6 @@ try:
 
         if response.status_code == 200:
             data = response.json()
-            st.json(data)
             
             if data:
                 df = pd.DataFrame(data)
