@@ -67,6 +67,39 @@ try:
             st.rerun()
         else:
             st.error(f"Failed to delete: HTTP {delete_response.status_code}")
-            
+
+    # Attach tool to request
+    st.subheader("Attach Tool")
+    attach_request_id = st.number_input("Request ID for Tool", min_value=1, step=1)
+    tool_name = st.text_input("Tool Name")
+    
+    if st.button("Attach Tool"):
+        if tool_name:
+            tool_data = {"tool": tool_name}
+            attach_response = requests.post(f"{API_URL}/{attach_request_id}/tools", json=tool_data)
+            if attach_response.status_code == 201:
+                st.success("Tool attached successfully")
+                st.rerun()
+            else:
+                st.error(f"Failed to attach tool: HTTP {attach_response.status_code}")
+        else:
+            st.warning("Please enter a tool name")
+
+    # Detach tool from request
+    st.subheader("Detach Tool")
+    detach_request_id = st.number_input("Request ID for Detach", min_value=1, step=1)
+    detach_tool_name = st.text_input("Tool Name to Detach")
+    
+    if st.button("Detach Tool"):
+        if detach_tool_name:
+            detach_response = requests.delete(f"{API_URL}/{detach_request_id}/tools/{detach_tool_name}")
+            if detach_response.status_code == 204:
+                st.success("Tool detached successfully")
+                st.rerun()
+            else:
+                st.error(f"Failed to detach tool: HTTP {detach_response.status_code}")
+        else:
+            st.warning("Please enter a tool name")
+
 except Exception as e:
     st.error(f"Error: {str(e)}")
