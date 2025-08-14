@@ -47,6 +47,7 @@ with right_col:
             data = response.json()
             if data:
                 df = pd.DataFrame(data)
+                st.subheader("Current Membership")
                 st.dataframe(df, use_container_width=True)
             else:
                 st.info("You are not part of any clubs.")
