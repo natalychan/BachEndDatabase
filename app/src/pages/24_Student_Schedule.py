@@ -3,11 +3,8 @@ logger = logging.getLogger(__name__)
 import pandas as pd
 import streamlit as st
 from streamlit_extras.app_logo import add_logo
-import world_bank_data as wb
-import matplotlib.pyplot as plt
-import numpy as np
-import plotly.express as px
 from modules.nav import SideBarLinks
+import requests
 
 # Show appropriate sidebar links for the role of the currently logged in user
 SideBarLinks()
@@ -20,22 +17,27 @@ st.write(f"### Hi, {st.session_state['first_name']}.")
 
 # get the student's courses
 with st.echo(code_location='above'):
-    countries:pd.DataFrame = wb.get_countries()
-   
-    st.dataframe(countries)
-
-# the with statment shows the code for this block above it 
-with st.echo(code_location='above'):
-    arr = np.random.normal(1, 1, size=100)
-    test_plot, ax = plt.subplots()
-    ax.hist(arr, bins=20)
-
-    st.pyplot(test_plot)
-
-
-with st.echo(code_location='above'):
-    slim_countries = countries[countries['incomeLevel'] != 'Aggregates']
-    data_crosstab = pd.crosstab(slim_countries['region'], 
-                                slim_countries['incomeLevel'],  
-                                margins = False) 
-    st.table(data_crosstab)
+    try:
+        API_URL = "http://web-api:4000/students_api/<int:studentId>/schedule"
+        response = requests.get(API_URL)
+        if response.status_code == 200:
+            data = response.json()
+            
+            #convert to pandas dataframe
+            df = pd.DataFrame(data)
+            
+            #display table
+            st.subheader("Student Schedule")
+            st.dataframe(df, use_container_width=True)
+            
+            #shows the total number of clubs
+            st.info(f"Class Schedule: {len(df)}")
+            
+        else:
+            st.error(f"Failed to fetch data: HTTP {response.status_code}")
+            
+    except requests.exceptions.RequestException as e:
+        st.error(f"Error connecting to API: {str(e)}")
+        st.info("Please ensure the API server is running on http://web-api:4000")
+    except Exception as e:
+        st.error(f"Error creating histogram: {str(e)}")

@@ -20,12 +20,13 @@ st.write(f"### Hi, {st.session_state['first_name']}.")
 
 # making the histogram to see the distribution of average GPA by college
 st.subheader("Distribution of College Average GPA")
-st.write("This histogram shows the distribution of average GPAs across different colleges. " \
-"Each bar represents the number of colleges that fall within a specific average GPA range. " \
-"The dashed line indicates the overall mean GPA across all colleges.")
+
 
 # the with statment shows the code for this block above it 
 with st.echo(code_location='above'):
+    st.write("This histogram shows the distribution of average GPAs across different colleges. " \
+    "Each bar represents the number of colleges that fall within a specific average GPA range. " \
+    "The dashed line indicates the overall mean GPA across all colleges.")
     try:
         response = requests.get('http://web-api:4000/api/colleges/averages/gpa')
         if response.status_code == 200:
@@ -81,12 +82,13 @@ with st.echo(code_location='above'):
 
 # making the box plot to see the distribution of student GPAs by college
 st.subheader("Distribution of Student GPAs by College")
-st.write("This box plot illustrates the distribution of individual student GPAs within each college. " \
-"Each box represents the IQR of GPAs for students in that college, along with the median GPA. " \
-"The whiskers extend to 1.5 times the IQR, and any points outside this range are considered outliers.")
+
 
 with st.echo(code_location='above'):
     try:
+        st.write("This box plot illustrates the distribution of individual student GPAs within each college. " \
+        "Each box represents the IQR of GPAs for students in that college, along with the median GPA. " \
+        "The whiskers extend to 1.5 times the IQR, and any points outside this range are considered outliers.")
         response = requests.get('http://web-api:4000/api/students/gpas')
         if response.status_code == 200:
             data = response.json()

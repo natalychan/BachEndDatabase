@@ -18,7 +18,7 @@ st.write(f"### Hi, {st.session_state['first_name']}.")
 
 with st.echo(code_location='above'):
     try:
-        API_URL = "http://web-api:4000/api/clubs"
+        API_URL = "http://web-api:4000/clubs_api/clubs"
         response = requests.get(API_URL)
         if response.status_code == 200:
             data = response.json()

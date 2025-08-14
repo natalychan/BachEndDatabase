@@ -17,8 +17,8 @@ with st.form("instrument_rental_form"):
     st.subheader("Instrument Rental")
 
     # Required fields
-    studentId = st.number_input("Student ID *", step-=1, min_value=1)
-    instrumentId = st.number_input("Instrument ID *", step=1, min_value=1)
+    studentId = st.number_input("Student ID *", step=1, min_value=1, placeholder="Enter Student ID")
+    instrumentId = st.number_input("Instrument ID *", step=1, min_value=1, placeholder="Enter Instrument ID")
     startDate = st.date_input("Date of Rental *")
 
     # Form submission button
