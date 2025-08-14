@@ -42,12 +42,12 @@ with st.echo(code_location='above'):
             
             # bins
             n_bins = min(len(gpa_values), 16)  # to adjust bins based on data size
-            counts, bins, patches = ax.hist(gpa_values, bins=n_bins, edgecolor='black', alpha=0.7)
+            counts, bins, patches = ax.hist(gpa_values, bins=n_bins, color="#80659eff", edgecolor='black', alpha=0.7)
             
             # labels, title, grid
             ax.set_xlabel('Average GPA')
             ax.set_ylabel('Number of Colleges')
-            ax.set_title('Distribution of Average GPA by College')
+            ax.set_title('Distribution of College Average GPA')
             ax.grid(True, alpha=0.3)
             
             # mean
@@ -155,15 +155,14 @@ with st.echo(code_location='above'):
             
             # histogram!
             fig, ax = plt.subplots()
-            ax.hist(gpa_values, bins=8, color="#ffae00ff", edgecolor="#e09900ff", alpha=1)
+            ax.hist(gpa_values, bins=10, color="#ffae00ff", edgecolor="#e09900ff", alpha=1)
             
             # titles, labels, grid
             ax.set_xlabel('Student GPA')
             ax.set_ylabel('Number of Students')
             ax.set_title('Distribution of Student GPAs')
             ax.grid(True, alpha=0.3)
-            ax.set_xticks([3.0, 3.2, 3.4, 3.6, 3.8, 4.0]) 
-            figsize = (10, 6)
+            figsize = (20, 10)
 
             st.pyplot(fig)
             
