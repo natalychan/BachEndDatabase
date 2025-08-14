@@ -40,8 +40,8 @@ with main_col:
 with right_col:
     try:
         st.subheader("Current Membership")
-        student_id = st.session_state['userId'] 
-        API_URL = f"http://web-api:4000/api/club_members?studentId={student_id}"
+        student_id = st.session_state['studentId'] 
+        API_URL = f"http://web-api:4000/api/club_members"
         response = requests.get(API_URL)
         if response.status_code == 200:
             data = response.json()
