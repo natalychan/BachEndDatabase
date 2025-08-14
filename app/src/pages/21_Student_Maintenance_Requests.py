@@ -18,7 +18,7 @@ with st.form("submit_maintenance_request_form"):
     # Required fields
     address = st.text_input("Maintenace Location Address *")
     problemType = st.text_input("Briefly Describe Maintenance Issue *")
-    studentId = st.number_input("Student ID *")
+    studentId = st.number_input("Student ID *", step=1, min_value=1)
 
     # Form submission button
     submitted = st.form_submit_button("Submit Maintenance Request")
@@ -32,7 +32,7 @@ with st.form("submit_maintenance_request_form"):
             maintenance_req_data = {
                 "Address": address,
                 "Problem Type": problemType,
-                "Student ID": int(studentId),
+                "Student ID": studentId,
             }
 
             try:

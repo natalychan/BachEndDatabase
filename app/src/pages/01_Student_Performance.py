@@ -18,9 +18,14 @@ st.header('Student Performance Data')
 # You can access the session state to make a more customized/personalized app experience
 st.write(f"### Hi, {st.session_state['first_name']}.")
 
+# making the histogram to see the distribution of average GPA by college
+st.subheader("Distribution of College Average GPA")
+st.write("This histogram shows the distribution of average GPAs across different colleges. " \
+"Each bar represents the number of colleges that fall within a specific average GPA range. " \
+"The dashed line indicates the overall mean GPA across all colleges.")
+
 # the with statment shows the code for this block above it 
 with st.echo(code_location='above'):
-    # making the histogram to see the distribution of average GPA by college
     try:
         response = requests.get('http://web-api:4000/api/colleges/averages/gpa')
         if response.status_code == 200:
@@ -75,6 +80,11 @@ with st.echo(code_location='above'):
 
 
 # making the box plot to see the distribution of student GPAs by college
+st.subheader("Distribution of Student GPAs by College")
+st.write("This box plot illustrates the distribution of individual student GPAs within each college. " \
+"Each box represents the IQR of GPAs for students in that college, along with the median GPA. " \
+"The whiskers extend to 1.5 times the IQR, and any points outside this range are considered outliers.")
+
 with st.echo(code_location='above'):
     try:
         response = requests.get('http://web-api:4000/api/students/gpas')
@@ -137,45 +147,3 @@ with st.echo(code_location='above'):
         st.error(f"Error connecting to API: {str(e)}")
     except Exception as e:
         st.error(f"Error creating box plot: {str(e)}")
-
-
-
-
-
-# making the histogram to see the distribution of student GPAs
-with st.echo(code_location='above'):
-    try:
-        API_URL = "http://web-api:4000/api/students/gpas"
-        response = requests.get(API_URL)
-        if response.status_code == 200:
-            data = response.json()
-
-            # extract GPA values
-            gpa_values = [row['gpa'] for row in data]
-            
-            # histogram!
-            fig, ax = plt.subplots()
-            ax.hist(gpa_values, bins=10, color="#ffae00ff", edgecolor="#e09900ff", alpha=1)
-            
-            # titles, labels, grid
-            ax.set_xlabel('Student GPA')
-            ax.set_ylabel('Number of Students')
-            ax.set_title('Distribution of Student GPAs')
-            ax.grid(True, alpha=0.3)
-            plt.xticks(rotation=45)
-            ax.set_xticks([0, 1, 2, 3, 4])
-            figsize = (20, 10)
-
-            st.pyplot(fig)
-            
-        else:
-            st.error(f"Failed to fetch data: HTTP {response.status_code}")
-            
-    except requests.exceptions.RequestException as e:
-        st.error(f"Error connecting to API: {str(e)}")
-        
-    except Exception as e:
-        st.error(f"Error creating histogram: {str(e)}")
-
-
-

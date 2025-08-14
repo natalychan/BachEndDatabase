@@ -15,9 +15,10 @@ st.header('Student Clubs and Organizations')
 # You can access the session state to make a more customized/personalized app experience
 st.write(f"### Hi, {st.session_state['first_name']}.")
 
-API_URL = "http://web-api:4000/clubs_api/clubs"
+
 with st.echo(code_location='above'):
     try:
+        API_URL = "http://web-api:4000/api/clubs"
         response = requests.get(API_URL)
         if response.status_code == 200:
             data = response.json()
