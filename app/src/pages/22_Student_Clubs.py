@@ -44,7 +44,7 @@ with right_col:
         st.write(f"### Student ID: {student_id}")
         
         if student_id:
-            API_URL = f"http://web-api:4000/api/club_members/{student_Id}"
+            API_URL = f"http://web-api:4000/api/club_members/{student_id}"
             response = requests.get(API_URL)
             if response.status_code == 200:
                 data = response.json()
