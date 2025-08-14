@@ -18,7 +18,7 @@ st.write(f"### Hi, {st.session_state['first_name']}.")
 # Helper to fetch and display a pie chart
 def create_pie_chart(api_url, category_col, title, color_seq=None):
     try:
-        response = requests.get(api_url)
+        response = requests.get('http://web-api:4000/api//metrics/demographics')
         if response.status_code == 200:
             data = response.json()
             df = pd.DataFrame(data)
