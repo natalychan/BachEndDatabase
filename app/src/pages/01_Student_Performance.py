@@ -30,7 +30,7 @@ with st.echo(code_location='above'):
             df = pd.DataFrame(data)
             
             # extract the average GPA
-            gpa_values = df['average_gpa'].tolist()
+            gpa_values = float(df['average_gpa']).tolist()
             college_names = df['college'].tolist()
             
             # histogram!
@@ -138,7 +138,7 @@ with st.echo(code_location='above'):
             
             # histogram!
             fig, ax = plt.subplots()
-            ax.hist(gpa_values, bins=16, color="#ffae00ff", edgecolor="#e09900ff", alpha=1)
+            ax.hist(gpa_values, bins=10, color="#ffae00ff", edgecolor="#e09900ff", alpha=1)
             
             # titles, labels, grid
             ax.set_xlabel('Student GPA')
