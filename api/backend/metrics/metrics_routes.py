@@ -59,11 +59,10 @@ def demographics_overall():
 
         SELECT 'incomeBracket' AS type,
                CASE 
-                   WHEN income < 50000 THEN '<$50k'
-                   WHEN income BETWEEN 50000 AND 100000 THEN '$50k–$100k'
-                   WHEN income BETWEEN 100000 AND 150000 THEN '$100k-$150k'
-                   WHEN income BETWEEN 150000 AND 200000 THEN '$150k–$200k'
-                   ELSE '$200k+'
+                   WHEN income < 25000 THEN '<$25k'
+                   WHEN income BETWEEN 25000 AND 49999 THEN '$25k–$50k'
+                   WHEN income BETWEEN 50000 AND 74999 THEN '$50k–$75k'
+                   ELSE '$75k+'
                END AS category,
                COUNT(*) AS num_students,
                ROUND(100 * COUNT(*) / SUM(COUNT(*)) OVER (), 2) AS percentage
