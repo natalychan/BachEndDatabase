@@ -1,8 +1,3 @@
-########################################################
-# Sample customers blueprint of endpoints
-# Remove this file if you are not using it in your project
-########################################################
-
 from flask import Blueprint
 from flask import request
 from flask import jsonify
@@ -19,38 +14,19 @@ classrooms_api = Blueprint('classrooms_api', __name__)
 # GET /api/classrooms
 # Purpose: List all classrooms that were not maintained in the last 2 months
 @classrooms_api.route('/classrooms', methods=['GET'])
-def get_students():
+def list_classrooms():  # Fixed function name
     query = '''
         SELECT lastMaintained, roomNumber
         FROM classrooms
-        WHERE lastMaintained >= DATE_SUB(NOW(), INTERVAL 2 MONTH)
-        ORDER BY lastMaintained;      
+        WHERE lastMaintained < DATE_SUB(NOW(), INTERVAL 2 MONTH)
+        ORDER BY lastMaintained;     
     '''
-    # logging the query for debugging purposes.  
-    # The output will appear in the Docker logs output
-    # This line has nothing to do with actually executing the query...
-    # It is only for debugging purposes. 
     current_app.logger.info(f'GET /classrooms query={query}')
-
-    # get a cursor object from the database
     cursor = db.get_db().cursor()
-
-    # use cursor to query the database for a list of products
     cursor.execute(query)
-
-    # fetch all the data from the cursor
-    # The cursor will return the data as a 
-    # Python Dictionary
     theData = cursor.fetchall()
-
-    # Another example of logging for debugging purposes.
-    # You can see if the data you're getting back is what you expect. 
-    current_app.logger.info(f'GET /classrooms/<roomNumber> Result of query = {theData}')
-
-    # Create a HTTP Response object and add results of the query to it
-    # after "jasonify"-ing it.
+    current_app.logger.info(f'GET /classrooms Result of query = {theData}')  # Fixed logging
     response = make_response(jsonify(theData))
-    # set the proper HTTP Status code of 200 (meaning all good)
     response.status_code = 200
-    # send the response back to the client
     return response
+
