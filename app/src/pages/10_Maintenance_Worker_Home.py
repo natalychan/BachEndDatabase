@@ -36,7 +36,7 @@ if st.button('View Work Hours',
              use_container_width=True):
   st.switch_page('pages/14_Work_Hours.py')
 
-if st.button("System Admin Privileges",
+if st.button("System Admin Page",
              type='primary',
              use_container_width=True):
   st.switch_page('pages/15_System_Admin.py')
