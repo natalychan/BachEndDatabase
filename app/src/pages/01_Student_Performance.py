@@ -28,11 +28,12 @@ with st.echo(code_location='above'):
 
              # convert to pandas dataframe
             df = pd.DataFrame(data)
-            
+            df['average_gpa'] = pd.to_numeric(df['average_gpa'])
+
             # extract the average GPA
             gpa_values = []
             for gpa in df['average_gpa']:
-                gpa_values.append(float(str(gpa).strip()))
+                gpa_values.append((gpa).strip())
             
             college_names = df['college'].tolist()
             
@@ -95,7 +96,7 @@ with st.echo(code_location='above'):
                 gpa_by_college.append(college_gpas)
             
             # create box plot
-            bp = ax.boxplot(gpa_by_college, labels=colleges, patch_artist=True)
+            boxplot = ax.boxplot(gpa_by_college, labels=colleges, patch_artist=True)
             
             # labels, title, grid
             ax.set_xlabel('College')
@@ -106,8 +107,12 @@ with st.echo(code_location='above'):
             # rotate x-axis labels if needed
             plt.xticks(rotation=45, ha='right')
             
-            # color!
+            # colors!
+            cmap = plt.cm.inferno
+            colors = [cmap(i/len(colleges)) for i in range(len(colleges))] # gets list of colors
 
+            for i in range(len(boxplot['boxes'])):
+                boxplot['boxes'][i].set_facecolor(colors[i])
             
             # adjust layout to prevent label cutoff
             plt.tight_layout()
@@ -150,7 +155,7 @@ with st.echo(code_location='above'):
             
             # histogram!
             fig, ax = plt.subplots()
-            ax.hist(gpa_values, bins=10, color="#ffae00ff", edgecolor="#e09900ff", alpha=1)
+            ax.hist(gpa_values, bins=8, color="#ffae00ff", edgecolor="#e09900ff", alpha=1)
             
             # titles, labels, grid
             ax.set_xlabel('Student GPA')
