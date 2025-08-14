@@ -4,9 +4,7 @@ insert into club_members (studentId, clubName, role) values
 (150, 'chamber ensemble', 'member'),
 (151, 'jazz club', 'member'),
 (152, 'rock band', 'member'),
-(153, 'vocal ensemble', 'member');
-
-/*
+(153, 'vocal ensemble', 'member'),
 (154, 'piano society', 'member'),
 (155, 'strings club', 'member'),
 (156, 'wind instruments guild', 'member'),
@@ -42,4 +40,4 @@ insert into club_members (studentId, clubName, role) values
 (166, 'harmonica guild', 'member'),
 (167, 'electric violin club', 'member'),
 (168, 'voice masterclass', 'member'),
-(169, 'music production lab', 'member');*/
+(169, 'music production lab', 'member');

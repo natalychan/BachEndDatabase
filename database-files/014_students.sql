@@ -4,9 +4,7 @@ insert into students (userId, gpa, year, housingStatus, race, income, origin, co
 (150, 3.85, 3, 'on-campus', 'Black', 45000, 'in-state', 'College of Composition', 75),
 (151, 3.60, 2, 'off-campus', 'Asian', 38000, 'out-of-state', 'College of Jazz', 76),
 (152, 3.95, 4, 'on-campus', 'Asian', 50000, 'in-state', 'College of Production', 77),
-(153, 2.80, 1, 'off-campus', 'White', 27000, 'in-state', 'College of Vocal Arts', 78);
-
-/*
+(153, 2.80, 1, 'off-campus', 'White', 27000, 'in-state', 'College of Vocal Arts', 78),
 (154, 3.20, 2, 'on-campus', 'Asian', 42000, 'in-state', 'College of Piano', 79),
 (155, 3.50, 3, 'off-campus', 'White', 39000, 'out-of-state', 'College of Strings', 80),
 (156, 3.75, 4, 'on-campus', 'Hispanic', 47000, 'in-state', 'College of Wind Instruments', 81),
@@ -55,4 +53,3 @@ insert into students (userId, gpa, year, housingStatus, race, income, origin, co
 (199, 3.65, 3, 'off-campus', 'White', 44000, 'in-state', 'College of Jazz', 124),
 (200, 3.30, 4, 'on-campus', 'Hispanic', 37000, 'in-state', 'College of Production', 125),
 (201, 3.85, 1, 'off-campus', 'Black', 46000, 'out-of-state', 'College of Vocal Arts', 126);
-*/
