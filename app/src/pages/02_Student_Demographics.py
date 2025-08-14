@@ -52,7 +52,7 @@ try:
             make_pie_chart(
                 df[df["type"] == "housingStatus"],
                 "Housing Status of Students",
-                color_seq=px.colors.qualitative.Pastel
+                color_seq=px.colors.sequential.Viridis
             )
 
             # Race/Ethnicity
@@ -60,9 +60,18 @@ try:
             make_pie_chart(
                 df[df["type"] == "race"],
                 "Race/Ethnicity of Students",
-                color_seq=px.colors.qualitative.Set3
+                color_seq=px.colors.sequential.Viridis
             )
 
+            # Socioeconomic Status (Income Brackets)
+            st.subheader("Socioeconomic Status")
+            st.write("Distribution of students across family income brackets.")
+
+            make_pie_chart(
+                df[df["type"] == "incomeBracket"],
+                "Family Income Brackets",
+                color_seq=px.colors.sequential.Viridis
+            )
     else:
         st.error(f"Failed to fetch data: HTTP {response.status_code}")
 

@@ -54,6 +54,21 @@ def demographics_overall():
                ROUND(100 * COUNT(*) / SUM(COUNT(*)) OVER (), 2) AS percentage
         FROM students
         GROUP BY race
+
+        UNION ALL
+
+        SELECT 'incomeBracket' AS type,
+               CASE 
+                   WHEN income < 50000 THEN '<$50k'
+                   WHEN income BETWEEN 50000 AND 100000 THEN '$50k–$100k'
+                   WHEN income BETWEEN 100000 AND 150000 THEN '$100k-$150k'
+                   WHEN income BETWEEN 150000 AND 200000 THEN '$150k–$200k'
+                   ELSE '$200k+'
+               END AS category,
+               COUNT(*) AS num_students,
+               ROUND(100 * COUNT(*) / SUM(COUNT(*)) OVER (), 2) AS percentage
+        FROM students
+        GROUP BY category
     '''
     current_app.logger.info("GET /metrics/demographics : overall demographics with percentages")
     cursor = db.get_db().cursor()
