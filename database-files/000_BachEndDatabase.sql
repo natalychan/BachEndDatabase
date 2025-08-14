@@ -148,7 +148,6 @@ CREATE TABLE students
    origin        VARCHAR(50) NOT NULL,
    college       VARCHAR(50) NOT NULL,
    advisor       INT         NOT NULL,
-   FOREIGN KEY userId REFERENCES users (userId),
    FOREIGN KEY (college) REFERENCES colleges (collegeName),
    FOREIGN KEY (advisor) REFERENCES advisors (userId)
 );

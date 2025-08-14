@@ -65,13 +65,13 @@ if st.button('Act as John, a Maintenance worker',
     st.session_state['first_name'] = 'John'
     st.switch_page('pages/10_Maintenance_Worker_Home.py')
 
-if st.button('Act as Octavius, a Student at the University', 
+if st.button('Act as Octavious, a Student at the University', 
             type = 'primary', 
             use_container_width=True):
     st.session_state['authenticated'] = True
     st.session_state['role'] = 'student'
     st.session_state['student_id'] = 1
-    st.session_state['first_name'] = 'Octavius'
+    st.session_state['first_name'] = 'Octavious'
     st.switch_page('pages/20_Student_Home.py')
 
 if st.button('Act as Yo, a Dean of the College of Composition at the University', 
