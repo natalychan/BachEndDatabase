@@ -53,7 +53,8 @@ def MaintenancePageNav():
     st.sidebar.page_link("pages/11_Maintenance_Requests.py", label="Maintenance Requests", icon="🔨")
     st.sidebar.page_link("pages/12_Tools.py", label="Tools", icon="🛠️")
     st.sidebar.page_link("pages/13_Classroom_Maintenance.py", label="Classroom Maintenance", icon="🏫")
-    st.sidebar.page_link("pages/14_System_Admin.py", label="System Admin", icon="🖥️")
+    st.sidebar.page_link("pages/14_Work_Hours.py", label="Work Hours", icon="⌛")
+    st.sidebar.page_link("pages/15_System_Admin.py", label="System Admin", icon="🖥️")
 
     
 ## ------------------------ Student ------------------------

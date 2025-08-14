@@ -31,7 +31,12 @@ if st.button('View Classroom Maintenance',
              use_container_width=True):
   st.switch_page('pages/13_Classroom_Maintenance.py')
 
+if st.button('View Work Hours', 
+             type='primary',
+             use_container_width=True):
+  st.switch_page('pages/14_Work_Hours.py')
+
 if st.button("System Admin Privileges",
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/14_System_Admin.py')
+  st.switch_page('pages/15_System_Admin.py')
