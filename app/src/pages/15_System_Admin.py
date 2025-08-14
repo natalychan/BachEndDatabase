@@ -109,6 +109,21 @@ try:
                 st.warning("No fields to update")
         else:
             st.warning("Please enter a user ID")
+    
+    # Delete student
+    st.subheader("Delete Student")
+    delete_user_id = st.number_input("User ID to Delete", min_value=1, step=1)
+    
+    if st.button("Delete Student"):
+        if delete_user_id:
+            delete_response = requests.delete(f"{API_URL}/{delete_user_id}")
+            if delete_response.status_code == 204:
+                st.success("Student deleted successfully")
+                st.rerun()
+            else:
+                st.error(f"Failed to delete student: HTTP {delete_response.status_code}")
+        else:
+            st.warning("Please enter a user ID")
 
 except Exception as e:
     st.error(f"Error: {str(e)}")

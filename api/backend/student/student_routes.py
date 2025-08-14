@@ -160,3 +160,17 @@ def update_student(userId):
     response = make_response(jsonify({'updated': 1}))
     response.status_code = 200
     return response
+
+# ------------------------------------------------------------
+# DELETE /api/students/<int:userId>
+# Purpose: Delete a student
+@students_api.route('/students/<int:userId>', methods=['DELETE'])
+def delete_student(userId):
+    query = "DELETE FROM students WHERE userId = %s"
+    current_app.logger.info("DELETE /students/%s", userId)
+    cursor = db.get_db().cursor()
+    cursor.execute(query, (userId,))
+    db.get_db().commit()
+    response = make_response(jsonify({}))
+    response.status_code = 204
+    return response
