@@ -33,7 +33,7 @@ if st.button('🎷 Rent Instrument',
 if st.button('🏫 Make Classroom Booking', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/02_Map_Demo.py')  
+  st.switch_page('pages/25_Student_Room_Booking.py')  
 
 #page shows advisor meetings
 if st.button('🧑‍🏫 View Advisor Meetings', 
