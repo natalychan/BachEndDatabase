@@ -45,7 +45,6 @@ with st.echo(code_location='above'):
     except requests.exceptions.RequestException as e:
         st.error(f"Error connecting to API: {str(e)}")
         st.info("Please ensure the API server is running on http://web-api:4000")
-    except Exception as e:
-        st.error(f"Error creating histogram: {str(e)}")
+
 
         
