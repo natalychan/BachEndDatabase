@@ -16,7 +16,9 @@ from backend.instruments.instruments_routes import instruments_api
 from backend.rentals.rental_routes import rentals_api
 from backend.reservations.reservations_routes import reserves_api
 from backend.maintenance_request.maintenance_request_routes import maintenance_api
+from backend.tools.tools_routes import tools_api
 from backend.school_rankings.school_rankings_routes import rankings_api
+
 
 def wait_for_db():
     host = os.getenv('DB_HOST', 'db').strip()
@@ -62,7 +64,7 @@ def create_app():
     db.init_app(app)
 
     # Register routes
-    app.register_blueprint(advisors_api,        url_prefix='/api')
+    app.register_blueprint(advisors_api,       url_prefix='/api')
     app.register_blueprint(alumni_api,         url_prefix='/api')
     app.register_blueprint(classrooms_api,     url_prefix='/api')
     app.register_blueprint(metrics_api,        url_prefix='/api')
@@ -73,6 +75,7 @@ def create_app():
     app.register_blueprint(rentals_api,        url_prefix='/api')
     app.register_blueprint(reserves_api,       url_prefix='/api')
     app.register_blueprint(maintenance_api,    url_prefix='/api')
+    app.register_blueprint(tools_api,          url_prefix='/api')
     app.register_blueprint(rankings_api,       url_prefix='/api')
 
     return app
