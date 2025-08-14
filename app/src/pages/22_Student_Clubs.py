@@ -38,11 +38,11 @@ with main_col:
         st.error(f"Error displaying clubs: {str(e)}")
 
 with right_col:
+    st.subheader("Current Membership")
+    if "student_id" not in st.session_state:
+        st.session_state["student_id"] = 1
+    student_id = st.session_state.get('student_id') 
     try:
-        st.subheader("Current Membership")
-        student_id = st.session_state.get('student_id') 
-        st.write(f"### Student ID: {student_id}")
-        
         if student_id:
             API_URL = f"http://web-api:4000/api/club_members/{student_id}"
             response = requests.get(API_URL)

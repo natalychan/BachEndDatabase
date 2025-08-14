@@ -16,7 +16,8 @@ def club_mems(studentId):
     cursor = db.get_db().cursor()
     cursor.execute(query, (studentId,))
     theData = cursor.fetchall()
+    theDataDict = [{"Club Name": row[0]} for row in theData]
     current_app.logger.info("GET /club_members/%s : rows=%d", studentId, len(theData))
-    response = make_response(jsonify(theData[0] if theData else {}))
+    response = make_response(jsonify(theDataDict))
     response.status_code = 200
     return response
