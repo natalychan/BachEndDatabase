@@ -14,7 +14,7 @@ st.header('Student Clubs and Organizations')
 
 # You can access the session state to make a more customized/personalized app experience
 st.write(f"### Hi, {st.session_state['first_name']}.")
-o
+
 
 with st.echo(code_location='above'):
     try:
