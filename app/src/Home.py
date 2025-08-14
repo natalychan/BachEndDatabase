@@ -34,9 +34,9 @@ SideBarLinks(show_home=True)
 
 # set the title of the page and provide a simple prompt. 
 logger.info("Loading the Home page of the app")
-st.title('CS 3200 Sample Semester Project App')
+st.title('Join University Hub')
 st.write('\n\n')
-st.write('### HI! As which user would you like to log in?')
+st.write('### Hi! As which user would you like to log in?')
 
 # For each of the user personas for which we are implementing
 # functionality, we put a button on the screen that the user 
@@ -57,7 +57,7 @@ if st.button("Act as Lim Jucchese, the President of the University",
     logger.info("Logging in as President Persona")
     st.switch_page('pages/00_President_Home.py')
 
-if st.button('Act as John, a Maintenance worker', 
+if st.button('Act as John Doe, a maintenance worker', 
             type = 'primary', 
             use_container_width=True):
     st.session_state['authenticated'] = True
@@ -65,7 +65,7 @@ if st.button('Act as John, a Maintenance worker',
     st.session_state['first_name'] = 'John'
     st.switch_page('pages/10_Maintenance_Worker_Home.py')
 
-if st.button('Act as Octavious, a Student at the University', 
+if st.button('Act as Octavious Treble, a student at the university', 
             type = 'primary', 
             use_container_width=True):
     st.session_state['authenticated'] = True
@@ -74,7 +74,7 @@ if st.button('Act as Octavious, a Student at the University',
     st.session_state['first_name'] = 'Octavious'
     st.switch_page('pages/20_Student_Home.py')
 
-if st.button('Act as Yo, a Dean of the College of Composition at the University', 
+if st.button('Act as Yo Dean, dean of the College of Composition at the university', 
             type = 'primary', 
             use_container_width=True):
     st.session_state['authenticated'] = True
