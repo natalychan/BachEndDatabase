@@ -78,3 +78,85 @@ def student_advisor(studentId):
     response = make_response(jsonify(theData[0] if theData else {'advisor_email': None}))
     response.status_code = 200
     return response
+
+# ------------------------------------------------------------
+# GET /api/students
+# Purpose: List all students (with options to filter by college or year)
+@students_api.route('/students', methods=['GET'])
+def list_students():
+    # Get query parameters
+    college = request.args.get('college')
+    year = request.args.get('year')
+    # Base query
+    query = "SELECT * FROM students JOIN users ON students.userId = users.userId"
+    params = []
+    # Add WHERE conditions if filters are provided
+    conditions = []
+    if college:
+        conditions.append("students.college = %s")
+        params.append(college)
+    if year:
+        conditions.append("students.year = %s") 
+        params.append(year)
+    # Add WHERE clause if we have any conditions
+    if conditions:
+        query += " WHERE " + " AND ".join(conditions)
+    
+    current_app.logger.info("GET /students : listing students")
+    cursor = db.get_db().cursor()
+    cursor.execute(query, tuple(params))
+    theData = cursor.fetchall()
+    current_app.logger.info("GET /students : rows=%d", len(theData))
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+
+# ------------------------------------------------------------
+# POST /api/students
+# Purpose: Create a student
+@students_api.route('/students', methods=['POST'])
+def create_student():
+    payload = request.get_json(force=True, silent=True) or {}
+    query = '''
+        INSERT INTO students (userId, year, housingStatus, race, income, origin, college, advisor)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+    '''
+    current_app.logger.info("POST /students : payload=%s", payload)
+    cursor = db.get_db().cursor()
+    cursor.execute(query, (payload.get('userId'),
+                           payload.get('year'),
+                           payload.get('housingStatus'),
+                           payload.get('race'),
+                           payload.get('income'),
+                           payload.get('origin'),
+                           payload.get('college'),
+                           payload.get('advisor')))
+    db.get_db().commit()
+    response = make_response(jsonify({'created': True}))
+    response.status_code = 201
+    return response
+
+# ------------------------------------------------------------
+# PATCH /api/students/<int:userId>
+# Purpose: Update fields of a student
+@students_api.route('/students/<int:userId>', methods=['PATCH'])
+def update_student(userId): 
+    payload = request.get_json(force=True, silent=True) or {}
+    fields, params = [], []
+    for k in ('year', 'housingStatus', 'race', 'income', 'origin', 'college', 'advisor'):
+        if k in payload:
+            fields.append(f"{k} = %s")
+            params.append(payload[k])
+    current_app.logger.info("PATCH /students/%s : fields=%s", userId, fields) 
+    if not fields:
+        response = make_response(jsonify({'updated': 0}))
+        response.status_code = 200
+        return response
+    query = "UPDATE students SET " + ", ".join(fields) + " WHERE userId = %s"
+    params.append(userId) 
+    cursor = db.get_db().cursor()
+    cursor.execute(query, tuple(params))
+    db.get_db().commit()
+    response = make_response(jsonify({'updated': 1}))
+    response.status_code = 200
+    return response
