@@ -21,7 +21,7 @@ with st.echo(code_location='above'):
         student_id = st.session_state.get('student_id') 
 
         if student_id:
-            API_URL = f"http://web-api:4000/students_api/{student_id}/schedule" 
+            API_URL = f"http://web-api:4000/students/{student_id}/schedule" 
             #f strings when you need to replace
 
             response = requests.get(API_URL)
