@@ -35,7 +35,7 @@ with st.echo(code_location='above'):
             with right_col:
                 st.subheader("My Clubs")
                 try:
-                    student_id = st.session_state['student_id']  # must be set at login
+                    student_id = st.session_state['userId'] 
                     API_URL = f"http://web-api:4000/api/club_members"
                     
                     response = requests.get(API_URL)
