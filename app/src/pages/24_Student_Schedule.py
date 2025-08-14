@@ -18,8 +18,16 @@ st.write(f"### Hi, {st.session_state['first_name']}.")
 # get the student's courses
 with st.echo(code_location='above'):
     try:
-        API_URL = "http://web-api:4000/students_api/<int:studentId>/schedule"
-        response = requests.get(API_URL)
+        student_id = st.session_state.get('student_id')  # or however you store the student ID
+
+        if student_id:
+            API_URL = f"http://web-api:4000/students_api/{student_id}/schedule" 
+            #f strings when you need to replace
+
+            response = requests.get(API_URL)
+            
+        else:
+            st.error("Student ID not found in session")
         if response.status_code == 200:
             data = response.json()
             
