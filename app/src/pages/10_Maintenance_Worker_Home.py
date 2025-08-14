@@ -15,17 +15,21 @@ st.write('')
 st.write('')
 st.write('### What would you like to do today?')
 
+
 if st.button('Daily Maintenance Tasks', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/11_Maintenance_Worker_Home.py')
+  st.switch_page('pages/11_Maintenance_Worker_Home.py',
+  st.subheader('Daily Maintenance Tasks'))
 
 if st.button('Track Work Hours and Pay', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/12_Hours_Wage_Pay.py')
+  st.switch_page('pages/12_Hours_Wage_Pay.py',
+  st.subheader('Track Work Hours and Pay'))
 
 if st.button("System Admin Privileges",
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/13_System_Admin_Privileges.py')
+  st.switch_page('pages/13_System_Admin_Privileges.py',
+  st.subheader('System Admin Privileges'))
