@@ -2,7 +2,9 @@ USE bachEndDatabase;
 
 insert into alumni (studentId, hasJob) values
 (150, TRUE),
-(152, TRUE),
+(152, TRUE);
+
+/*
 (155, FALSE),
 (158, TRUE),
 (160, TRUE),
@@ -21,3 +23,4 @@ insert into alumni (studentId, hasJob) values
 (192, TRUE),
 (195, FALSE),
 (197, TRUE);
+*/
