@@ -39,7 +39,7 @@ with main_col:
 
 with right_col:
     try:
-        student_id = st.session_state['userId'] 
+        student_id = st.session_state['studentId'] 
         API_URL = f"http://web-api:4000/api/club_members"
                     
         response = requests.get(API_URL)
