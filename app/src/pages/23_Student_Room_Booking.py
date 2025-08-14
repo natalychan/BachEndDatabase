@@ -15,8 +15,8 @@ st.write(f"### Hi, {st.session_state['first_name']}.")
 
 
 try:
-    API_URL = f"http://web-api:4000/api/classrooms"
-    response = requests.get(API_URL)
+    API_URL_viewing = "http://web-api:4000/api/classrooms"
+    response = requests.get(API_URL_viewing)
 
     if response.status_code == 200:
         data = response.json()
