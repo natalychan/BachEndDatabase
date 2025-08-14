@@ -41,7 +41,7 @@ with right_col:
     try:
         if "studentId" not in st.session_state:
             st.session_state["studentId"] = 1
-        student_id = st.session_state.get('studentId')
+        studentId = st.session_state.get('studentId')
         st.subheader("Current Membership")
         API_URL = f"http://web-api:4000/api/club_members?studentId={studentId}"
         response = requests.get(API_URL)
