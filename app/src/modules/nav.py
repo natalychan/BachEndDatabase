@@ -82,7 +82,6 @@ def StudentMaintenanceRequestNav():
         "pages/21_Student_Maintenance_Requests.py", label="Maintenance Requests", icon="🔨"
     ) 
 
-
 def ClubNav():
     st.sidebar.page_link(
         "pages/22_Student_Clubs.py", label="Clubs", icon="🎉"
@@ -147,6 +146,7 @@ def SideBarLinks(show_home=False):
             StudentHomeNav()
             StudentScheduleNav()
             InstrumentNav()
+            ClassroomBookingNav()
             StudentMaintenanceRequestNav()
             ClubNav()
 
