@@ -39,9 +39,11 @@ with main_col:
 
 with right_col:
     try:
+        if "studentId" not in st.session_state:
+            st.session_state["studentId"] = 1
+        studentId = st.session_state.get('studentId')
         st.subheader("Current Membership")
-        student_id = st.session_state['studentId'] 
-        API_URL = f"http://web-api:4000/api/club_members"
+        API_URL = f"http://web-api:4000/api/club_members?studentId={studentId}"
         response = requests.get(API_URL)
         if response.status_code == 200:
             data = response.json()
