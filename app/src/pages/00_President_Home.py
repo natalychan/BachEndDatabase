@@ -24,6 +24,6 @@ if st.button('View Student Performance Data Visualization',
 if st.button('View Demographic Data Visualization', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/01_World_Bank_Viz.py')
+  st.switch_page('pages/02_Student_Demographics.py')
 
 
