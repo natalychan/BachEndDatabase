@@ -10,10 +10,10 @@ import requests
 SideBarLinks()
 
 # set the header of the page
-st.header('Maintenance Tasks')
+st.header('Tools')
 
 # You can access the session state to make a more customized/personalized app experience
-st.write(f"### Hi, {st.session_state['first_name']}.")
+st.write(f"### Hi, {st.session_state['first_name']}, here's your tools inventory.")
 
 
 try:
