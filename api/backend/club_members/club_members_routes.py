@@ -1,13 +1,13 @@
 # GET /api/students/<student_id>/clubs
 @clubs_api.route('/club_members', methods=['GET'])
-def club_mems(student_id):
+def club_mems(userId):
     query = """
         SELECT cm.clubName AS club_name
         FROM club_members cm
-        WHERE cm.studentId = %s
+        WHERE cm.userId = %s
     """
     cursor = db.get_db().cursor()
-    cursor.execute(query, (student_id,))
+    cursor.execute(query, (userId,))
     theData = cursor.fetchall()
     
     # Convert tuples to dicts
