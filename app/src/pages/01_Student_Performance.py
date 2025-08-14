@@ -52,7 +52,7 @@ with st.echo(code_location='above'):
             
             # mean
             mean_gpa = df['average_gpa'].mean()
-            ax.axvline(mean_gpa, color='red', linestyle='--', 
+            ax.axvline(mean_gpa, color="#4a3c5aff", linestyle='--', 
                       label=f'Overall Mean: {mean_gpa:.2f}')
             ax.legend()
             
@@ -162,6 +162,8 @@ with st.echo(code_location='above'):
             ax.set_ylabel('Number of Students')
             ax.set_title('Distribution of Student GPAs')
             ax.grid(True, alpha=0.3)
+            plt.xticks(rotation=45)
+            ax.set_xticks([3.0, 3.2, 3.4, 3.6, 3.8, 4.0])
             figsize = (20, 10)
 
             st.pyplot(fig)
