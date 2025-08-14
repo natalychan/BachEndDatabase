@@ -3,6 +3,9 @@ import requests
 from streamlit_extras.app_logo import add_logo
 from modules.nav import SideBarLinks
 from datetime import datetime
+import pandas as pd
+import logging
+logger = logging.getLogger(__name__)
 
 # Show appropriate sidebar links for the role of the currently logged in user
 SideBarLinks()
