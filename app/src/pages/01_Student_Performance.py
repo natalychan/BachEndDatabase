@@ -135,7 +135,14 @@ with st.echo(code_location='above'):
             st.subheader("Summary Statistics by College")
             summary_stats = df.groupby('college')['gpa'].agg([
                 'count', 'mean', 'median', 'std', 'min', 'max'
-            ]).round(3)
+            ]).round(3).rename(columns={
+            'count': 'Students',
+            'mean': 'Average GPA',
+            'median': 'Median GPA',
+            'std': 'Std Dev',
+            'min': 'Lowest GPA',
+            'max': 'Highest GPA'
+})
             st.dataframe(summary_stats)
             
             # show data
