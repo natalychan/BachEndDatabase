@@ -10,7 +10,7 @@ import requests
 SideBarLinks()
 
 # set the header of the page
-st.header('Track Work Hours and Pay')
+st.header('Maintenance Tasks')
 
 # You can access the session state to make a more customized/personalized app experience
 st.write(f"### Hi, {st.session_state['first_name']}.")

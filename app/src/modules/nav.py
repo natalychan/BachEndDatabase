@@ -49,10 +49,11 @@ def DeanAlumniNav():
 
 #### ------------------------ System Admin Role (maintenance) ------------------------
 def MaintenancePageNav():
-    st.sidebar.page_link("pages/10_Maintenance_Worker_Home.py", label="System Admin", icon="🖥️")
-    st.sidebar.page_link(
-        "pages/21_ML_Model_Mgmt.py", label="ML Model Management", icon="🏢"
-    )
+    st.sidebar.page_link("pages/10_Maintenance_Worker_Home.py", label="Maintenance Home", icon="👤")
+    st.sidebar.page_link("pages/11_Maintenance_Requests.py", label="Maintenance Requests", icon="🔨")
+    st.sidebar.page_link("pages/12_Tools.py", label="Tools", icon="🛠️")
+    st.sidebar.page_link("pages/13_Classroom_Maintenance.py", label="Classroom Maintenance", icon="🏫")
+    st.sidebar.page_link("pages/14_System_Admin", label="System Amdin", icon="🖥️")
 
     
 ## ------------------------ Student ------------------------
