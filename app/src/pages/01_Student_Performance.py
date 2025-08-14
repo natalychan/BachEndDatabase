@@ -33,7 +33,7 @@ with st.echo(code_location='above'):
             # extract the average GPA
             gpa_values = []
             for gpa in df['average_gpa']:
-                gpa_values.append((gpa).strip())
+                gpa_values.append(gpa)
             
             college_names = df['college'].tolist()
             
@@ -162,6 +162,7 @@ with st.echo(code_location='above'):
             ax.set_ylabel('Number of Students')
             ax.set_title('Distribution of Student GPAs')
             ax.grid(True, alpha=0.3)
+            ax.set_xticks([3.0, 3.2, 3.4, 3.6, 3.8, 4.0]) 
             figsize = (10, 6)
 
             st.pyplot(fig)
