@@ -49,6 +49,20 @@ with st.echo(code_location='above'):
             # bins
             n_bins = min(len(gpa_values), 16)  # to adjust bins based on data size
             counts, bins, patches = ax.hist(gpa_values, bins=n_bins, color="#80659eff", edgecolor='black', alpha=0.7)
+                        # labels, title, grid
+            ax.set_xlabel('Average GPA')
+            ax.set_ylabel('Number of Colleges')
+            ax.set_title('Distribution of College Average GPA')
+            ax.grid(True, alpha=0.3)
+            
+            # mean
+            mean_gpa = df['average_gpa'].mean()
+            ax.axvline(mean_gpa, color="#4a3c5aff", linestyle='--', 
+                      label=f'Overall Mean: {mean_gpa:.2f}')
+            ax.legend()
+            
+            st.pyplot(fig)
+            
             
         else:
             st.error(f"Failed to fetch data: HTTP {response.status_code}")
