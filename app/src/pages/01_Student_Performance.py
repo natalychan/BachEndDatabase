@@ -26,8 +26,19 @@ with st.echo(code_location='above'):
         if response.status_code == 200:
             data = response.json()
             
-            # convert to pandas dataframe
+            st.write("Raw data from API:", data)
+            st.write("Type of data:", type(data))
+            st.write("Number of items:", len(data))
+            if data:
+                st.write("First item:", data[0])
+                st.write("Type of first item:", type(data[0]))
+        
+             # convert to pandas dataframe
             df = pd.DataFrame(data)
+            st.write("DataFrame shape:", df.shape)
+            st.write("DataFrame columns:", df.columns.tolist())
+            st.write("First few rows:")
+            st.dataframe(df.head())
             
             # extract the average GPA
             gpa_values = pd.to_numeric(df['average_gpa']).tolist()
@@ -66,13 +77,17 @@ with st.echo(code_location='above'):
     except Exception as e:
         st.error(f"Error creating histogram: {str(e)}")
 
+
+
+
+
 # making the box plot to see the distribution of student GPAs by college
 with st.echo(code_location='above'):
     try:
         response = requests.get('http://web-api:4000/api/students/gpas')
         if response.status_code == 200:
             data = response.json()
-            
+
             # convert to dataframe
             df = pd.DataFrame(data)
             
@@ -124,6 +139,10 @@ with st.echo(code_location='above'):
         st.error(f"Error connecting to API: {str(e)}")
     except Exception as e:
         st.error(f"Error creating box plot: {str(e)}")
+
+
+
+
 
 # making the histogram to see the distribution of student GPAs
 with st.echo(code_location='above'):

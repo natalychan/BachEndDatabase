@@ -12,7 +12,7 @@ def colleges_avg_gpa():
     query = '''
         SELECT college, ROUND(AVG(gpa), 2) AS average_gpa
         FROM students
-        GROUP BY college, year
+        GROUP BY college
         ORDER BY average_gpa DESC
     '''
     current_app.logger.info("GET /colleges/averages/gpa : computing avg GPA by college")

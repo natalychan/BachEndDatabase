@@ -23,7 +23,7 @@ def student_gpa(studentId):
 # Purpose: Fetch all students' GPAs for histogram for Lim
 @students_api.route('/students/gpas', methods=['GET'])
 def all_students_gpas():
-    query = "SELECT gpa FROM students WHERE gpa IS NOT NULL ORDER BY college"
+    query = "SELECT gpa, college FROM students WHERE gpa IS NOT NULL ORDER BY college"
     current_app.logger.info("GET /students/gpas")
     cursor = db.get_db().cursor()
     cursor.execute(query)
