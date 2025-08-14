@@ -26,26 +26,26 @@ with st.echo(code_location='above'):
 
             response = requests.get(API_URL)
             
-        else:
-            st.error("Student ID not found in session")
-        if response.status_code == 200:
-            data = response.json()
+            if response.status_code == 200:
+                data = response.json()
             
-            #convert to pandas dataframe
-            df = pd.DataFrame(data)
+                #convert to pandas dataframe
+                df = pd.DataFrame(data)
             
-            #display table
-            st.subheader("Student Schedule")
-            st.dataframe(df, use_container_width=True)
+                #display table
+                st.subheader("Student Schedule")
+                st.dataframe(df, use_container_width=True)
             
-            #shows the total number of clubs
-            st.info(f"Class Schedule: {len(df)}")
+                #shows the total number of clubs
+                st.info(f"Class Schedule: {len(df)}")
             
-        else:
-            st.error(f"Failed to fetch data: HTTP {response.status_code}")
+            else:
+                st.error(f"Failed to fetch data: HTTP {response.status_code}")
             
     except requests.exceptions.RequestException as e:
         st.error(f"Error connecting to API: {str(e)}")
         st.info("Please ensure the API server is running on http://web-api:4000")
     except Exception as e:
         st.error(f"Error creating histogram: {str(e)}")
+
+        
