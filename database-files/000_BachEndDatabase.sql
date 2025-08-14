@@ -44,7 +44,7 @@ CREATE TABLE president
 DROP TABLE IF EXISTS school_rankings;
 CREATE TABLE school_rankings
 (
-   schoolName VARCHAR(30) NOT NULL,
+   schoolName VARCHAR(50) NOT NULL,
    ranking    INT UNIQUE  NOT NULL,
    primary key (schoolName)
 );
