@@ -19,6 +19,20 @@ def student_gpa(studentId):
     response.status_code = 200
     return response
 
+# GET /api/students/gpas
+# Purpose: Fetch all students' GPAs for histogram for Lim
+@students_api.route('/students/gpas', methods=['GET'])
+def all_students_gpas():
+    query = "SELECT gpa FROM students WHERE gpa IS NOT NULL"
+    current_app.logger.info("GET /students/gpas")
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    current_app.logger.info("GET /students/gpas : rows=%d", len(theData))
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+
 # ------------------------------------------------------------
 # GET /api/students/<studentId>/schedule
 # Purpose: Class schedule for a student (courses, time, room)
