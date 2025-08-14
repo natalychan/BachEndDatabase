@@ -20,4 +20,4 @@ insert into alumni (studentId, hasJob) values
 (190, TRUE),
 (192, TRUE),
 (195, FALSE),
-,(197, TRUE);
+(197, TRUE);
