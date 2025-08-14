@@ -150,7 +150,7 @@ insert into users (userId, firstName, lastName, emailAddress, dateOfBirth) value
 (147, 'Aurora', 'Fisher', 'aurora.fisher2@example.com', '1993-05-23'),
 (148, 'Gabriel', 'Knight', 'gabriel.knight2@example.com', '1986-10-12'),
 (149, 'Aria', 'Woods', 'aria.woods@example.com', '1991-02-04'),
-(150, 'Connor', 'Gray', 'connor.gray2@example.com', '1989-06-28');
+(150, 'Connor', 'Gray', 'connor.gray2@example.com', '1989-06-28'),
 (101, 'Evelyn', 'Bryant', 'evelyn.bryant@example.com', '1991-07-21'),
 (102, 'Hunter', 'Ferguson', 'hunter.ferguson@example.com', '1987-09-12'),
 (103, 'Zoe', 'Reed', 'zoe.reed2@example.com', '1992-02-05'),
@@ -200,4 +200,5 @@ insert into users (userId, firstName, lastName, emailAddress, dateOfBirth) value
 (147, 'Aurora', 'Fisher', 'aurora.fisher2@example.com', '1993-05-23'),
 (148, 'Gabriel', 'Knight', 'gabriel.knight2@example.com', '1986-10-12'),
 (149, 'Aria', 'Woods', 'aria.woods@example.com', '1991-02-04'),
-(150, 'Connor', 'Gray', 'connor.gray2@example.com', '1989-06-28');
+(150, 'Connor', 'Gray', 'connor.gray2@example.com', '1989-06-28')
+(151, 'Juri', 'Park', 'juri.is.not.happy@fml.com','2004-05-18');
