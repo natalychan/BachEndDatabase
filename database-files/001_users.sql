@@ -100,7 +100,7 @@ insert into users (userId, firstName, lastName, emailAddress, dateOfBirth) value
 (97, 'Scarlett', 'Foster', 'scarlett.foster2@example.com', '1991-08-04'),
 (98, 'Isaac', 'Woods', 'isaac.woods@example.com', '1989-10-28'),
 (99, 'Victoria', 'Grant', 'victoria.grant@example.com', '1992-01-09'),
-(100, 'Mia', 'Ellis', 'mia.ellis@example.com', '1993-04-15');
+(100, 'Mia', 'Ellis', 'mia.ellis@example.com', '1993-04-15'),
 (101, 'Evelyn', 'Bryant', 'evelyn.bryant@example.com', '1991-07-21'),
 (102, 'Hunter', 'Ferguson', 'hunter.ferguson@example.com', '1987-09-12'),
 (103, 'Zoe', 'Reed', 'zoe.reed2@example.com', '1992-02-05'),
