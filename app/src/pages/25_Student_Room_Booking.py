@@ -15,8 +15,8 @@ st.write(f"### Hi, {st.session_state['first_name']}.")
 
 
 try:
-    API_URL = f"http://web-api:4000/api/students/{student_id}/schedule"
-    response = requests.get(API_URL)
+    API_URL_viewing = "http://web-api:4000/api/classrooms"
+    response = requests.get(API_URL_viewing)
 
     if response.status_code == 200:
         data = response.json()
@@ -24,9 +24,9 @@ try:
             
         if data:
             df = pd.DataFrame(data)
-            st.subheader("Student Schedule")
+            st.subheader("Classroom Availability")
             st.dataframe(df, use_container_width=True)
-            st.info(f"Class Schedule: {len(df)}")
+            st.info(f"Total Available Classrooms: {len(df)}")
         else:
             st.warning("No courses found - API returned empty array")
     else:
@@ -42,23 +42,26 @@ except Exception as e:
 
 
 # Create a form for NGO details
-with st.form("instrument_rental_form"):
-    st.subheader("Instrument Rental")
+with st.form("Classroom Booking Form"):
+    st.subheader("Classroom Booking")
+
+    API_URL = "http://web-api:4000/api/reserves"
 
     # Required fields
     studentId = st.number_input("Student ID *", step=1, min_value=1, placeholder="Enter Student ID")
     instrumentId = st.number_input("Instrument ID *", step=1, min_value=1, placeholder="Enter Instrument ID")
-    startDate = st.date_input("Date of Rental *")
+    startTime = st.time_input("Reservation Start Time *")
+    endTime = st.time_input("Reservation End Time *")
 
     # Form submission button
-    submitted = st.form_submit_button("Submit Instrument Rental Request")
+    submitted = st.form_submit_button("Classroom Booking Request")
 
     if submitted:
         # Validate required fields
         if not all([startDate, instrumentId, studentId]):
             st.error("Please fill in all required fields marked with *")
-        elif studentId < 0: # Assuming studentId should be a positive integer
-            st.error("Student ID must be a positive integer")
+        elif startTime >= endTime:
+            st.error("Start time must be before end time")
         else:
             # Prepare the data for API
             rental_data = {
