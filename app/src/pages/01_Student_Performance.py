@@ -163,7 +163,7 @@ with st.echo(code_location='above'):
             ax.set_title('Distribution of Student GPAs')
             ax.grid(True, alpha=0.3)
             plt.xticks(rotation=45)
-            ax.set_xticks([3.0, 3.2, 3.4, 3.6, 3.8, 4.0])
+            ax.set_xticks([0, 1, 2, 3, 4])
             figsize = (20, 10)
 
             st.pyplot(fig)
