@@ -55,7 +55,7 @@ st.subheader("Geographic Origin")
 st.write("Proportion of students from in-state vs. out-of-state.")
 with st.echo(code_location='above'):
     create_pie_chart(
-        "http://web-api:4000/api//metrics/demographics",
+        "http://web-api:4000/api/metrics/demographics",
         category_col="origin",
         title="Geographic Origin of Students",
         color_seq=px.colors.sequential.Viridis
