@@ -151,4 +151,6 @@ insert into users (userId, firstName, lastName, emailAddress, dateOfBirth) value
 (148, 'Gabriel', 'Knight', 'gabriel.knight2@example.com', '1986-10-12'),
 (149, 'Aria', 'Woods', 'aria.woods@example.com', '1991-02-04'),
 (150, 'Connor', 'Gray', 'connor.gray2@example.com', '1989-06-28'),
-(151, 'Juri', 'Park', 'juri.is.not.happy@fml.com','2004-05-18');
+(151, 'Juri', 'Park', 'juri.is.not.happy@fml.com','2004-05-18'),
+(152, 'Dokja', 'Kim', 'rlaehrwk@kimcom.com', '2000-02-15'),
+(153, 'Mark', 'Fontenot','mfontenot@example.com', '1999-11-22');
