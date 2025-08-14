@@ -18,7 +18,7 @@ st.write(f"### Hi, {st.session_state['first_name']}.")
 # Helper to fetch and display a pie chart
 def create_pie_chart(api_url, category_col, title, color_seq=None):
     try:
-        response = requests.get('http://web-api:4000/api//metrics/demographics')
+        response = requests.get(api_url)
         if response.status_code == 200:
             data = response.json()
             df = pd.DataFrame(data)
@@ -55,7 +55,7 @@ st.subheader("Geographic Origin")
 st.write("Proportion of students from in-state vs. out-of-state.")
 with st.echo(code_location='above'):
     create_pie_chart(
-        "http://web-api:4000/api/students/geographic_origin",
+        "http://web-api:4000/api//metrics/demographics",
         category_col="origin",
         title="Geographic Origin of Students",
         color_seq=px.colors.sequential.Viridis
