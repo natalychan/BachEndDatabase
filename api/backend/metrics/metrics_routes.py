@@ -65,6 +65,27 @@ def demographics_overall():
     return response
 
 # ------------------------------------------------------------
+# GET /api/colleges/<CollegeName>/enrollment-trend
+# Purpose: Year-by-year enrollment counts for a college
+@metrics_api.route('/colleges/<string:collegeName>/enrollment-trend', methods=['GET'])
+def college_enrollment_trend(collegeName):
+    # by=year for now; easy to extend to term/semester later
+    query = '''
+        SELECT s.year AS period, COUNT(*) AS enrollment
+        FROM students s
+        WHERE s.college = %s
+        GROUP BY s.year
+        ORDER BY s.year
+    '''
+    current_app.logger.info("GET /colleges/%s/enrollment-trend", collegeName)
+    cursor = db.get_db().cursor()
+    cursor.execute(query, (collegeName,))
+    rows = cursor.fetchall()  # e.g., [{'period': 1, 'enrollment': 240}, ...]
+    response = make_response(jsonify(rows))
+    response.status_code = 200
+    return response
+
+# ------------------------------------------------------------
 # GET /api/colleges/<collegeName>/demographics
 # Purpose: Demographics (origin, housingStatus, race) within a single college with within-college percentages
 @metrics_api.route('/colleges/<string:collegeName>/demographics', methods=['GET'])
