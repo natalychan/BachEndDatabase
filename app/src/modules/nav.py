@@ -74,7 +74,7 @@ def InstrumentNav():
 
 def ClassroomBookingNav():
     st.sidebar.page_link(
-        "pages/25_Student_Classroom_Booking.py", label="Classroom Booking", icon="🏫"
+        "pages/25_Student_Room_Booking.py", label="Classroom Booking", icon="🏫"
     )
 
 def StudentMaintenanceRequestNav():
