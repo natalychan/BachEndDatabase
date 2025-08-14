@@ -2,10 +2,10 @@ from flask import Blueprint, jsonify, make_response, current_app
 from backend.db_connection import db
 
 # Blueprint for clubs listing
-clubs_api = Blueprint('clubs_api', __name__)
+club_members_api = Blueprint('club_members_api', __name__)
 
 # GET /api/students/<student_id>/clubs
-@clubs_api.route('/club_members', methods=['GET'])
+@club_members_api.route('/club_members', methods=['GET'])
 def club_mems(userId):
     query = """
         SELECT cm.clubName AS club_name
