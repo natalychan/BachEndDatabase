@@ -42,7 +42,18 @@ In VSCode, TERMINAL, type in
    4. `docker compose stop` to "turn off" the containers but not delete them.
    5. `docker compose restart` to restart all containers
 
-### Access the Application!
+### Access the Application
 Once the containers are running...
 
-In browser, put in "localhost:8501", press enter!
+In browser, put in "localhost:8501", press enter, and access the app!
+
+
+
+## Development
+This project uses:
+- Database: MYSQL
+- Backend API: Flask
+- Frontend: Streamlit
+- Containerization: Docker
+
+For more information about each part, refer to the README in individual sections.
