@@ -19,16 +19,38 @@ By integrating these perspectives into one platform, the Bach-End Database empow
 
 
 ## Set Up
-### Prerequisites
-(do something with the .env.template, set the password... Should user supposed to set up their own secret key?)
-(do user need to install python on their computer?)
 
-*Set up containers*
-In VSCode: in TERMINAL, type in 
-   1. docker compose up -d` to start all the containers in the background
+### Prerequisites
+- Docker and Docker Compose installed
+- Git
+- A code editor (VS Code recommended)
+
+### Installation
+1. Clone the repository from github
+2. Set up the env file
+   Under the api section, find .env.template file.
+   Fill in your secret key and password for the databse.
+   Change the file name to .env
+3. Start the docker containers: see following section for guide!
+
+### Docker Commands
+*Basic container setup/turn-down:*
+In VSCode, TERMINAL, type in 
+   1. `docker compose up -d` to start all the containers in the background
    2.  `docker compose down` to shutdown and delete the containers
    3.  `docker compose up db -d` only start the database container (replace db with api or app for the other two services as needed)
    4. `docker compose stop` to "turn off" the containers but not delete them.
+   5. `docker compose restart` to restart all containers
+
+### Access the Application!
+Once the containers are running...
+
+In browser, put in "localhost:8501", press enter!
+
+
+
+
+
 
 if you want to see stuff he put here, you can scroll down a bit. 
 
