@@ -962,51 +962,14 @@ def president_budget_by_course():
     q = """
         SELECT
             c.college AS collegeName,
-            c.courseName,
+            c.name,
             COALESCE(c.budget, 0) AS budget,
             COALESCE(SUM(e.amount), 0) AS budgetUsed,
             (COALESCE(c.budget, 0) - COALESCE(SUM(e.amount), 0)) AS remaining
         FROM courses c
         LEFT JOIN course_expenses e ON e.courseId = c.id
-        GROUP BY c.college, c.courseName, c.budget
+        GROUP BY c.college, c.name, c.budget
         ORDER BY c.college, remaining ASC
-    """
-    cur = db.get_db().cursor()
-    cur.execute(q)
-    return jsonify(cur.fetchall())
-
-@metrics_api.route("/metrics/president/budget/donations-summary", methods=["GET"])
-def president_donations_summary():
-    """
-    Total donations received for each college.
-    """
-    q = """
-        SELECT
-            c.college AS collegeName,
-            COALESCE(SUM(d.amount), 0) AS totalDonations
-        FROM courses c
-        LEFT JOIN course_donations d ON d.courseId = c.id
-        GROUP BY c.college
-        ORDER BY c.college
-    """
-    cur = db.get_db().cursor()
-    cur.execute(q)
-    return jsonify(cur.fetchall())
-
-@metrics_api.route("/metrics/president/budget/donations-by-course", methods=["GET"])
-def president_donations_by_course():
-    """
-    Donations broken down by course for each college.
-    """
-    q = """
-        SELECT
-            c.college AS collegeName,
-            c.courseName,
-            COALESCE(SUM(d.amount), 0) AS totalDonations
-        FROM courses c
-        LEFT JOIN course_donations d ON d.courseId = c.id
-        GROUP BY c.college, c.courseName
-        ORDER BY c.college, totalDonations DESC
     """
     cur = db.get_db().cursor()
     cur.execute(q)

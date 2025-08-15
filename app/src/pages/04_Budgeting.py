@@ -91,48 +91,6 @@ with left_mid:
         for col in ["Total", "Allocated", "Donations", "Used", "Used %"]:
             if col in df_break.columns:
                 df_break[col] = pd.to_numeric(df_break[col], errors="coerce").fillna(0)
-        df_break = df_break.sort_values(["College", "Used %"], ascending=[True, False])
         st.dataframe(df_break, use_container_width=True)
     else:
         st.info("No course-level data available.")
-
-with right_mid:
-    st.subheader("Recent Donations")
-    donations = _get("/metrics/president/budget/donations", params={"limit": 100})
-    df_don = pd.DataFrame(donations)
-
-    if not df_don.empty:
-        df_don["date"] = pd.to_datetime(df_don["date"], errors="coerce")
-        df_don["amount"] = pd.to_numeric(df_don["amount"], errors="coerce").fillna(0)
-        df_don = df_don.rename(columns={
-            "donor": "Donor",
-            "courseName": "Course",
-            "date": "Date",
-            "amount": "Amount",
-            "collegeName": "College"
-        })
-        st.dataframe(df_don.sort_values("Date", ascending=False), use_container_width=True)
-    else:
-        st.info("No recent donations available.")
-
-# =====================
-# Bottom: donations by course bar chart
-# =====================
-st.subheader("Donations by Course")
-donations_by_course = _get("/metrics/president/budget/donations-by-course")
-df_dbc = pd.DataFrame(donations_by_course)
-
-if not df_dbc.empty:
-    df_dbc = df_dbc.rename(columns={"courseName": "Course", "donations": "Donations", "college": "College"})
-    df_dbc["Donations"] = pd.to_numeric(df_dbc["Donations"], errors="coerce").fillna(0)
-    fig_dbc = px.bar(
-        df_dbc,
-        x="Course",
-        y="Donations",
-        color="College",
-        labels={"Course": "Course", "Donations": "Donations ($)"},
-        title="Donations by Course and College"
-    )
-    st.plotly_chart(fig_dbc, use_container_width=True)
-else:
-    st.info("No donation data available for chart.")

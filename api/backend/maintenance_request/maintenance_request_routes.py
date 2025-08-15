@@ -7,18 +7,19 @@ maintenance_api = Blueprint('maintenance_api', __name__)
 # ------------------------------------------------------------
 # GET /api/maintenance-requests?status=open|closed
 # Purpose: List maintenance requests (optionally filtered by state)
-@maintenance_api.route('/maintenance-requests', methods=['GET'])
-def list_requests():
+@maintenance_api.route('/maintenance-requests/<int:userId>', methods=['GET'])
+def list_requests(userId):
     status = request.args.get('status')
-    params = []
+    # params = []
     query = '''
-        SELECT mr.orderId, mr.address, mr.problemType, mr.state, mr.submitted, mr.description,
+        SELECT mr.orderId, mr.address, mr.problemType, mr.submitted, mr.description,
                ms.staffId,
                u.firstName, u.lastName
         FROM maintenance_request AS mr
         LEFT JOIN maintenance_staffs_maintenance_request AS msmr ON mr.orderId = msmr.orderId
         LEFT JOIN maintenance_staffs AS ms ON msmr.staffId = ms.staffId
         LEFT JOIN users AS u ON ms.staffId = u.userId
+        where u.userId = %s
     '''
     if status in ('open','closed'):
         query += " WHERE mr.state = %s"
@@ -26,7 +27,7 @@ def list_requests():
     query += " ORDER BY mr.submitted DESC"
     current_app.logger.info("GET /maintenance-requests : status=%s", status)
     cursor = db.get_db().cursor()
-    cursor.execute(query, tuple(params))
+    cursor.execute(query, userId,)
     theData = cursor.fetchall()
     current_app.logger.info("GET /maintenance-requests : rows=%d", len(theData))
     response = make_response(jsonify(theData))
