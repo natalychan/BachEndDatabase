@@ -157,6 +157,7 @@ except Exception as e:
 
 # Vacant Courses
 st.subheader("College Rankings")
+st.write("This table shows the national rankings of colleges.")
 
 try:
     response = requests.get(f"http://web-api:4000/api/rankings/compare")
@@ -168,4 +169,4 @@ try:
 except requests.exceptions.RequestException as e:
         st.error(f"Error connecting to API: {str(e)}")
 except Exception as e:
-        st.error(f"Error displaying clubs: {str(e)}")
+        st.error(f"Error displaying : {str(e)}")
