@@ -157,8 +157,9 @@ except Exception as e:
 
 # Vacant Courses
 st.subheader("College Rankings")
-vacancy_resp = requests.get(f"http://web-api:4000/api/metrics/courses/vacancies")
-if vacancy_resp.status_code == 200:
-    vacancy_df = pd.DataFrame(vacancy_resp.json())
-    vacant_only = vacancy_df[vacancy_df["is_vacant"] == 1]
-    st.dataframe(vacant_only)
+response = requests.get(f"http://web-api:4000/api/rankings/compare")
+if response.status_code == 200:
+    data = response.json()
+    if data: 
+        df = pd.DataFrame(data)
+        st.dataframe(df, use_container_width=True)
