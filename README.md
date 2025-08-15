@@ -24,7 +24,7 @@ By integrating these perspectives into one platform, the Bach-End Database empow
 
 *Set up containers*
 In VSCode: in TERMINAL, type in 
-q. docker compose up -d` to start all the containers in the background
+1. docker compose up -d` to start all the containers in the background
 2.  `docker compose down` to shutdown and delete the containers
 3.  `docker compose up db -d` only start the database container (replace db with api or app for the other two services as needed)
 4. `docker compose stop` to "turn off" the containers but not delete them.
