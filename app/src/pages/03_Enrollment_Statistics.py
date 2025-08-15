@@ -16,26 +16,36 @@ st.write(f"### Hi, {st.session_state['first_name']}.")
 
 # Student–Teacher Ratio
 st.subheader("Student–Teacher Ratio by College")
-ratio_resp = requests.get(f"http://web-api:4000/api/metrics/student-teacher-ratio")
-if ratio_resp.status_code == 200:
-    ratio_df = pd.DataFrame(ratio_resp.json())
-    st.dataframe(ratio_df)
+try:
+    ratio_resp = requests.get(f"http://web-api:4000/api/metrics/student-teacher-ratio")
+    ratio_resp.raise_for_status()
+# ratio_resp = requests.get(f"http://web-api:4000/api/metrics/student-teacher-ratio")
+    if ratio_resp.status_code == 200:
+        ratio_df = pd.DataFrame(ratio_resp.json())
+        st.dataframe(ratio_df)
 
-    fig_ratio = px.bar(
-        ratio_df,
-        x="college",
-        y="student_teacher_ratio",
-        text="student_teacher_ratio",
-        title="Student–Teacher Ratio by College",
-        labels={"college": "College", "student_teacher_ratio": "Ratio"},
-    )
-    fig_ratio.update_traces(texttemplate='%{text}', textposition='outside')
-    st.plotly_chart(fig_ratio)
+        fig_ratio = px.bar(
+            ratio_df,
+            x="college",
+            y="student_teacher_ratio",
+            text="student_teacher_ratio",
+            title="Student–Teacher Ratio by College",
+            labels={"college": "College", "student_teacher_ratio": "Ratio"},
+        )
+        fig_ratio.update_traces(texttemplate='%{text}', textposition='outside')
+        st.plotly_chart(fig_ratio, use_container_width=True)
+except requests.RequestException as e:
+    st.error(f"Error fetching student-teacher ratio data: {e}")
 
 # Vacant Courses
 st.subheader("Vacant Courses")
-vacancy_resp = requests.get(f"http://web-api:4000/api/metrics/courses/vacancies")
-if vacancy_resp.status_code == 200:
-    vacancy_df = pd.DataFrame(vacancy_resp.json())
-    vacant_only = vacancy_df[vacancy_df["is_vacant"] == 1]
-    st.dataframe(vacant_only)
+try:
+    vacancy_resp = requests.get(f"http://web-api:4000/api/metrics/courses/vacancies")
+    vacancy_resp.raise_for_status()
+# vacancy_resp = requests.get(f"http://web-api:4000/api/metrics/courses/vacancies")
+    if vacancy_resp.status_code == 200:
+        vacancy_df = pd.DataFrame(vacancy_resp.json())
+        vacant_only = vacancy_df[vacancy_df["is_vacant"] == 1]
+        st.dataframe(vacant_only[['course_id','course_name','enrollment','time']], use_container_width=True)
+except requests.RequestException as e:
+    st.error(f"Error fetching vacant courses data: {e}")

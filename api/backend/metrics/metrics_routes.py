@@ -145,7 +145,7 @@ def demographics_by_college(collegeName):
 # ------------------------------------------------------------
 # GET /api/courses/vacancies
 # Purpose: List courses with a vacancy flag (no professor assigned) (President / Lim-3)
-@metrics_api.route('/courses/vacancies', methods=['GET'])
+@metrics_api.route('/metrics/courses/vacancies', methods=['GET'])
 def courses_vacancies():
     query = '''
         SELECT c.id      AS course_id,
@@ -168,7 +168,7 @@ def courses_vacancies():
 # ------------------------------------------------------------
 # GET /api/colleges/metrics/student-teacher-ratio
 # Purpose: Student-to-teacher ratio by college (President / Lim-5)
-@metrics_api.route('/colleges/metrics/student-teacher-ratio', methods=['GET'])
+@metrics_api.route('/metrics/student-teacher-ratio', methods=['GET'])
 def student_teacher_ratio():
     query = '''
         SELECT s.college,
