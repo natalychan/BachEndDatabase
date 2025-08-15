@@ -51,7 +51,7 @@ def get_dean_college(_dean_id: int) -> str | None:
         return None
 
 # Prefer session value if set, otherwise fetch from API
-dean_college = st.session_state.get("college") or fetch_dean_college(dean_id)
+dean_college = st.session_state.get("college") or get_dean_college(dean_id)
 
 if not dean_college:
     st.warning("Could not determine your college yet. Some panels may be empty.")
@@ -131,7 +131,7 @@ with right_top:
             y="enrollment",
             color="CourseName",
             markers=True,
-            labels={"period": "Period", "enrollment": "Enrollment", "CourseName": "Course"},
+            labels={"period": "Year", "enrollment": "Enrollment", "CourseName": "Course"},
         )
         fig.update_layout(margin=dict(l=10, r=10, t=10, b=10), legend_title_text="Course")
         st.plotly_chart(fig, use_container_width=True)
@@ -471,171 +471,149 @@ with left_top:
 
 # ---------------- RIGHT BOTTOM: Quick Lists ----------------
 # ---------------- RIGHT BOTTOM: Attention Lists (by Course, scoped to dean's college) ----------------
-with right_bottom:
-    st.subheader("Attention Lists")
+    with right_bottom:
+        st.subheader("Attention Lists")
 
-    API_BASE = os.getenv("API_BASE", "http://api:4000/api").rstrip("/")
-    TIMEOUT = int(os.getenv("API_TIMEOUT", "8"))
+        API_BASE = os.getenv("API_BASE", "http://api:4000/api").rstrip("/")
+        TIMEOUT = int(os.getenv("API_TIMEOUT", "8"))
 
-    def _get(path, params=None):
-        url = f"{API_BASE}{path if path.startswith('/') else '/'+path}"
-        r = requests.get(url, params=params or {}, timeout=TIMEOUT)
-        r.raise_for_status()
-        return r.json()
+        def _get(path, params=None):
+            url = f"{API_BASE}{path if path.startswith('/') else '/'+path}"
+            r = requests.get(url, params=params or {}, timeout=TIMEOUT)
+            r.raise_for_status()
+            return r.json()
 
-    # Resolve dean + college
-    dean_id = st.session_state.get("dean_id")
-    if dean_id is None:
-        st.error("No dean_id in session. Set st.session_state['dean_id'] at login.")
-        st.stop()
+        # Resolve dean + college
+        dean_id = st.session_state.get("dean_id")
+        if dean_id is None:
+            st.error("No dean_id in session. Set st.session_state['dean_id'] at login.")
+            st.stop()
 
-    dean_college = st.session_state.get("college")
-    if not dean_college:
+        dean_college = st.session_state.get("college")
+        if not dean_college:
+            try:
+                info = _get(f"/metrics/deans/{dean_id}/college")
+                dean_college = (info or {}).get("collegeName")
+                if dean_college:
+                    st.session_state["college"] = dean_college
+            except Exception:
+                dean_college = None
+
+        # Dean's courses for filter UI
         try:
-            info = _get(f"/metrics/deans/{dean_id}/college")
-            dean_college = (info or {}).get("collegeName")
-            if dean_college:
-                st.session_state["college"] = dean_college
-        except Exception:
-            dean_college = None
-
-    # Get the dean's courses for filtering
-    try:
-        data_courses = _get(f"/metrics/deans/{dean_id}/courses")
-        df_courses = pd.DataFrame(data_courses)
-        need = {"course_id", "course_name"}
-        if not need.issubset(df_courses.columns):
-            raise ValueError(f"Dean courses missing: {need - set(df_courses.columns)}")
-        df_courses = (
-            df_courses[["course_id", "course_name"]]
-            .dropna()
-            .astype({"course_id": "int64", "course_name": "string"})
-            .sort_values("course_name")
-        )
-        course_names = df_courses["course_name"].tolist()
-        name_to_id = dict(zip(df_courses["course_name"], df_courses["course_id"]))
-    except Exception as e:
-        st.warning(f"Could not load your courses — {e}")
-        df_courses = pd.DataFrame(columns=["course_id", "course_name"])
-        course_names, name_to_id = [], {}
-
-    # Course filter (multi)
-    selected_courses = st.multiselect(
-        "Filter courses",
-        options=course_names,
-        default=course_names[: min(5, len(course_names))],
-        key="attn_courses_select",
-    )
-    selected_ids = {name_to_id[n] for n in selected_courses if n in name_to_id}
-
-    # Layout: 2x2
-    c1, c2 = st.columns(2, gap="medium")
-    c3, c4 = st.columns(2, gap="medium")
-
-    # --- 1) Vacant Courses (no assigned professor) ---
-    with c1:
-        st.caption("Vacant Courses (no professor)")
-        try:
-            params = {"college": dean_college} if dean_college else {}
-            vac = pd.DataFrame(_get("/courses/vacancies", params=params))
-            # Expected: course_id, course_name, time, enrollment, is_vacant
-            if "is_vacant" in vac.columns:
-                vac = vac[vac["is_vacant"].astype(bool)]
-            else:
-                vac = pd.DataFrame(columns=["course_id", "course_name", "enrollment"])
-
-            if selected_ids:
-                vac = vac[vac["course_id"].isin(list(selected_ids))]
-
-            show = vac[["course_id", "course_name", "enrollment"]].head(5) if not vac.empty else vac
-            st.dataframe(
-                show.rename(columns={"course_id": "Course ID", "course_name": "Course", "enrollment": "Enroll"}),
-                use_container_width=True, hide_index=True
+            data_courses = _get(f"/metrics/deans/{dean_id}/courses")
+            df_courses = pd.DataFrame(data_courses)
+            need = {"course_id", "course_name"}
+            if not need.issubset(df_courses.columns):
+                raise ValueError(f"Dean courses missing: {need - set(df_courses.columns)}")
+            df_courses = (
+                df_courses[["course_id", "course_name"]]
+                .dropna()
+                .astype({"course_id": "int64", "course_name": "string"})
+                .sort_values("course_name")
             )
+            course_names = df_courses["course_name"].tolist()
+            name_to_id = dict(zip(df_courses["course_name"], df_courses["course_id"]))
         except Exception as e:
-            st.caption(f"Unable to load vacancies — {e}")
+            st.warning(f"Could not load your courses — {e}")
+            df_courses = pd.DataFrame(columns=["course_id", "course_name"])
+            course_names, name_to_id = [], {}
 
-    # Preload enrollments (for panels 2 & 4)
-    def load_enrollments_df():
-        try:
-            params = {"college": dean_college} if dean_college else {}
-            ce = pd.DataFrame(_get("/metrics/courses/enrollments", params=params))
-            # Expected: course_id, course_name, enrolled_students
-            if not {"course_id", "course_name", "enrollment", "enrolled_students"} & set(ce.columns):
+        # Multi-select filter (used everywhere below)
+        selected_courses = st.multiselect(
+            "Filter courses",
+            options=course_names,
+            default=course_names[: min(5, len(course_names))],
+            key="attn_courses_select",
+        )
+        selected_ids = {name_to_id[n] for n in selected_courses if n in name_to_id}
+
+        # Build enroll_df once (scoped to dean's college), then filter by selected_ids
+        def load_enrollments_df(college: str | None):
+            try:
+                params = {"college": college} if college else {}
+                df = pd.DataFrame(_get("/metrics/courses/enrollments", params=params))
+                if "enrolled_students" not in df.columns and "enrollment" in df.columns:
+                    df = df.rename(columns={"enrollment": "enrolled_students"})
+                need = {"course_id", "course_name", "enrolled_students"}
+                if not need.issubset(df.columns):
+                    return pd.DataFrame(columns=list(need))
+                df["enrolled_students"] = (
+                    pd.to_numeric(df["enrolled_students"], errors="coerce").fillna(0).astype(int)
+                )
+                return df
+            except Exception:
                 return pd.DataFrame(columns=["course_id", "course_name", "enrolled_students"])
-            if "enrolled_students" not in ce.columns and "enrollment" in ce.columns:
-                ce = ce.rename(columns={"enrollment": "enrolled_students"})
-            ce["enrolled_students"] = pd.to_numeric(ce["enrolled_students"], errors="coerce").fillna(0).astype(int)
-            if selected_ids:
-                ce = ce[ce["course_id"].isin(list(selected_ids))]
-            return ce
-        except Exception:
-            return pd.DataFrame(columns=["course_id", "course_name", "enrolled_students"])
 
-    enroll_df = load_enrollments_df()
+        enroll_df = load_enrollments_df(dean_college)
+        if selected_ids:
+            enroll_df = enroll_df[enroll_df["course_id"].isin(list(selected_ids))]
 
-    # --- 2) Highest Enrollment (selected courses) ---
-    with c2:
-        st.caption("Most Enrolled Courses (selection)")
-        try:
-            if enroll_df.empty:
-                st.caption("No courses to show.")
-            else:
-                top = enroll_df.sort_values("enrolled_students", ascending=False).head(5)
-                st.dataframe(
-                    top.rename(columns={"course_id": "Course ID", "course_name": "Course", "enrolled_students": "Enroll"}),
-                    use_container_width=True, hide_index=True
-                )
-        except Exception as e:
-            st.caption(f"Unable to load course enrollments — {e}")
+        col_left, col_right = st.columns(2, gap="medium")
 
-    # --- 3) High GPA Students (by selected course) ---
-    with c3:
-        st.caption("High GPA Students (course)")
-        try:
-            if course_names:
-                # Choose one course from the (possibly filtered) list
-                course_for_gpa = st.selectbox(
-                    "Course",
-                    options=selected_courses if selected_courses else course_names,
-                    key="high_gpa_course_select",
-                )
-                gpa_min = st.slider("GPA minimum", 0.0, 4.0, 3.5, 0.1, key="high_gpa_min_course")
-                cid = name_to_id.get(course_for_gpa)
-                if cid is not None:
-                    stu = pd.DataFrame(_get(f"/metrics/courses/{cid}/students", params={"gpaMin": gpa_min}))
-                    # Expected: userId, firstName, lastName, gpa, school_rank
-                    if not stu.empty:
-                        stu["Name"] = (stu["firstName"].astype(str) + " " + stu["lastName"].astype(str)).str.strip()
-                        stu["gpa"] = pd.to_numeric(stu["gpa"], errors="coerce")
-                        show = stu[["userId", "Name", "gpa", "school_rank"]].head(5)
-                        st.dataframe(
-                            show.rename(columns={"userId": "ID", "gpa": "GPA", "school_rank": "Rank"}),
-                            use_container_width=True, hide_index=True
-                        )
+        # --- Vacancies (left) ---
+        with col_left:
+            st.caption("Vacancies")
+            mode = st.toggle(
+                "Show vacancies based on ENROLLMENT (off = based on PROFESSOR)",
+                value=False, key="vacancy_mode"
+            )
+
+            if not mode:
+                st.caption("Mode: No professor assigned")
+                try:
+                    params = {"college": dean_college} if dean_college else {}
+                    vac = pd.DataFrame(_get("/courses/vacancies", params=params))
+                    if "is_vacant" in vac.columns:
+                        vac = vac[vac["is_vacant"].astype(bool)]
                     else:
-                        st.caption("No students at or above this GPA.")
-                else:
-                    st.caption("Pick a course to view.")
+                        vac = pd.DataFrame(columns=["course_id", "course_name", "enrollment"])
+                    if selected_ids:
+                        vac = vac[vac["course_id"].isin(list(selected_ids))]
+                    show = vac[["course_id", "course_name", "enrollment"]].head(5) if not vac.empty else vac
+                    st.dataframe(
+                        show.rename(columns={"course_id": "Course ID", "course_name": "Course", "enrollment": "Enroll"}),
+                        use_container_width=True, hide_index=True
+                    )
+                except Exception as e:
+                    st.caption(f"Unable to load vacancies — {e}")
             else:
-                st.caption("No courses found.")
-        except Exception as e:
-            st.caption(f"Unable to load students — {e}")
-
-    # --- 4) Low Enrollment (selected courses) ---
-    with c4:
-        st.caption("Low Enrollment Courses (selection)")
-        try:
-            if enroll_df.empty:
-                st.caption("No courses to show.")
-            else:
-                min_enroll = st.slider("Max enroll to flag", 0, 50, 10, 1, key="low_enroll_max_course")
-                low = enroll_df[enroll_df["enrolled_students"] <= min_enroll] \
+                st.caption("Mode: Low/Zero enrollment")
+                thresh = st.slider("Max enrollment to flag", 0, 50, 0, 1, key="vacancy_enroll_threshold")
+                low = enroll_df[enroll_df["enrolled_students"] <= thresh] \
                         .sort_values("enrolled_students", ascending=True) \
                         .head(5)
-                st.dataframe(
-                    low.rename(columns={"course_id": "Course ID", "course_name": "Course", "enrolled_students": "Enroll"}),
-                    use_container_width=True, hide_index=True
-                )
-        except Exception as e:
-            st.caption(f"Unable to load course enrollments — {e}")
+                if low.empty:
+                    st.caption("No courses meet the enrollment threshold.")
+                else:
+                    st.dataframe(
+                        low.rename(columns={"course_id": "Course ID", "course_name": "Course", "enrolled_students": "Enroll"}),
+                        use_container_width=True, hide_index=True
+                    )
+
+        # --- High GPA Students (right) ---
+        with col_right:
+            st.caption("High GPA Students (course)")
+            try:
+                if selected_courses:  # use multi-select courses
+                    gpa_min = st.slider("GPA minimum", 0.0, 4.0, 3.5, 0.1, key="high_gpa_min_course")
+                    for course_for_gpa in selected_courses:
+                        cid = name_to_id.get(course_for_gpa)
+                        if cid is None:
+                            continue
+                        stu = pd.DataFrame(_get(f"/metrics/courses/{cid}/students", params={"gpaMin": gpa_min}))
+                        if not stu.empty:
+                            stu["Name"] = (stu["firstName"].astype(str) + " " + stu["lastName"].astype(str)).str.strip()
+                            stu["gpa"] = pd.to_numeric(stu["gpa"], errors="coerce")
+                            show = stu[["userId", "Name", "gpa", "school_rank"]].head(5)
+                            st.write(f"**{course_for_gpa}**")
+                            st.dataframe(
+                                show.rename(columns={"userId": "ID", "gpa": "GPA", "school_rank": "Rank"}),
+                                use_container_width=True, hide_index=True
+                            )
+                        else:
+                            st.caption(f"No students at or above GPA {gpa_min} for {course_for_gpa}.")
+                else:
+                    st.caption("No courses selected.")
+            except Exception as e:
+                st.caption(f"Unable to load students — {e}")

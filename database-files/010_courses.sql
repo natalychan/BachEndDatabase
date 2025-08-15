@@ -40,4 +40,14 @@ INSERT INTO courses (id, name, time, enrollment, college, roomNumber, professorI
 (37, 'Wind Techniques', '2025-10-07 09:00:00', 22, 'College of Wind Instruments', 137, 56, 220000.00),
 (38, 'Advanced Drumming', '2025-10-08 10:00:00', 18, 'College of Percussion', 138, 57, 175500.00),
 (39, 'Music Composition Lab', '2025-10-09 11:00:00', 25, 'College of Music Theory', 139, 58, 207500.00),
-(40, 'Electronic Sound Design', '2025-10-10 12:00:00', 20, 'College of Electronic Music', 140, 59, 230000.00);
+(40, 'Electronic Sound Design', '2025-10-10 12:00:00', 20, 'College of Electronic Music', 140, 59, 230000.00),
+(41, 'Experimental Composition', '2025-10-11 09:00:00', 0, 'College of Composition', 141, NULL, 180000.00),
+(42, 'Intro to World Music', '2025-10-12 10:00:00', 2, 'College of Music Theory', 142, 60, 150000.00),
+(43, 'Opera Workshop', '2025-10-13 11:00:00', 3, 'College of Vocal Arts', 143, NULL, 210000.00),
+(44, 'Advanced Harp Performance', '2025-10-14 12:00:00', 0, 'College of Strings', 144, NULL, 190000.00),
+(45, 'Music Business Essentials', '2025-10-15 13:00:00', 18, 'College of Production', 145, 61, 205000.00),
+(46, 'Brass Quintet', '2025-10-16 14:00:00', 1, 'College of Wind Instruments', 146, 62, 172000.00),
+(47, 'Contemporary Dance Accompaniment', '2025-10-17 09:00:00', 0, 'College of Composition', 147, NULL, 160000.00),
+(48, 'Percussion Improvisation', '2025-10-18 10:00:00', 0, 'College of Percussion', 148, 63, 185000.00),
+(49, 'Modular Synthesis Basics', '2025-10-19 11:00:00', 4, 'College of Electronic Music', 149, 64, 200000.00),
+(50, 'Historical Music Notation', '2025-10-20 12:00:00', 0, 'College of Music Theory', 150, NULL, 175000.00);
