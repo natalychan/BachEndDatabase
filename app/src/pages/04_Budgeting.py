@@ -58,7 +58,7 @@ if not df_trend.empty:
         df_trend.sort_values("period"),
         x="period",
         y="spending",
-        color="college",
+        color="collegeName",
         markers=True,
         labels={"period": "Date", "spending": "Spending ($)", "college": "College"},
         title="Spending Trend by College"
