@@ -15,10 +15,15 @@ def AboutPageNav():
 
 
 #### ------------------------ President ------------------------
-def PresidentHomeNav():
-    st.sidebar.page_link(
-        "pages/00_President_Home.py", label="President Home", icon="👤"
-    )
+def PresidentPageNav():
+    st.sidebar.page_link("pages/00_President_Home.py", label="President Home", icon="👤")
+    st.sidebar.page_link("pages/01_Student_Performance.py", label="Student Performance", icon="📊")
+    st.sidebar.page_link("pages/02_Student_Demographics.py", label="Student Demographics", icon="📊")
+    st.sidebar.page_link("pages/03_Enrollment_Statistics.py", label="Enrollment Statistics", icon="📊")
+
+
+
+    
 
 #### ------------------------ Dean ------------------------
 def DeanHomeNav():
@@ -119,7 +124,7 @@ def SideBarLinks(show_home=False):
 
         # Show World Bank Link and Map Demo Link if the user is a political strategy advisor role.
         if st.session_state["role"] == "president":
-            PresidentHomeNav()
+            PresidentPageNav()
 
         # If the user role is a dean, show the dean homepage
         if st.session_state["role"] == "dean":
