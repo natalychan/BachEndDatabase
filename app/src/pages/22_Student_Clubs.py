@@ -38,23 +38,60 @@ with main_col:
         st.error(f"Error displaying clubs: {str(e)}")
 
 with right_col:
-    student_id = st.session_state.get('student_id') 
+    st.subheader("Current Membership")
+
+    # Initialize student_id for testing if not set
+    if "student_id" not in st.session_state:
+        st.session_state["student_id"] = st.session_state.get("userId", 1)  # Default to 1 if not set
+
+    student_id = st.session_state.get("student_id")
     st.write(f"### Student ID: {student_id}")
+
     if student_id:
         API_URL = f"http://web-api:4000/api/club_members/{student_id}/clubs"
         try:
             response = requests.get(API_URL)
             if response.status_code == 200:
                 data = response.json()
-                if data:
+                
+                # Debug print
+                st.write("Raw API data:", data)
+
+                if data:  # student has clubs
                     df = pd.DataFrame(data)
-                    st.subheader("Current Membership")
                     st.dataframe(df, use_container_width=True)
-                else:
-                        st.info("You are not part of any clubs.")
+                else:  # empty list
+                    st.info("You are not part of any clubs.")
             else:
                 st.error(f"Failed to fetch data: HTTP {response.status_code}")
         except requests.exceptions.RequestException as e:
             st.error(f"Error connecting to API: {str(e)}")
         except Exception as e:
             st.error(f"Error displaying your clubs: {str(e)}")
+
+
+
+
+
+
+# with right_col:
+#     student_id = st.session_state.get('student_id') 
+#     st.write(f"### Student ID: {student_id}")
+#     if student_id:
+#         API_URL = f"http://web-api:4000/api/club_members/{student_id}/clubs"
+#         try:
+#             response = requests.get(API_URL)
+#             if response.status_code == 200:
+#                 data = response.json()
+#                 if data:
+#                     df = pd.DataFrame(data)
+#                     st.subheader("Current Membership")
+#                     st.dataframe(df, use_container_width=True)
+#                 else:
+#                         st.info("You are not part of any clubs.")
+#             else:
+#                 st.error(f"Failed to fetch data: HTTP {response.status_code}")
+#         except requests.exceptions.RequestException as e:
+#             st.error(f"Error connecting to API: {str(e)}")
+#         except Exception as e:
+#             st.error(f"Error displaying your clubs: {str(e)}")
