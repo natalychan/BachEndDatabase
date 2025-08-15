@@ -1,6 +1,6 @@
 USE bachEndDatabase;
 
-insert into reserves (studentID, roomNumber, startTime, endTime) values
+INSERT INTO reserves (studentID, roomNumber, startTime, endTime) VALUES
 (150, 101, '2025-09-01 09:00:00', '2025-09-01 10:00:00'),
 (151, 102, '2025-09-01 10:00:00', '2025-09-01 11:00:00'),
 (152, 103, '2025-09-01 11:00:00', '2025-09-01 12:00:00'),

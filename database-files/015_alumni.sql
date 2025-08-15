@@ -21,3 +21,25 @@ insert into alumni (studentId, hasJob) values
 (192, TRUE),
 (195, FALSE),
 (197, TRUE);
+
+insert into alumni (studentId, hasJob) values
+(204, TRUE),
+(215, TRUE),
+(224, FALSE),
+(227, TRUE),
+(228, TRUE),
+(229, FALSE),
+(230, TRUE),
+(241, FALSE),
+(250, TRUE),
+(252, FALSE),
+(257, TRUE),
+(260, TRUE),
+(264, FALSE),
+(268, TRUE),
+(269, TRUE),
+(276, FALSE),
+(290, TRUE),
+(291, TRUE),
+(293, FALSE),
+(297, TRUE);

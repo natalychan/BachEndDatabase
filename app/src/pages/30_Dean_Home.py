@@ -23,9 +23,6 @@ first_name = st.session_state.get("first_name", "Colleague")
 st.title(f"Welcome Dean, {first_name}.")
 st.header("Dean Overview")
 
-left_top, right_top = st.columns(2, gap="large")
-left_bottom, right_bottom = st.columns(2, gap="large")
-
 @st.cache_data(ttl=60, show_spinner=False)
 def get_json(path, params=None):
     r = requests.get(f"{API_BASE}{path}", params=params or {}, timeout=TIMEOUT)
@@ -58,6 +55,20 @@ if not dean_college:
 else:
     # cache it in session for the rest of the app
     st.session_state['college'] = dean_college
+
+# --- Key KPI row (place BEFORE the top panels) ---
+with st.container():
+    try:
+        data = get_json(f"/metrics/deans/{dean_id}/students/enrollment-total")
+        total_enroll = int((data or {}).get("totalEnrollment") or 0)
+        kpi_col, _ = st.columns([1, 3], gap="large")
+        with kpi_col:
+            st.metric("Total Students Enrolled (College-wide)", f"{total_enroll:,}")
+    except Exception as e:
+        st.caption(f"Unable to load total students — {e}")
+
+left_top, right_top = st.columns(2, gap="large")
+left_bottom, right_bottom = st.columns(2, gap="large")
 
 # --- Top-right panel ---
 with right_top:

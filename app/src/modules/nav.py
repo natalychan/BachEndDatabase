@@ -31,19 +31,9 @@ def DeanBudgetNav():
         "pages/31_Dean_Budget.py", label="Dean - Budget Overview", icon="📈"
     )
 
-def DeanStudentsNav():
-    st.sidebar.page_link(
-        "pages/30_Dean_Home.py", label="Dean - Student Overview", icon="📈"
-    )
-
-def DeanCoursesNav():
-    st.sidebar.page_link(
-        "pages/30_Dean_Home.py", label="Dean - Courses Overview", icon="📈"
-    )
-
 def DeanAlumniNav():
     st.sidebar.page_link(
-        "pages/30_Dean_Home.py", label="Dean - Alumni Overview", icon="📈"
+        "pages/32_Alumni_Placements.py", label="Dean - Alumni Overview", icon="📈"
     )
 
 
@@ -135,8 +125,6 @@ def SideBarLinks(show_home=False):
         if st.session_state["role"] == "dean":
             DeanHomeNav()
             DeanBudgetNav()
-            DeanCoursesNav()
-            DeanStudentsNav()
             DeanAlumniNav()
 
         # If the user is an administrator, give them access to the administrator pages

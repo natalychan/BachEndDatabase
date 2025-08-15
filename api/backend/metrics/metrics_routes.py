@@ -793,3 +793,106 @@ def dean_donations_by_course(dean_id: int):
     cur = db.get_db().cursor()
     cur.execute(q, (college,))
     return jsonify(cur.fetchall())
+
+# ---------------- Alumni placement (Dean) ------------------
+
+@metrics_api.route("/metrics/deans/<int:dean_id>/alumni/placement/summary", methods=["GET"])
+def dean_alumni_placement_summary(dean_id: int):
+    """Overall alumni placement summary for the dean's college."""
+    row = _college_for_dean_id(dean_id)
+    college = (row or {}).get("collegeName")
+    if not college:
+        return jsonify({})
+
+    q = '''
+        SELECT
+            COUNT(*) AS totalAlumni,
+            SUM(CASE WHEN a.hasJob THEN 1 ELSE 0 END) AS placed,
+            ROUND(100 * SUM(CASE WHEN a.hasJob THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 2) AS placementRate
+        FROM alumni a
+        JOIN students s ON s.userId = a.studentId
+        WHERE s.college = %s
+    '''
+    cur = db.get_db().cursor()
+    cur.execute(q, (college,))
+    row = cur.fetchone() or {"totalAlumni": 0, "placed": 0, "placementRate": 0.0}
+    return jsonify(row)
+
+
+@metrics_api.route("/metrics/deans/<int:dean_id>/alumni/placement/by-course", methods=["GET"])
+def dean_alumni_placement_by_course(dean_id: int):
+    """Placement rate by course within the dean's college."""
+    row = _college_for_dean_id(dean_id)
+    college = (row or {}).get("collegeName")
+    if not college:
+        return jsonify([])
+
+    q = '''
+        SELECT
+            c.id AS courseId,
+            c.name AS courseName,
+            COUNT(*) AS alumniCount,
+            SUM(CASE WHEN a.hasJob THEN 1 ELSE 0 END) AS placed,
+            ROUND(100 * SUM(CASE WHEN a.hasJob THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 2) AS placementRate,
+            ROUND(AVG(s.gpa), 2) AS avgGpa
+        FROM alumni a
+        JOIN students s         ON s.userId = a.studentId
+        JOIN students_courses sc ON sc.studentId = a.studentId
+        JOIN courses c          ON c.id = sc.courseId
+        WHERE c.college = %s
+        GROUP BY c.id, c.name
+        ORDER BY placementRate DESC, alumniCount DESC, c.name
+    '''
+    cur = db.get_db().cursor()
+    cur.execute(q, (college,))
+    return jsonify(cur.fetchall())
+
+
+@metrics_api.route("/metrics/deans/<int:dean_id>/alumni/placement/by-year", methods=["GET"])
+def dean_alumni_placement_by_year(dean_id: int):
+    """Placement trend by student year (proxy for cohort) in the dean's college."""
+    row = _college_for_dean_id(dean_id)
+    college = (row or {}).get("collegeName")
+    if not college:
+        return jsonify([])
+
+    q = '''
+        SELECT
+            s.year AS year,
+            COUNT(*) AS alumniCount,
+            SUM(CASE WHEN a.hasJob THEN 1 ELSE 0 END) AS placed,
+            ROUND(100 * SUM(CASE WHEN a.hasJob THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0), 2) AS placementRate
+        FROM alumni a
+        JOIN students s ON s.userId = a.studentId
+        WHERE s.college = %s
+        GROUP BY s.year
+        ORDER BY s.year
+    '''
+    cur = db.get_db().cursor()
+    cur.execute(q, (college,))
+    return jsonify(cur.fetchall())
+
+@metrics_api.route("/metrics/deans/<int:dean_id>/students/enrollment-total", methods=["GET"])
+def dean_total_students_enrollment(dean_id: int):
+    """
+    Total number of students enrolled in the dean's college.
+    Returns: { "totalEnrollment": <int> }
+    """
+    row = _college_for_dean_id(dean_id)
+    college = (row or {}).get("collegeName")
+    if not college:
+        return jsonify({"totalEnrollment": 0})
+
+    q = """
+        SELECT COUNT(*) AS totalEnrollment
+        FROM students s
+        WHERE s.college = %s
+    """
+    cur = db.get_db().cursor()
+    cur.execute(q, (college,))
+    result = cur.fetchone() or {"totalEnrollment": 0}
+    try:
+        result["totalEnrollment"] = int(result.get("totalEnrollment") or 0)
+    except Exception:
+        result["totalEnrollment"] = 0
+    return jsonify(result)
