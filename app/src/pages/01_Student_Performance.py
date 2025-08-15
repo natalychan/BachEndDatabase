@@ -157,9 +157,15 @@ except Exception as e:
 
 # Vacant Courses
 st.subheader("College Rankings")
-response = requests.get(f"http://web-api:4000/api/rankings/compare")
-if response.status_code == 200:
-    data = response.json()
-    if data: 
-        df = pd.DataFrame(data)
-        st.dataframe(df, use_container_width=True)
+
+try:
+    response = requests.get(f"http://web-api:4000/api/rankings/compare")
+    if response.status_code == 200:
+        data = response.json()
+        if data: 
+            df = pd.DataFrame(data)
+            st.dataframe(df, use_container_width=True)
+except requests.exceptions.RequestException as e:
+        st.error(f"Error connecting to API: {str(e)}")
+except Exception as e:
+        st.error(f"Error displaying clubs: {str(e)}")
