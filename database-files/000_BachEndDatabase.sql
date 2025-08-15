@@ -280,3 +280,28 @@ CREATE TABLE maintenance_request_tools
    FOREIGN KEY (tool) REFERENCES tools (productName),
    PRIMARY KEY (orderId, tool)
 );
+
+DROP TABLE IF EXISTS course_donations;
+CREATE TABLE course_donations
+(
+   donationId INT PRIMARY KEY AUTO_INCREMENT,
+   donorName  VARCHAR(255) NOT NULL,
+   amount     DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+   donatedAt  DATE NOT NULL,
+   courseId   INT NOT NULL,
+   note       VARCHAR(512),
+   FOREIGN KEY (courseId) REFERENCES courses (id)
+);
+
+DROP TABLE IF EXISTS course_expenses;
+CREATE TABLE course_expenses
+(
+   expenseId INT PRIMARY KEY AUTO_INCREMENT,
+   amount    DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+   spentAt   DATE NOT NULL,
+   courseId  INT NOT NULL,
+   category  VARCHAR(128),
+   memo      VARCHAR(512),
+   FOREIGN KEY (courseId) REFERENCES courses (id)
+);
+

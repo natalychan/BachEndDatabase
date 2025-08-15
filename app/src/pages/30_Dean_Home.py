@@ -142,7 +142,7 @@ with left_top:
     sub_lt, sub_rt = st.columns(2, gap="medium")
     sub_lb, sub_rb = st.columns(2, gap="medium")
 
-    # We'll reuse the same GPA endpoint to get the list of colleges dynamically.
+    #reuse the same GPA endpoint to get the list of colleges dynamically.
     try:
         r = requests.get(f"{API_BASE}/colleges/averages/gpa", timeout=TIMEOUT)
         r.raise_for_status()
@@ -217,7 +217,6 @@ with left_top:
                 df_ratio["StudentsPerTeacher"], errors="coerce"
             )
 
-            # optional: sort biggest ratios first
             df_ratio = df_ratio.sort_values("StudentsPerTeacher", ascending=False)
 
         except Exception as e:
@@ -268,7 +267,6 @@ with left_top:
                 "AverageGPA": pd.to_numeric(df_gpa_all.get("average_gpa", pd.Series([], dtype=float)), errors="coerce")
             }).fillna({"AverageGPA": 0.0})
 
-            # optional: sort by GPA desc
             df_gpa = df_gpa.sort_values("AverageGPA", ascending=False)
 
         except Exception as e:
@@ -307,9 +305,6 @@ with left_top:
 
                 df_budget = df_budget.rename(columns={"course_name": "CourseName", "budget": "Budget"})
                 df_budget["Budget"] = pd.to_numeric(df_budget["Budget"], errors="coerce").fillna(0)
-
-                # optional: show top N by budget (they’re equal within a college, but allows cross-college view)
-                # df_budget = df_budget.sort_values("Budget", ascending=False).head(20)
 
             except Exception as e:
                 st.caption(f"Using sample data — {e}")
@@ -421,7 +416,6 @@ with left_top:
             if rename_map:
                 df = df.rename(columns=rename_map)
 
-            # keep just what we need, clean types
             keep = [c for c in ["course_id", "course_name", "average_gpa"] if c in df.columns]
             df = df[keep] if keep else pd.DataFrame(columns=["course_id", "course_name", "average_gpa"])
             if "course_id" in df.columns:

@@ -621,7 +621,175 @@ def courses_enrollments_list():
         """)
     return make_response(jsonify(cur.fetchall()), 200)
 
+# =========================
+# Dean Budget / Finance APIs (matches final schema)
+# =========================
+
+@metrics_api.route("/metrics/deans/<int:dean_id>/budget/summary", methods=["GET"])
+def dean_budget_summary(dean_id: int):
+    """
+    Returns: totalBudget, totalDonations, budgetUsed, remaining
+    for the dean's college.
+    """
+    row = _college_for_dean_id(dean_id)
+    college = (row or {}).get("collegeName")
+    if not college:
+        return jsonify({})
+
+    q = """
+        SELECT
+            COALESCE(SUM(c.budget), 0) AS totalBudget,
+            COALESCE(SUM(d.amount), 0) AS totalDonations,
+            COALESCE(SUM(e.amount), 0) AS budgetUsed,
+            (COALESCE(SUM(c.budget),0) + COALESCE(SUM(d.amount),0)
+             - COALESCE(SUM(e.amount),0)) AS remaining
+        FROM courses c
+        LEFT JOIN course_donations d ON d.courseId = c.id
+        LEFT JOIN course_expenses e  ON e.courseId = c.id
+        WHERE c.college = %s
+    """
+    cur = db.get_db().cursor()
+    cur.execute(q, (college,))
+    return jsonify(cur.fetchone() or {})
+
+
+@metrics_api.route("/metrics/deans/<int:dean_id>/budget/spending-trend", methods=["GET"])
+def dean_spending_trend(dean_id: int):
+    """
+    Time-series of spending (sum of course_expenses.amount) for the dean's college.
+    Returns rows like: [{ "period": <date>, "spending": <number> }]
+    Optional: ?by=month to aggregate by month instead of by day.
+    """
+    # Get the dean's college
+    row = _college_for_dean_id(dean_id)
+    college = (row or {}).get("collegeName")
+    if not college:
+        return jsonify([])
+
+    # Allow aggregation choice: daily (default) or monthly
+    by = (request.args.get("by") or "day").lower()
+    if by == "month":
+        # Aggregate by first day of each month
+        q = """
+            SELECT
+                DATE_FORMAT(e.spentAt, '%%Y-%%m-01') AS period,
+                COALESCE(SUM(e.amount), 0) AS spending
+            FROM course_expenses e
+            JOIN courses c ON c.id = e.courseId
+            WHERE c.college = %s
+            GROUP BY DATE_FORMAT(e.spentAt, '%%Y-%%m-01')
+            ORDER BY DATE_FORMAT(e.spentAt, '%%Y-%%m-01')
+        """
+        params = (college,)
+    else:
+        # Default: daily aggregation
+        q = """
+            SELECT
+                e.spentAt AS period,
+                COALESCE(SUM(e.amount), 0) AS spending
+            FROM course_expenses e
+            JOIN courses c ON c.id = e.courseId
+            WHERE c.college = %s
+            GROUP BY e.spentAt
+            ORDER BY e.spentAt
+        """
+        params = (college,)
+
+    # Run the query
+    cur = db.get_db().cursor()
+    cur.execute(q, params)
+    rows = cur.fetchall()
+
+    # Return the results
+    return jsonify(rows)
 
 
 
 
+@metrics_api.route("/metrics/deans/<int:dean_id>/budget/by-course", methods=["GET"])
+def dean_budget_by_course(dean_id: int):
+    """
+    Department/Course financial breakdown.
+    """
+    row = _college_for_dean_id(dean_id)
+    college = (row or {}).get("collegeName")
+    if not college:
+        return jsonify([])
+
+    q = """
+        SELECT
+            c.id AS courseId,
+            c.name AS courseName,
+            COALESCE(c.budget, 0) AS allocated,
+            COALESCE(SUM(DISTINCT d.amount), 0) AS donations,
+            COALESCE(SUM(DISTINCT e.amount), 0) AS used,
+            (COALESCE(c.budget,0) + COALESCE(SUM(DISTINCT d.amount),0)) AS total,
+            CASE 
+              WHEN (COALESCE(c.budget,0) + COALESCE(SUM(DISTINCT d.amount),0)) > 0
+              THEN ROUND(100 * COALESCE(SUM(DISTINCT e.amount),0) 
+                         / (COALESCE(c.budget,0) + COALESCE(SUM(DISTINCT d.amount),0)), 2)
+              ELSE NULL
+            END AS usedPct
+        FROM courses c
+        LEFT JOIN course_donations d ON d.courseId = c.id
+        LEFT JOIN course_expenses e  ON e.courseId = c.id
+        WHERE c.college = %s
+        GROUP BY c.id, c.name, c.budget
+        ORDER BY c.name
+    """
+    cur = db.get_db().cursor()
+    cur.execute(q, (college,))
+    return jsonify(cur.fetchall())
+
+
+@metrics_api.route("/metrics/deans/<int:dean_id>/budget/donations", methods=["GET"])
+def dean_budget_donations(dean_id: int):
+    """
+    Latest donations table for this dean's college.
+    """
+    row = _college_for_dean_id(dean_id)
+    college = (row or {}).get("collegeName")
+    if not college:
+        return jsonify([])
+
+    limit = max(1, min(int(request.args.get("limit", 25)), 500))
+    q = f"""
+        SELECT
+            d.donorName AS donor,
+            d.amount AS amount,
+            d.donatedAt AS date,
+            c.name AS courseName
+        FROM course_donations d
+        JOIN courses c ON c.id = d.courseId
+        WHERE c.college = %s
+        ORDER BY d.donatedAt DESC, d.donationId DESC
+        LIMIT {limit}
+    """
+    cur = db.get_db().cursor()
+    cur.execute(q, (college,))
+    return jsonify(cur.fetchall())
+
+
+@metrics_api.route("/metrics/deans/<int:dean_id>/budget/donations-by-course", methods=["GET"])
+def dean_donations_by_course(dean_id: int):
+    """
+    Bar chart: total donations grouped by course for this dean's college.
+    """
+    row = _college_for_dean_id(dean_id)
+    college = (row or {}).get("collegeName")
+    if not college:
+        return jsonify([])
+
+    q = """
+        SELECT
+            c.name AS courseName,
+            COALESCE(SUM(d.amount), 0) AS donations
+        FROM courses c
+        LEFT JOIN course_donations d ON d.courseId = c.id
+        WHERE c.college = %s
+        GROUP BY c.name
+        ORDER BY donations DESC, c.name
+    """
+    cur = db.get_db().cursor()
+    cur.execute(q, (college,))
+    return jsonify(cur.fetchall())

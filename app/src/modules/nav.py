@@ -28,7 +28,7 @@ def DeanHomeNav():
 
 def DeanBudgetNav():
     st.sidebar.page_link(
-        "pages/30_Dean_Home.py", label="Dean - Budget Overview", icon="📈"
+        "pages/31_Dean_Budget.py", label="Dean - Budget Overview", icon="📈"
     )
 
 def DeanStudentsNav():
