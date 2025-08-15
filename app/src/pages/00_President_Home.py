@@ -26,7 +26,7 @@ if st.button('View Demographic Data Visualization',
              use_container_width=True):
   st.switch_page('pages/02_Student_Demographics.py')
 
-if st.button('View Demographic Data Visualization', 
+if st.button('View Enrollment Statistics', 
              type='primary',
              use_container_width=True):
   st.switch_page('pages/03_Enrollment_Statistics.py')
