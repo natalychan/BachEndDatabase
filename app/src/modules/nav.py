@@ -75,6 +75,10 @@ def ClassroomBookingNav():
     st.sidebar.page_link(
         "pages/25_Student_Room_Booking.py", label="Classroom Booking", icon="🏫"
     )
+def StudentAdvisorNav():
+    st.sidebar.page_link(
+        "pages/26_Student_Advisor_Booking.py", label="Advisor Info", icon="🧑‍🏫"
+    )
 
 def StudentMaintenanceRequestNav():
     st.sidebar.page_link(
@@ -144,6 +148,7 @@ def SideBarLinks(show_home=False):
             StudentScheduleNav()
             InstrumentNav()
             ClassroomBookingNav()
+            StudentAdvisorNav()
             StudentMaintenanceRequestNav()
             ClubNav()
 

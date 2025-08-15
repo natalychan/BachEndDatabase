@@ -36,7 +36,7 @@ if st.button('🏫 Make Classroom Booking',
   st.switch_page('pages/25_Student_Room_Booking.py')  
 
 #page shows advisor meetings
-if st.button('🧑‍🏫 View Advisor Meetings', 
+if st.button('🧑‍🏫 View Advisor Info', 
              type='primary',
              use_container_width=True):
   st.switch_page('pages/26_Student_Advisor_Booking.py')  
