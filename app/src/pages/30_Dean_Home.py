@@ -610,7 +610,7 @@ with left_top:
                         if not stu.empty:
                             stu["Name"] = (stu["firstName"].astype(str) + " " + stu["lastName"].astype(str)).str.strip()
                             stu["gpa"] = pd.to_numeric(stu["gpa"], errors="coerce")
-                            show = stu[["userId", "Name", "gpa", "school_rank"]].head(5)
+                            show = stu[["userId", "Name", "gpa", "school_rank"]]
                             st.write(f"**{course_for_gpa}**")
                             st.dataframe(
                                 show.rename(columns={"userId": "ID", "gpa": "GPA", "school_rank": "Rank"}),
