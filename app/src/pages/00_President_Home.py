@@ -31,7 +31,7 @@ if st.button('View Enrollment Statistics',
              use_container_width=True):
   st.switch_page('pages/03_Enrollment_Statistics.py')
 
-if st.button('View Budgeting', 
+if st.button('View Budgeting💲', 
              type='primary',
              use_container_width=True):
   st.switch_page('pages/04_Budgeting.py')

@@ -192,7 +192,7 @@ def student_teacher_ratio():
 
 # ------------------------------------------------------------
 # GET /api/rankings/compare
-# Purpose: Compare internal GPA vs national rankings (President / Lim-6)
+# Purpose: retrieves national rankings (President / Lim-6)
 @metrics_api.route('/rankings/compare', methods=['GET'])
 def rankings_compare():
     query = '''
@@ -200,9 +200,7 @@ def rankings_compare():
                sr.ranking,
                ROUND(AVG(s.gpa), 2) AS average_gpa
         FROM school_rankings sr
-        LEFT JOIN students s ON sr.schoolName = s.college
-        GROUP BY sr.schoolName, sr.ranking
-        ORDER BY sr.ranking DESC
+        ORDER BY sr.ranking ASC
     '''
     current_app.logger.info("GET /rankings/compare : comparing GPA vs rankings")
     cursor = db.get_db().cursor()
