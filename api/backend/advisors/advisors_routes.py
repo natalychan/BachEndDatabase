@@ -13,32 +13,25 @@ advisors_api = Blueprint('advisors_api', __name__)
 #------------------------------------------------------------
 # Get all the club from the database, package them up,
 # and return them to the client
-@advisors_api.route('/advisors', methods=['GET'])
-def get_advisor_email():
+@advisors_api.route('/advisors/<int:student_id>', methods=['GET'])
+def get_advisor_email(student_id):
     query = '''
-        SELECT u.emailAddress
+        SELECT u.firstName, u.lastName, u.emailAddress
         FROM advisors a
         JOIN users u ON a.userId = u.userId
         JOIN students s ON a.userId = s.advisor
+        where s.userId = %s
     '''
-    
-   # logging the query for debugging purposes.  
-    # The output will appear in the Docker logs output
-    # This line has nothing to do with actually executing the query...
-    # It is only for debugging purposes. 
-    current_app.logger.info(f'GET /advisors query={query}')
+    conn = db.get_db()
+    cursor = conn.cursor()
+    cursor.execute(query, (student_id,))
+    row = cursor.fetchone()
 
-    # get the database connection, execute the query, and 
-    # fetch the results as a Python Dictionary
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    theData = cursor.fetchall()
-    
-    # Another example of logging for debugging purposes.
-    # You can see if the data you're getting back is what you expect. 
-    current_app.logger.info(f'GET /advisors Result of query = {theData}')
-    
-    response = make_response(jsonify(theData))
-    response.status_code = 200
-    return response
-    
+    if row:  
+        result = {
+            "advisor_name": f"{row['firstName']} {row['lastName']}",
+            "emailAddress": row['emailAddress']
+        }
+        return jsonify(result), 200
+    else:
+        return jsonify({"error": "Student or advisor not found"}), 404
