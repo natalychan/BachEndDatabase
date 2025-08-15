@@ -155,7 +155,7 @@ except Exception as e:
 
 
 
-# Vacant Courses
+# College Rankings
 st.subheader("College Rankings")
 st.write("This table shows the national rankings of colleges.")
 
