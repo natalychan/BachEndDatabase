@@ -196,9 +196,7 @@ def student_teacher_ratio():
 @metrics_api.route('/rankings/compare', methods=['GET'])
 def rankings_compare():
     query = '''
-        SELECT sr.schoolName,
-               sr.ranking,
-               ROUND(AVG(s.gpa), 2) AS average_gpa
+        SELECT *
         FROM school_rankings sr
         ORDER BY sr.ranking ASC
     '''
