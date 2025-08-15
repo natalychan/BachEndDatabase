@@ -7,7 +7,7 @@ club_members_api = Blueprint('club_members_api', __name__)
 # @club_members_api.route('/club_members/<int:studentId>/clubs', methods=['GET'])
 @club_members_api.route('/club_members/<int:studentId>', methods=['GET'])
 def club_members(studentId):
-    query = 'SELECT * FROM club_members WHERE studentId = %s;'
+    query = 'SELECT clubName, role FROM club_members WHERE studentId = %s;'
     cursor = db.get_db().cursor()
     cursor.execute(query, (studentId,))
     theData = cursor.fetchall()
