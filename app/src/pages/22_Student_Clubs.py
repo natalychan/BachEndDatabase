@@ -27,7 +27,16 @@ with main_col:
                 df = pd.DataFrame(data)
                 st.subheader("All Clubs")
                 st.write("Here is a list of all clubs available:")
-                st.dataframe(df, use_container_width=True)
+                categories = ['All'] + sorted(df['category'].unique())
+                selected_category = st.selectbox("Filter by category:", categories)
+
+                if selected_category != 'All':
+                    filtered_df = df[df['category'] == selected_category]
+                else:
+                    filtered_df = df
+
+                st.write(f"Showing {len(filtered_df)} clubs:")
+                st.dataframe(df[['name','location','description']], use_container_width=True)
             else: 
                 st.info("No clubs data available.")
         else:

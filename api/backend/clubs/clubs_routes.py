@@ -9,7 +9,7 @@ clubs_api = Blueprint('clubs_api', __name__)
 # Purpose: List all clubs
 @clubs_api.route('/clubs', methods=['GET'])
 def list_clubs():
-    query = "SELECT name AS club_name FROM clubs ORDER BY name"
+    query = "SELECT * FROM clubs"
     current_app.logger.info("GET /clubs : listing clubs")
     cursor = db.get_db().cursor()
     cursor.execute(query)

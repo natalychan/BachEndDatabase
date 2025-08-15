@@ -82,11 +82,11 @@ create table professors
 
 
 DROP TABLE IF EXISTS classrooms;
-CREATE TABLE classrooms
+create table classrooms
 (
-   roomNumber     int PRIMARY KEY,
-   status         VARCHAR(50),
-   lastMaintained DATETIME
+    roomNumber int not null primary key,
+    status varchar(50) not null,
+    lastMaintained datetime
 );
 
 
@@ -163,9 +163,13 @@ CREATE TABLE alumni
 
 
 DROP TABLE IF EXISTS clubs;
-CREATE TABLE clubs
+create table clubs
 (
-   name VARCHAR(50) PRIMARY KEY
+    name varchar(50) primary key,
+    category varchar(50),
+    location int not null,
+    description mediumtext,
+    foreign key (location) references classrooms(roomNumber)
 );
 
 
