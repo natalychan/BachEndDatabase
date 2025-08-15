@@ -20,6 +20,8 @@ def PresidentPageNav():
     st.sidebar.page_link("pages/01_Student_Performance.py", label="Student Performance", icon="📊")
     st.sidebar.page_link("pages/02_Student_Demographics.py", label="Student Demographics", icon="📊")
     st.sidebar.page_link("pages/03_Enrollment_Statistics.py", label="Enrollment Statistics", icon="📊")
+    st.sidebar.page_link("pages/04_Budgeting.py", label="Budget", icon="💰")
+
 
 
 
