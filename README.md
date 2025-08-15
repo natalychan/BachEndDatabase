@@ -17,9 +17,17 @@ The system supports a diverse range of users, including the university president
 
 By integrating these perspectives into one platform, the Bach-End Database empowers the university to identify trends, address problems promptly, and improve overall institutional performance.
 
-## Secret Stuff
-idk what exatly to put here,,, env stuff???
+## Set Up
+### Prerequisites
+(do something with the .env.template, set the password... Should user supposed to set up their own secret key?)
+(do user need to install python on their computer?)
 
+*Set up containers*
+In VSCode: in TERMINAL, type in 
+q. docker compose up -d` to start all the containers in the background
+2.  `docker compose down` to shutdown and delete the containers
+3.  `docker compose up db -d` only start the database container (replace db with api or app for the other two services as needed)
+4. `docker compose stop` to "turn off" the containers but not delete them.
 
 if you want to see stuff he put here, you can scroll down a bit. 
 
