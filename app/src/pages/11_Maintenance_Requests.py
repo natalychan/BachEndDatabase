@@ -15,6 +15,7 @@ st.header('Maintenance Requests')
 # You can access the session state to make a more customized/personalized app experience
 st.write(f"### Hi, {st.session_state['first_name']}.")
 
+st.write("Here you can view and manage maintenance requests.")
 
 try:
    # Display maintenance requests
