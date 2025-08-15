@@ -18,18 +18,29 @@ st.write(f"### Hi, {st.session_state['first_name']}.")
 
 try:
    # Display maintenance requests
-    API_URL = "http://web-api:4000/api/maintenance-requests"
+    user_id = st.session_state.get('user_id') 
+    API_URL = f"http://web-api:4000/api/maintenance-requests/{user_id}"
     response = requests.get(API_URL)
-    
-    if response.status_code == 200:
-        data = response.json()
-        
-        if data:
-            df = pd.DataFrame(data)
-            st.dataframe(df, use_container_width=True)
-            st.info(f"Total Requests: {len(df)}")
-        else:
-            st.warning("No maintenance requests found")
+    if user_id:
+        if response.status_code == 200:
+            data = response.json()
+            
+            if data:
+                df = pd.DataFrame(data)
+                mr = df.rename(columns={
+                    "address": "Address",
+                    "description": "Description",
+                    "firstName": "First Name",
+                    "lastName": "Last Name",
+                    "orderId": "Order ID",
+                    "problemType": "Problem Type",
+                    "staffId": "Staff ID",
+                    "submitted": "Date Submitted"
+                })
+                st.dataframe(mr, use_container_width=True)
+                st.info(f"Total Requests: {len(df)}")
+            else:
+                st.warning("No maintenance requests found")
     else:
         st.error(f"Failed to fetch data: HTTP {response.status_code}")
 
