@@ -383,3 +383,129 @@ def alumni_placements(collegeName):
     response = make_response(jsonify(theData[0] if theData else {'college': collegeName, 'total_alumni': 0, 'employed_alumni': 0, 'employment_rate': None}))
     response.status_code = 200
     return response
+
+@metrics_api.route("/metrics/courses/student-teacher-ratio", methods=["GET"])
+def course_student_teacher_ratio():
+    """
+    Returns: [{course_name, students_per_teacher}]
+    Optional filter: ?college=Name
+    """
+    college = request.args.get("college")
+    cur = db.get_db().cursor()
+
+    # Base course list (filter by college if provided)
+    if college:
+        cur.execute("""
+            SELECT id AS course_id, name AS course_name, enrollment
+            FROM courses
+            WHERE college = %s
+        """, (college,))
+    else:
+        cur.execute("""
+            SELECT id AS course_id, name AS course_name, enrollment
+            FROM courses
+        """)
+    courses = cur.fetchall()
+
+    def _as_num(v, d=0):
+        try:
+            return float(v) if v is not None else d
+        except Exception:
+            return d
+
+    results = []
+    for c in courses:
+        cid = c["course_id"]
+
+        # Enrollment: prefer courses.enrollment; fallback to students_courses count
+        enrolled = _as_num(c.get("enrollment"), 0)
+        if not enrolled:
+            cur.execute("SELECT COUNT(*) AS cnt FROM students_courses WHERE courseId = %s", (cid,))
+            enrolled = _as_num(cur.fetchone()["cnt"], 0)
+
+        # Instructors from professors_courses
+        cur.execute("SELECT COUNT(*) AS icnt FROM professors_courses WHERE courseId = %s", (cid,))
+        icnt = _as_num(cur.fetchone()["icnt"], 0)
+
+        ratio = (enrolled / icnt) if icnt else None
+        results.append({
+            "course_name": c["course_name"],
+            "students_per_teacher": ratio
+        })
+
+    return make_response(jsonify(results), 200)
+
+
+@metrics_api.route("/metrics/courses/budget", methods=["GET"])
+def course_budget_direct():
+    """
+    Returns the stored budget per course, optionally filtered by college.
+    Requires `courses.budget` to exist (DECIMAL/NUMERIC).
+    [{course_id, course_name, budget}]
+    """
+    college = request.args.get("college")
+    cur = db.get_db().cursor()
+    if college:
+        cur.execute("""
+            SELECT id AS course_id, name AS course_name, COALESCE(budget, 0) AS budget
+            FROM courses
+            WHERE college = %s
+            ORDER BY name
+        """, (college,))
+    else:
+        cur.execute("""
+            SELECT id AS course_id, name AS course_name, COALESCE(budget, 0) AS budget
+            FROM courses
+            ORDER BY name
+        """)
+    return make_response(jsonify(cur.fetchall()), 200)
+
+@metrics_api.route("/metrics/courses/<int:course_id>/students", methods=["GET"])
+def course_students(course_id: int):
+    """
+    ?gpaMin=3.5 (default)
+    Returns: [{userId, firstName, lastName, gpa, school_rank}]
+    """
+    gpa_min = request.args.get('gpaMin', default=3.5, type=float)
+    cur = db.get_db().cursor()
+    q = """
+        SELECT s.userId,
+               u.firstName,
+               u.lastName,
+               s.gpa,
+               sr.ranking AS school_rank
+        FROM students_courses sc
+        JOIN students s ON s.userId = sc.studentId
+        JOIN users   u  ON u.userId = s.userId
+        LEFT JOIN school_rankings sr ON s.college = sr.schoolName
+        WHERE sc.courseId = %s AND s.gpa >= %s
+        ORDER BY s.gpa DESC, u.lastName, u.firstName
+        LIMIT 100
+    """
+    cur.execute(q, (course_id, gpa_min))
+    return make_response(jsonify(cur.fetchall()), 200)
+
+@metrics_api.route("/metrics/courses/enrollments", methods=["GET"])
+def courses_enrollments_list():
+    """
+    Returns: [{course_id, course_name, enrolled_students}]
+    Optional: ?college=Name
+    """
+    college = request.args.get("college")
+    cur = db.get_db().cursor()
+    if college:
+        cur.execute("""
+            SELECT id AS course_id, name AS course_name, COALESCE(enrollment, 0) AS enrolled_students
+            FROM courses
+            WHERE college = %s
+            ORDER BY enrolled_students DESC, name
+        """, (college,))
+    else:
+        cur.execute("""
+            SELECT id AS course_id, name AS course_name, COALESCE(enrollment, 0) AS enrolled_students
+            FROM courses
+            ORDER BY enrolled_students DESC, name
+        """)
+    return make_response(jsonify(cur.fetchall()), 200)
+
+

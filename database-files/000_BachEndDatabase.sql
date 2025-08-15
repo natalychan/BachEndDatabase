@@ -100,6 +100,7 @@ CREATE TABLE courses
    college     varchar(50) not null,
    roomNumber  int         not null,
    professorId INT         not null,
+   budget      int         not null,
    Foreign key (college) references colleges (collegeName),
    Foreign key (professorId) references professors (userId),
    Foreign key (roomNumber) references classrooms (roomNumber)

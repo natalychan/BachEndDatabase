@@ -81,4 +81,6 @@ if st.button('Act as Yo Dean, dean of the College of Composition at the universi
     st.session_state['authenticated'] = True
     st.session_state['role'] = 'dean'
     st.session_state['first_name'] = 'Yo'
+    st.session_state['college'] = 'Composition'
+    st.session_state['dean_id'] = '3'
     st.switch_page('pages/30_Dean_Home.py')
