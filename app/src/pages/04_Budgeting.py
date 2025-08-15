@@ -1,94 +1,141 @@
 import logging
 logger = logging.getLogger(__name__)
 
-import pandas as pd
-import streamlit as st
-from streamlit_extras.app_logo import add_logo
-import plotly.express as px
-from modules.nav import SideBarLinks
+import os
 import requests
+import pandas as pd
+import plotly.express as px
+import streamlit as st
+from modules.nav import SideBarLinks
 
-# Sidebar navigation
+st.set_page_config(layout="wide")
+
+# Sidebar
 SideBarLinks()
 
-# Page Header
-st.title("💰 President's Budget Dashboard")
+API_BASE = os.getenv("API_BASE", "http://api:4000/api").rstrip("/")
+TIMEOUT = int(os.getenv("API_TIMEOUT", "8"))
+
+def _get(path: str, params=None):
+    """Simple GET wrapper with base + timeout + raise_for_status."""
+    url = f"{API_BASE}{path if path.startswith('/') else '/' + path}"
+    r = requests.get(url, params=params or {}, timeout=TIMEOUT)
+    r.raise_for_status()
+    return r.json()
+
+# =====================
+# Top row: headline metrics + spending trend
+# =====================
+st.title("💰 President Budget Dashboard")
 st.write(f"### Welcome back, {st.session_state['first_name']}.")
 
-st.info("This dashboard provides a comprehensive view of revenue, expenses, and net balance for all colleges.")
 
-# --- Fetch Budget Data ---
 try:
-    budget_resp = requests.get("http://web-api:4000/api/metrics/president/budget")
-    if budget_resp.status_code != 200:
-        st.error(f"Failed to fetch budget data. HTTP {budget_resp.status_code}")
-    else:
-        df = pd.DataFrame(budget_resp.json())
-
-        # Expected columns check
-        expected_cols = {"college", "total_expenses", "total_revenue", "net_balance"}
-        if not expected_cols.issubset(df.columns):
-            st.error(f"Unexpected columns in API response. Expected: {expected_cols}")
-        else:
-            # --- Summary KPIs ---
-            total_rev = df["total_revenue"].sum()
-            total_exp = df["total_expenses"].sum()
-            total_net = total_rev - total_exp
-
-            kpi_cols = st.columns(3)
-            kpi_cols[0].metric("📈 Total Revenue", f"${total_rev:,.2f}")
-            kpi_cols[1].metric("📉 Total Expenses", f"${total_exp:,.2f}")
-            kpi_cols[2].metric("💵 Net Balance", f"${total_net:,.2f}")
-
-            # --- Revenue vs Expenses by College ---
-            st.subheader("Revenue vs Expenses by College")
-            fig_bar = px.bar(
-                df,
-                x="college",
-                y=["total_revenue", "total_expenses"],
-                barmode="group",
-                title="Revenue & Expenses by College",
-                labels={"value": "Amount (USD)", "variable": "Category"},
-                text_auto=True
-            )
-            st.plotly_chart(fig_bar, use_container_width=True)
-
-            # --- Net Balance by College ---
-            st.subheader("Net Balance by College")
-            fig_net = px.bar(
-                df,
-                x="college",
-                y="net_balance",
-                title="Net Balance (Revenue - Expenses)",
-                labels={"net_balance": "Net Balance (USD)", "college": "College"},
-                text_auto=True,
-                color="net_balance",
-                color_continuous_scale=px.colors.sequential.Viridis
-            )
-            st.plotly_chart(fig_net, use_container_width=True)
-
-            # --- Revenue Distribution ---
-            st.subheader("Revenue Distribution Across Colleges")
-            fig_pie = px.pie(
-                df,
-                names="college",
-                values="total_revenue",
-                title="Share of Total Revenue by College",
-                hole=0.4,
-                color_discrete_sequence=px.colors.sequential.Viridis
-            )
-            fig_pie.update_traces(textinfo="percent+label")
-            st.plotly_chart(fig_pie, use_container_width=True)
-
-            # --- Full Data Table ---
-            st.subheader("Detailed Budget Data")
-            st.dataframe(df.style.format({
-                "total_revenue": "${:,.2f}",
-                "total_expenses": "${:,.2f}",
-                "net_balance": "${:,.2f}"
-            }))
-
-except requests.exceptions.RequestException as e:
-    st.error(f"Error connecting to API: {str(e)}")
+    summary = _get("/metrics/president/budget")  # Returns list of dicts per college
+    df_summary = pd.DataFrame(summary)
 except Exception as e:
-    st.error(f"Error processing data: {str(e)}")
+    st.error(f"Unable to load budget summary — {e}")
+    df_summary = pd.DataFrame()
+
+if not df_summary.empty:
+    st.subheader("Budget Overview by College")
+    # Format numbers
+    for col in ["totalBudget", "totalDonations", "budgetUsed", "remaining"]:
+        if col in df_summary.columns:
+            df_summary[col] = pd.to_numeric(df_summary[col], errors="coerce").fillna(0).map("${:,.0f}".format)
+    st.dataframe(df_summary, use_container_width=True)
+else:
+    st.info("No budget summary data available.")
+
+# Spending trend
+st.subheader("Spending Trend Across Colleges")
+try:
+    trend = _get("/metrics/president/budget/spending-trend")  # Expecting: [{college, period, spending}]
+    df_trend = pd.DataFrame(trend)
+    if not df_trend.empty:
+        df_trend["period"] = pd.to_datetime(df_trend["period"], errors="coerce")
+        df_trend["spending"] = pd.to_numeric(df_trend["spending"], errors="coerce").fillna(0)
+        fig_trend = px.line(
+            df_trend.sort_values("period"),
+            x="period",
+            y="spending",
+            color="college",
+            markers=True,
+            labels={"period": "Date", "spending": "Spending ($)", "college": "College"},
+            title="Spending Trend by College"
+        )
+        st.plotly_chart(fig_trend, use_container_width=True)
+    else:
+        st.info("No spending trend data available.")
+except Exception as e:
+    st.warning(f"Unable to load spending trend: {e}")
+
+# =====================
+# Middle: course-level breakdown + recent donations
+# =====================
+left_mid, right_mid = st.columns([1.4, 0.6], gap="large")
+
+with left_mid:
+    st.subheader("Course-Level Financial Breakdown")
+    try:
+        breakdown = _get("/metrics/president/budget/by-course")  # Expecting all courses across colleges
+        df_break = pd.DataFrame(breakdown)
+        if not df_break.empty:
+            rename_map = {
+                "college": "College",
+                "courseName": "Course",
+                "total": "Total",
+                "allocated": "Allocated",
+                "donations": "Donations",
+                "used": "Used",
+                "usedPct": "Used %"
+            }
+            df_break = df_break.rename(columns=rename_map)
+            for col in ["Total", "Allocated", "Donations", "Used", "Used %"]:
+                if col in df_break.columns:
+                    df_break[col] = pd.to_numeric(df_break[col], errors="coerce").fillna(0)
+            df_break = df_break.sort_values(["College", "Used %"], ascending=[True, False])
+            st.dataframe(df_break, use_container_width=True)
+        else:
+            st.info("No course-level data available.")
+    except Exception as e:
+        st.warning(f"Unable to load course breakdown: {e}")
+
+with right_mid:
+    st.subheader("Recent Donations")
+    try:
+        donations = _get("/metrics/president/budget/donations", params={"limit": 100})
+        df_don = pd.DataFrame(donations)
+        if not df_don.empty:
+            df_don["date"] = pd.to_datetime(df_don["date"], errors="coerce")
+            df_don["amount"] = pd.to_numeric(df_don["amount"], errors="coerce").fillna(0)
+            df_don = df_don.rename(columns={"donor": "Donor", "courseName": "Course", "date": "Date", "amount": "Amount", "college": "College"})
+            st.dataframe(df_don.sort_values("Date", ascending=False), use_container_width=True)
+        else:
+            st.info("No recent donations available.")
+    except Exception as e:
+        st.warning(f"Unable to load donations: {e}")
+
+# =====================
+# Bottom: donations by course bar chart
+# =====================
+st.subheader("Donations by Course")
+try:
+    donations_by_course = _get("/metrics/president/budget/donations-by-course")  # Expecting all courses
+    df_dbc = pd.DataFrame(donations_by_course)
+    if not df_dbc.empty:
+        df_dbc = df_dbc.rename(columns={"courseName": "Course", "donations": "Donations", "college": "College"})
+        df_dbc["Donations"] = pd.to_numeric(df_dbc["Donations"], errors="coerce").fillna(0)
+        fig_dbc = px.bar(
+            df_dbc,
+            x="Course",
+            y="Donations",
+            color="College",
+            labels={"Course": "Course", "Donations": "Donations ($)"},
+            title="Donations by Course and College"
+        )
+        st.plotly_chart(fig_dbc, use_container_width=True)
+    else:
+        st.info("No donation data available for chart.")
+except Exception as e:
+    st.warning(f"Unable to load donations by course: {e}")
