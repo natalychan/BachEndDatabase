@@ -896,3 +896,122 @@ def dean_total_students_enrollment(dean_id: int):
     except Exception:
         result["totalEnrollment"] = 0
     return jsonify(result)
+
+
+# =========================
+# President Budget / Finance APIs 
+# =========================
+@metrics_api.route("/metrics/president/budget/summary", methods=["GET"])
+def president_budget_summary():
+    """
+    Overall budget summary for each college: budget, donations, spending, remaining.
+    """
+    q = """
+        SELECT
+            c.college AS collegeName,
+            COALESCE(SUM(c.budget), 0) AS totalBudget,
+            COALESCE(SUM(d.amount), 0) AS totalDonations,
+            COALESCE(SUM(e.amount), 0) AS budgetUsed,
+            (COALESCE(SUM(c.budget),0) + COALESCE(SUM(d.amount),0)
+             - COALESCE(SUM(e.amount),0)) AS remaining
+        FROM courses c
+        LEFT JOIN course_donations d ON d.courseId = c.id
+        LEFT JOIN course_expenses e  ON e.courseId = c.id
+        GROUP BY c.college
+        ORDER BY c.college
+    """
+    cur = db.get_db().cursor()
+    cur.execute(q)
+    return jsonify(cur.fetchall())
+
+@metrics_api.route("/metrics/president/budget/spending-trend", methods=["GET"])
+def president_spending_trend():
+    """
+    Time-series of spending for all colleges.
+    Pass ?by=month to aggregate by month.
+    """
+    by = (request.args.get("by") or "day").lower()
+    if by == "month":
+        q = """
+            SELECT
+                c.college AS collegeName,
+                DATE_FORMAT(e.spentAt, '%%Y-%%m-01') AS period,
+                COALESCE(SUM(e.amount), 0) AS spending
+            FROM course_expenses e
+            JOIN courses c ON c.id = e.courseId
+            GROUP BY c.college, DATE_FORMAT(e.spentAt, '%%Y-%%m-01')
+            ORDER BY c.college, period
+        """
+    else:
+        q = """
+            SELECT
+                c.college AS collegeName,
+                e.spentAt AS period,
+                COALESCE(SUM(e.amount), 0) AS spending
+            FROM course_expenses e
+            JOIN courses c ON c.id = e.courseId
+            GROUP BY c.college, e.spentAt
+            ORDER BY c.college, period
+        """
+
+    cur = db.get_db().cursor()
+    cur.execute(q)
+    return jsonify(cur.fetchall())
+
+@metrics_api.route("/metrics/president/budget/by-course", methods=["GET"])
+def president_budget_by_course():
+    """
+    Budget usage broken down by course for each college.
+    """
+    q = """
+        SELECT
+            c.college AS collegeName,
+            c.courseName,
+            COALESCE(c.budget, 0) AS budget,
+            COALESCE(SUM(e.amount), 0) AS budgetUsed,
+            (COALESCE(c.budget, 0) - COALESCE(SUM(e.amount), 0)) AS remaining
+        FROM courses c
+        LEFT JOIN course_expenses e ON e.courseId = c.id
+        GROUP BY c.college, c.courseName, c.budget
+        ORDER BY c.college, remaining ASC
+    """
+    cur = db.get_db().cursor()
+    cur.execute(q)
+    return jsonify(cur.fetchall())
+
+@metrics_api.route("/metrics/president/budget/donations-summary", methods=["GET"])
+def president_donations_summary():
+    """
+    Total donations received for each college.
+    """
+    q = """
+        SELECT
+            c.college AS collegeName,
+            COALESCE(SUM(d.amount), 0) AS totalDonations
+        FROM courses c
+        LEFT JOIN course_donations d ON d.courseId = c.id
+        GROUP BY c.college
+        ORDER BY c.college
+    """
+    cur = db.get_db().cursor()
+    cur.execute(q)
+    return jsonify(cur.fetchall())
+
+@metrics_api.route("/metrics/president/budget/donations-by-course", methods=["GET"])
+def president_donations_by_course():
+    """
+    Donations broken down by course for each college.
+    """
+    q = """
+        SELECT
+            c.college AS collegeName,
+            c.courseName,
+            COALESCE(SUM(d.amount), 0) AS totalDonations
+        FROM courses c
+        LEFT JOIN course_donations d ON d.courseId = c.id
+        GROUP BY c.college, c.courseName
+        ORDER BY c.college, totalDonations DESC
+    """
+    cur = db.get_db().cursor()
+    cur.execute(q)
+    return jsonify(cur.fetchall())
