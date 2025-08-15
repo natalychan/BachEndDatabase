@@ -18,7 +18,7 @@ st.write(f"### Hi, {st.session_state['first_name']}.")
 
 # Student–Teacher Ratio
 st.subheader("Student–Teacher Ratio by College")
-ratio_resp = requests.get(f"{API_BASE}/colleges/metrics/student-teacher-ratio")
+ratio_resp = requests.get(f"http://web-api:4000/api/metrics/student-teacher-ratio")
 if ratio_resp.status_code == 200:
     ratio_df = pd.DataFrame(ratio_resp.json())
     st.dataframe(ratio_df)
@@ -36,7 +36,7 @@ if ratio_resp.status_code == 200:
 
 # Vacant Courses
 st.subheader("Vacant Courses")
-vacancy_resp = requests.get(f"{API_BASE}/courses/vacancies")
+vacancy_resp = requests.get(f"http://web-api:4000/api/metrics/courses/vacancies")
 if vacancy_resp.status_code == 200:
     vacancy_df = pd.DataFrame(vacancy_resp.json())
     vacant_only = vacancy_df[vacancy_df["is_vacant"] == 1]
