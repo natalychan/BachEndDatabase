@@ -23,11 +23,11 @@ st.subheader("Distribution of College Average GPA")
 
 
 # the with statment shows the code for this block above it 
-with st.echo(code_location='above'):
-    st.write("This histogram shows the distribution of average GPAs across different colleges. " \
+
+st.write("This histogram shows the distribution of average GPAs across different colleges. " \
     "Each bar represents the number of colleges that fall within a specific average GPA range. " \
     "The dashed line indicates the overall mean GPA across all colleges.")
-    try:
+try:
         response = requests.get('http://web-api:4000/api/colleges/averages/gpa')
         if response.status_code == 200:
             data = response.json()
@@ -67,9 +67,9 @@ with st.echo(code_location='above'):
         else:
             st.error(f"Failed to fetch data: HTTP {response.status_code}")
             
-    except requests.exceptions.RequestException as e:
+except requests.exceptions.RequestException as e:
         st.error(f"Error connecting to API: {str(e)}")
-    except Exception as e:
+except Exception as e:
         st.error(f"Error creating histogram: {str(e)}")
 
 
@@ -79,9 +79,7 @@ with st.echo(code_location='above'):
 # making the box plot to see the distribution of student GPAs by college
 st.subheader("Distribution of Student GPAs by College")
 
-
-with st.echo(code_location='above'):
-    try:
+try:
         st.write("This box plot illustrates the distribution of individual student GPAs within each college. " \
         "Each box represents the IQR of GPAs for students in that college, along with the median GPA. " \
         "The whiskers extend to 1.5 times the IQR, and any points outside this range are considered outliers.")
@@ -148,7 +146,19 @@ with st.echo(code_location='above'):
         else:
             st.error(f"Failed to fetch data: HTTP {response.status_code}")
             
-    except requests.exceptions.RequestException as e:
-        st.error(f"Error connecting to API: {str(e)}")
-    except Exception as e:
-        st.error(f"Error creating box plot: {str(e)}")
+except requests.exceptions.RequestException as e:
+    st.error(f"Error connecting to API: {str(e)}")
+except Exception as e:
+    st.error(f"Error creating box plot: {str(e)}")
+
+    
+
+
+
+# Vacant Courses
+st.subheader("College Rankings")
+vacancy_resp = requests.get(f"http://web-api:4000/api/metrics/courses/vacancies")
+if vacancy_resp.status_code == 200:
+    vacancy_df = pd.DataFrame(vacancy_resp.json())
+    vacant_only = vacancy_df[vacancy_df["is_vacant"] == 1]
+    st.dataframe(vacant_only)
