@@ -384,6 +384,119 @@ def alumni_placements(collegeName):
     response.status_code = 200
     return response
 
+# ------ Dean-specific helpers & routes ------
+
+def _as_num(v, default=0):
+    try:
+        return float(v) if v is not None else default
+    except Exception:
+        return default
+
+def _college_for_dean_id(dean_id: int):
+    q = "SELECT c.collegeName FROM colleges c WHERE c.dean = %s LIMIT 1"
+    cur = db.get_db().cursor()
+    cur.execute(q, (dean_id,))
+    return cur.fetchone()
+
+@metrics_api.route("/metrics/deans/<int:dean_id>/college", methods=["GET"])
+def dean_college(dean_id: int):
+    row = _college_for_dean_id(dean_id)
+    return make_response(jsonify(row or {}), 200)
+
+@metrics_api.route("/metrics/deans/<int:dean_id>/courses", methods=["GET"])
+def dean_courses(dean_id: int):
+    col = _college_for_dean_id(dean_id)
+    if not col or not col.get("collegeName"):
+        return make_response(jsonify([]), 200)
+
+    q = """
+        SELECT c.id AS course_id, c.name AS course_name,
+               COALESCE(c.enrollment, 0) AS enrollment,
+               0 AS capacity,
+               NULL AS vacancies
+        FROM courses c
+        WHERE c.college = %s
+        ORDER BY c.name
+    """
+    cur = db.get_db().cursor()
+    cur.execute(q, (col["collegeName"],))
+    rows = cur.fetchall() or []
+    for r in rows:
+        r["enrollment"] = int(_as_num(r.get("enrollment"), 0))
+        r["capacity"] = int(_as_num(r.get("capacity"), 0))
+    return make_response(jsonify(rows), 200)
+
+@metrics_api.route("/metrics/courses/averages/gpa", methods=["GET"])
+def course_averages_gpa():
+    """
+    Returns: [{course_id, course_name, average_gpa}]
+    Optional filter: ?college=Name
+    """
+    college = request.args.get("college")
+    cur = db.get_db().cursor()
+    if college:
+        q = """
+            SELECT c.id AS course_id, c.name AS course_name, ROUND(AVG(s.gpa), 2) AS average_gpa
+            FROM students_courses sc
+            JOIN students s ON s.userId = sc.studentId
+            JOIN courses  c ON c.id = sc.courseId
+            WHERE c.college = %s
+            GROUP BY c.id, c.name
+            ORDER BY c.name
+        """
+        cur.execute(q, (college,))
+    else:
+        q = """
+            SELECT c.id AS course_id, c.name AS course_name, ROUND(AVG(s.gpa), 2) AS average_gpa
+            FROM students_courses sc
+            JOIN students s ON s.userId = sc.studentId
+            JOIN courses  c ON c.id = sc.courseId
+            GROUP BY c.id, c.name
+            ORDER BY c.name
+        """
+        cur.execute(q)
+    return make_response(jsonify(cur.fetchall()), 200)
+
+
+@metrics_api.route('/courses/vacancies', methods=['GET'])
+def courses_vacancies_filtered():
+    college = request.args.get("college")
+    cur = db.get_db().cursor()
+    if college:
+        q = """
+            SELECT c.id AS course_id, c.name AS course_name, c.time, c.enrollment,
+                   ((c.professorId IS NULL) OR
+                    (c.id NOT IN (SELECT pc.courseId FROM professors_courses pc))) AS is_vacant
+            FROM courses c
+            WHERE c.college = %s
+            ORDER BY is_vacant DESC, c.name
+        """
+        cur.execute(q, (college,))
+    else:
+        q = """
+            SELECT c.id AS course_id, c.name AS course_name, c.time, c.enrollment,
+                   ((c.professorId IS NULL) OR
+                    (c.id NOT IN (SELECT pc.courseId FROM professors_courses pc))) AS is_vacant
+            FROM courses c
+            ORDER BY is_vacant DESC, c.name
+        """
+        cur.execute(q)
+    return make_response(jsonify(cur.fetchall()), 200)
+
+@metrics_api.route("/metrics/courses/<int:course_id>/enrollment-trend", methods=["GET"])
+def course_enrollment_trend(course_id: int):
+    q = """
+        SELECT s.year AS period, COUNT(*) AS enrollment
+        FROM students_courses sc
+        JOIN students s ON s.userId = sc.studentId
+        WHERE sc.courseId = %s
+        GROUP BY s.year
+        ORDER BY s.year
+    """
+    cur = db.get_db().cursor()
+    cur.execute(q, (course_id,))
+    return make_response(jsonify(cur.fetchall()), 200)
+
 @metrics_api.route("/metrics/courses/student-teacher-ratio", methods=["GET"])
 def course_student_teacher_ratio():
     """
@@ -507,5 +620,8 @@ def courses_enrollments_list():
             ORDER BY enrolled_students DESC, name
         """)
     return make_response(jsonify(cur.fetchall()), 200)
+
+
+
 
 
