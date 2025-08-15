@@ -18,7 +18,7 @@ from backend.reservations.reservations_routes import reserves_api
 from backend.maintenance_request.maintenance_request_routes import maintenance_api
 from backend.tools.tools_routes import tools_api
 from backend.school_rankings.school_rankings_routes import rankings_api
-
+from backend.club_members.club_members_routes import club_members_api
 
 def wait_for_db():
     host = os.getenv('DB_HOST', 'db').strip()
@@ -77,5 +77,7 @@ def create_app():
     app.register_blueprint(maintenance_api,    url_prefix='/api')
     app.register_blueprint(tools_api,          url_prefix='/api')
     app.register_blueprint(rankings_api,       url_prefix='/api')
+    app.register_blueprint(club_members_api,   url_prefix='/api') 
+
 
     return app

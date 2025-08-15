@@ -5,19 +5,23 @@ from backend.db_connection import db
 club_members_api = Blueprint('club_members_api', __name__)
 
 # GET /api/students/<student_id>/clubs
-@club_members_api.route('/club_members/<int:studentId>', methods=['GET'])
+@club_members_api.route('/club_members/<int:studentId>/clubs', methods=['GET'])
 def club_mems(studentId):
     query = """
-        SELECT cm.clubName AS club_name
-        FROM club_members cm
-        WHERE cm.studentId = %s
+        SELECT clubName 
+        FROM club_members cm 
+        join clubs c 
+            on cm.clubName = c.name
+        join students s 
+            on cm.studentId = s.userId
+        WHERE s.userId = %s
     """
-    current_app.logger.info("GET /club_members/%s", studentId)
+    current_app.logger.info("GET /club_members/%s/clubs", studentId)
     cursor = db.get_db().cursor()
     cursor.execute(query, (studentId,))
     theData = cursor.fetchall()
     theDataDict = [{"Club Name": row[0]} for row in theData]
-    current_app.logger.info("GET /club_members/%s : rows=%d", studentId, len(theData))
+    current_app.logger.info("GET /club_members/%s/clubs : rows=%d", studentId, len(theData))
     response = make_response(jsonify(theDataDict))
     response.status_code = 200
     return response

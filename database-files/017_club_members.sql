@@ -5,7 +5,7 @@ insert into club_members (studentId, clubName, role) values
 (151, 'jazz club', 'member'),
 (152, 'rock band', 'member'),
 (153, 'vocal ensemble', 'member'),
-(154, 'piano society', 'member'),
+(1, 'piano society', 'member'),
 (155, 'strings club', 'member'),
 (156, 'wind instruments guild', 'member'),
 (157, 'percussion circle', 'member'),
