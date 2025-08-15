@@ -79,7 +79,7 @@ with left_mid:
 
     if not df_break.empty:
         rename_map = {
-            "college": "College",
+            "collegeName": "College",
             "courseName": "Course",
             "total": "Total",
             "allocated": "Allocated",
@@ -109,7 +109,7 @@ with right_mid:
             "courseName": "Course",
             "date": "Date",
             "amount": "Amount",
-            "college": "College"
+            "collegeName": "College"
         })
         st.dataframe(df_don.sort_values("Date", ascending=False), use_container_width=True)
     else:
