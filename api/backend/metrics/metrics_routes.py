@@ -552,7 +552,7 @@ def course_student_teacher_ratio():
 @metrics_api.route("/metrics/courses/budget", methods=["GET"])
 def course_budget_direct():
     """
-    Returns the stored budget per course, optionally filtered by college.
+    Returns the stored budget per course, optionally filtered by college.o
     Requires `courses.budget` to exist (DECIMAL/NUMERIC).
     [{course_id, course_name, budget}]
     """

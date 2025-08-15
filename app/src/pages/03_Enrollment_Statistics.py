@@ -11,8 +11,6 @@ import requests
 # Sidebar navigation
 SideBarLinks()
 
-API_BASE = "http://localhost:5000/api"
-
 st.title("📊 Enrollment & Teacher Metrics")
 st.write(f"### Hi, {st.session_state['first_name']}.")
 
