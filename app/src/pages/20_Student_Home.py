@@ -39,7 +39,7 @@ if st.button('🏫 Make Classroom Booking',
 if st.button('🧑‍🏫 View Advisor Meetings', 
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/02_Map_Demo.py')  
+  st.switch_page('pages/26_Student_Advisor_Booking.py')  
 
 #page shows clubs info
 if st.button('🎉 View Clubs', 
