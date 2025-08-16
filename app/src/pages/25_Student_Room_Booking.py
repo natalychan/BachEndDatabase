@@ -26,6 +26,11 @@ try:
             
         if data:
             df = pd.DataFrame(data)
+            df.rename(columns={
+                    "roomnumber": "Room Number",
+                }, inplace=True)
+            if "lastMaintained" in df.columns:
+                df = df.drop(columns=["lastMaintained"])
             st.subheader("Classroom Availability")
             st.dataframe(df, use_container_width=True)
             st.info(f"Total Available Classrooms: {len(df)}")
