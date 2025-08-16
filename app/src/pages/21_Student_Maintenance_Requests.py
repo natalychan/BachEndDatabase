@@ -52,6 +52,49 @@ with st.form("submit_maintenance_request_form"):
                 st.error(f"Error connecting to the API: {str(e)}")
                 st.info("Please ensure the API server is running")
 
-# Add a button to return to the NGO Directory
+
+#view work requests submitted by student
+try:
+    # Display maintenance requests for current student
+    user_id = st.session_state.get('student_id') 
+    st.write(f"### My Maintenance Requests - Student ID: {user_id}")
+    
+    if user_id:
+        API_URL = f"http://web-api:4000/api/maintenance-requests/student/{user_id}"
+        response = requests.get(API_URL)
+        
+        if response.status_code == 200:
+            data = response.json()
+            
+            if data:
+                df = pd.DataFrame(data)
+                
+                # Rename columns to capitalize words
+                df.rename(columns={
+                    'orderId': 'Order ID',
+                    'address': 'Address',
+                    'problemType': 'Problem Type',
+                    'state': 'State',
+                    'submitted': 'Submitted',
+                    'description': 'Description',
+                    'staffId': 'Staff ID',
+                    'firstName': 'First Name',
+                    'lastName': 'Last Name',
+                    'tools': 'Tools'
+                }, inplace=True)
+                
+                st.dataframe(df, use_container_width=True, hide_index=True)
+                st.info(f"Total Requests: {len(df)}")
+            else:
+                st.warning("No maintenance requests found")
+        else:
+            st.error(f"Failed to fetch data: HTTP {response.status_code}")
+    else:
+        st.error("User ID not found in session")
+
+except Exception as e:
+    st.error(f"Error: {str(e)}")
+
+# Add a button to return to the Student Home
 if st.button("Return to Student Home"):
     st.switch_page("pages/20_Student_Home.py")
