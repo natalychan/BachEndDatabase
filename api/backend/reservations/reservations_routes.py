@@ -54,6 +54,12 @@ def create_reserve():
     query = '''
         INSERT INTO reserves (studentID, roomNumber, startTime, endTime)
         VALUES (%s, %s, %s, %s)
+        
+        UPDATE instruments i
+        JOIN rentals r ON i.instrumentId = r.instrumentId
+        SET i.isAvailable = TRUE
+        WHERE r.returnDate < CURDATE();
+
     '''
     current_app.logger.info("POST /reserves : payload=%s", payload)
     cursor = db.get_db().cursor()

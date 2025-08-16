@@ -38,8 +38,6 @@ API_URL = "http://api:4000/api/rentals"
 with st.form("instrument_rental_form"):
     st.subheader("Instrument Rental")
     studentId = st.session_state.get("student_id")  # Pre-fill from session state
-    # Required fields
-    # studentId = st.number_input("Student ID *", step=1, min_value=1, placeholder="Enter Student ID")
     instrumentId = st.number_input("Instrument ID *", step=1, min_value=1, placeholder="Enter Instrument ID")
     startDate = st.date_input("Date of Rental *")
 
@@ -68,16 +66,33 @@ with st.form("instrument_rental_form"):
 
                 if response.status_code == 201:
                     st.success("Instrument Rental submitted successfully!")
-                    # Clear the form
+                    update_url = f"http://api:4000/api/instruments/{instrumentId}"
+                    update_payload = {"isAvailable": False}
+                    update_resp = requests.patch(update_url, json=update_payload)
+
+                    if update_resp.status_code == 200:
+                        st.info(f"Instrument {instrumentId} marked as unavailable.")
+                    else:
+                        st.warning(f"Could not update instrument availability: {update_resp.text}")
+
                     st.rerun()
+
                 else:
-                    st.error(
-                        f"Failed to submit request: {response.text}"
-                    )
+                    st.error(f"Failed to submit request: {response.text}")
 
             except requests.exceptions.RequestException as e:
                 st.error(f"Error connecting to the API: {str(e)}")
                 st.info("Please ensure the API server is running")
+            #         # Clear the form
+            #         st.rerun()
+            #         else:
+            #         st.error(
+            #             f"Failed to submit request: {response.text}"
+            #         )
+
+            # except requests.exceptions.RequestException as e:
+            #     st.error(f"Error connecting to the API: {str(e)}")
+            #     st.info("Please ensure the API server is running")
 
 # Add a button to return to the NGO Directory
 if st.button("Return to Student Home"):
