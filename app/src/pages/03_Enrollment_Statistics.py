@@ -22,7 +22,7 @@ try:
 # ratio_resp = requests.get(f"http://web-api:4000/api/metrics/student-teacher-ratio")
     if ratio_resp.status_code == 200:
         ratio_df = pd.DataFrame(ratio_resp.json())
-        st.dataframe(ratio_df, hide_index=True)
+        st.dataframe(ratio_df.rename(columns={'college': 'College', 'num_professors':'Number of Professors', 'num_students':'Number of Students', 'student_teacher_ratio':'Student-Teacher Ratio'}), hide_index=True)
 
         fig_ratio = px.bar(
             ratio_df,
@@ -42,11 +42,13 @@ st.subheader("Vacant Courses")
 try:
     vacancy_resp = requests.get(f"http://web-api:4000/api/metrics/courses/vacancies")
     vacancy_resp.raise_for_status()
-# vacancy_resp = requests.get(f"http://web-api:4000/api/metrics/courses/vacancies")
     if vacancy_resp.status_code == 200:
         vacancy_df = pd.DataFrame(vacancy_resp.json())
         vacant_only = vacancy_df[vacancy_df["is_vacant"] == 1]
-        st.dataframe(vacant_only[['course_id','course_name','enrollment','time']], use_container_width=True,
+        df_sub = vacant_only[['course_id', 'course_name', 'enrollment', 'time']]
+        st.dataframe(df_sub.rename(columns={
+            'course_id': 'Course ID', 'course_name': 'Course Name', 'enrollment': 'Enrollment', 'time': 'Time'})
+                     , use_container_width=True,
                       hide_index=True)
 except requests.RequestException as e:
     st.error(f"Error fetching vacant courses data: {e}")
