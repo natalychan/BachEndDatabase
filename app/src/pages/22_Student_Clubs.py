@@ -31,12 +31,6 @@ with main_col:
                     "description": "Description"
                 }
 
-                st.dataframe(
-                    df[["name", "location", "description"]]
-                    .rename(columns=friendly_names),
-                    use_container_width=True,
-                    hide_index=True
-                )
                 st.subheader("All Clubs")
                 st.write("Here is a list of all clubs available:")
                 categories = ['All'] + sorted(df['category'].unique())
@@ -63,8 +57,6 @@ with main_col:
         st.error(f"Error connecting to API: {str(e)}")
     except Exception as e:
         st.error(f"Error displaying clubs: {str(e)}")
-
-
 
 with right_col:
     student_id = st.session_state.get('student_id') 
