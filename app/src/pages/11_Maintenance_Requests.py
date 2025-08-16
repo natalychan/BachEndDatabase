@@ -38,7 +38,7 @@ try:
                     "staffId": "Staff ID",
                     "submitted": "Date Submitted"
                 })
-                st.dataframe(mr, use_container_width=True)
+                st.dataframe(mr, use_container_width=True, hide_index=True)
                 st.info(f"Total Requests: {len(df)}")
             else:
                 st.warning("No maintenance requests found")

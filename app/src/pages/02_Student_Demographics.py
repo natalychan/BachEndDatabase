@@ -37,7 +37,7 @@ try:
                 fig.update_traces(textinfo='percent+label')
                 fig.update_layout(title=title)
                 st.plotly_chart(fig, use_container_width=True)
-                st.dataframe(df_subset)
+                st.dataframe(df_subset, hide_index=True)
 
             # Geographic Origin
             st.subheader("Geographic Origin")

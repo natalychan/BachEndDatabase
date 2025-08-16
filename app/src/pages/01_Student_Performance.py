@@ -141,7 +141,7 @@ try:
             
             # show data
             st.subheader("Individual Student GPAs by College")
-            st.dataframe(df.sort_values(['college', 'gpa']))
+            st.dataframe(df.sort_values(['college', 'gpa'], hide_index=True)
             
         else:
             st.error(f"Failed to fetch data: HTTP {response.status_code}")
@@ -165,7 +165,7 @@ try:
         data = response.json()
         if data: 
             df = pd.DataFrame(data)
-            st.dataframe(df, use_container_width=True)
+            st.dataframe(df, use_container_width=True, hide_index=True)
 except requests.exceptions.RequestException as e:
         st.error(f"Error connecting to API: {str(e)}")
 except Exception as e:

@@ -42,7 +42,7 @@ if not df_summary.empty:
     for col in ["totalBudget", "totalDonations", "budgetUsed", "remaining"]:
         if col in df_summary.columns:
             df_summary[col] = pd.to_numeric(df_summary[col], errors="coerce").fillna(0).map("${:,.0f}".format)
-    st.dataframe(df_summary, use_container_width=True)
+    st.dataframe(df_summary, use_container_width=True, hide_index=True)
 else:
     st.info("No budget summary data available.")
 
@@ -91,6 +91,6 @@ with left_mid:
         for col in ["Total", "Allocated", "Donations", "Used", "Used %"]:
             if col in df_break.columns:
                 df_break[col] = pd.to_numeric(df_break[col], errors="coerce").fillna(0)
-        st.dataframe(df_break, use_container_width=True)
+        st.dataframe(df_break, use_container_width=True,hide_index=True)
     else:
         st.info("No course-level data available.")

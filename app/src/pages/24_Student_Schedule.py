@@ -30,7 +30,8 @@ try:
             if data:
                 df = pd.DataFrame(data)
                 st.subheader("Student Schedule")
-                st.dataframe(df, use_container_width=True)
+                st.dataframe(df, use_container_width=True, hide_index=True)
+                st.write("This is your current class schedule.")
                 st.info(f"Class Schedule: {len(df)}")
             else:
                 st.warning("No courses found - API returned empty array")

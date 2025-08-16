@@ -30,7 +30,7 @@ try:
             
             if data and data.get('entries'):
                 df = pd.DataFrame(data['entries'])
-                st.dataframe(df, use_container_width=True)
+                st.dataframe(df, use_container_width=True, hide_index=True)
                 st.info(f"Total Work Entries: {len(df)}")
             else:
                 st.warning("No work hours found")

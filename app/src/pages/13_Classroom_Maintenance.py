@@ -26,7 +26,7 @@ try:
             
         if data:
             df = pd.DataFrame(data)
-            st.dataframe(df, use_container_width=True)
+            st.dataframe(df, use_container_width=True, hide_index=True)
             st.info(f"Classrooms Needing Maintenance: {len(df)}")
         else:
             st.warning("No classrooms need maintenance")

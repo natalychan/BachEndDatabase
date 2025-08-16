@@ -30,7 +30,7 @@ try:
         if data:
             df = pd.DataFrame([data])
             st.subheader("Name and Email")
-            st.dataframe(df[['advisor_name', 'emailAddress']], use_container_width=True)
+            st.dataframe(df[['advisor_name', 'emailAddress']], use_container_width=True, hide_index=True)
         else:
             st.warning("No info found - API returned empty array")
     else:
