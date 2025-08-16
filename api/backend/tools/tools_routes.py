@@ -41,7 +41,7 @@ def create_tool():
 # ------------------------------------------------------------
 # PATCH /api/tools/<productName>
 # Purpose: Update fields of a tool
-@tools_api.route('/tools/<string:productName>', methods=['PATCH'])
+@tools_api.route('/tools/<string:productName>', methods=['PUT'])
 def update_tool(productName): 
     payload = request.get_json(force=True, silent=True) or {}
     fields, params = [], []
@@ -49,7 +49,7 @@ def update_tool(productName):
         if k in payload:
             fields.append(f"{k} = %s")
             params.append(payload[k])
-    current_app.logger.info("PATCH /tools/%s : fields=%s", productName, fields) 
+    current_app.logger.info("PUT /tools/%s : fields=%s", productName, fields) 
     if not fields:
         response = make_response(jsonify({'updated': 0}))
         response.status_code = 200
