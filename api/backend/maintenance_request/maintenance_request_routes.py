@@ -7,54 +7,44 @@ maintenance_api = Blueprint('maintenance_api', __name__)
 # ------------------------------------------------------------
 # GET /api/maintenance-requests?status=open|closed
 # Purpose: List maintenance requests (optionally filtered by state)
-@maintenance_api.route('/maintenance-requests/<int:userId>', methods=['GET'])
-def list_requests(userId):
+@maintenance_api.route('/maintenance-requests', methods=['GET'])
+def list_requests():
     status = request.args.get('status')
-    # params = []
+    params = []
+    
+    # Main query with LEFT JOINs to get maintenance requests with staff and tools
     query = '''
-        SELECT mr.orderId, mr.address, mr.problemType, mr.submitted, mr.description,
+        SELECT mr.orderId, mr.address, mr.problemType, mr.state, mr.submitted, mr.description,
                ms.staffId,
-               u.firstName, u.lastName
+               u.firstName, u.lastName,
+               GROUP_CONCAT(mrt.tool SEPARATOR ', ') as tools
         FROM maintenance_request AS mr
         LEFT JOIN maintenance_staffs_maintenance_request AS msmr ON mr.orderId = msmr.orderId
         LEFT JOIN maintenance_staffs AS ms ON msmr.staffId = ms.staffId
         LEFT JOIN users AS u ON ms.staffId = u.userId
-        where u.userId = %s
+        LEFT JOIN maintenance_request_tools AS mrt ON mr.orderId = mrt.orderId
     '''
+    
     if status in ('open','closed'):
         query += " WHERE mr.state = %s"
         params.append(True if status == 'open' else False)
-    query += " ORDER BY mr.submitted DESC"
+    
+    # Group by all non-aggregated columns to combine tools into one row per request
+    query += '''
+        GROUP BY mr.orderId, mr.address, mr.problemType, mr.state, mr.submitted, 
+                 mr.description, ms.staffId, u.firstName, u.lastName
+        ORDER BY mr.submitted DESC
+    '''
+    
     current_app.logger.info("GET /maintenance-requests : status=%s", status)
     cursor = db.get_db().cursor()
-    cursor.execute(query, userId,)
+    cursor.execute(query, tuple(params))
     theData = cursor.fetchall()
     current_app.logger.info("GET /maintenance-requests : rows=%d", len(theData))
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response
 
-# ------------------------------------------------------------
-# POST /api/maintenance-requests
-# Purpose: Create a new maintenance request
-@maintenance_api.route('/maintenance-requests', methods=['POST'])
-def create_request():
-    payload = request.get_json(force=True, silent=True) or {}
-    query = '''
-        INSERT INTO maintenance_request (address, problemType, description, maintenanceStaffId, studentId)
-        VALUES (%s, %s, %s, %s, %s)
-    '''
-    current_app.logger.info("POST /maintenance-requests : payload=%s", payload)
-    cursor = db.get_db().cursor()
-    cursor.execute(query, (payload.get('address'),
-                           payload.get('problemType'),
-                           payload.get('description'),
-                           payload.get('maintenanceStaffId'),
-                           payload.get('studentId')))
-    db.get_db().commit()
-    response = make_response(jsonify({'created': True}))
-    response.status_code = 201
-    return response
 
 # ------------------------------------------------------------
 # GET /api/maintenance-requests/<requestId>

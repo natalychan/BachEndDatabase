@@ -19,29 +19,33 @@ st.write("Here you can view and manage maintenance requests.")
 
 try:
    # Display maintenance requests
-    user_id = st.session_state.get('user_id') 
-    API_URL = f"http://web-api:4000/api/maintenance-requests/{user_id}"
+    API_URL = "http://web-api:4000/api/maintenance-requests"
     response = requests.get(API_URL)
-    if user_id:
-        if response.status_code == 200:
-            data = response.json()
+    
+    if response.status_code == 200:
+        data = response.json()
+        
+        if data:
+            df = pd.DataFrame(data)
             
-            if data:
-                df = pd.DataFrame(data)
-                mr = df.rename(columns={
-                    "address": "Address",
-                    "description": "Description",
-                    "firstName": "First Name",
-                    "lastName": "Last Name",
-                    "orderId": "Order ID",
-                    "problemType": "Problem Type",
-                    "staffId": "Staff ID",
-                    "submitted": "Date Submitted"
-                })
-                st.dataframe(mr, use_container_width=True, hide_index=True)
-                st.info(f"Total Requests: {len(df)}")
-            else:
-                st.warning("No maintenance requests found")
+            # Rename columns to capitalize words
+            df.rename(columns={
+                'orderId': 'Order ID',
+                'address': 'Address',
+                'problemType': 'Problem Type',
+                'state': 'State',
+                'submitted': 'Submitted',
+                'description': 'Description',
+                'staffId': 'Staff ID',
+                'firstName': 'First Name',
+                'lastName': 'Last Name',
+                'tools': 'Tools'
+            }, inplace=True)
+            
+            st.dataframe(df, use_container_width=True)
+            st.info(f"Total Requests: {len(df)}")
+        else:
+            st.warning("No maintenance requests found")
     else:
         st.error(f"Failed to fetch data: HTTP {response.status_code}")
 
