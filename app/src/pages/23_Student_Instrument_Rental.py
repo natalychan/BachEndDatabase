@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 from streamlit_extras.app_logo import add_logo
 from modules.nav import SideBarLinks
-from datetime import datetime
+from datetime import datetime, date
 
 # Initialize sidebar
 SideBarLinks()
@@ -10,7 +10,7 @@ SideBarLinks()
 st.title("Instrument Rentals")
 
 # API endpoint
-API_URL = "http://web-api:4000/rentals"
+API_URL = "http://api:4000/api/rentals"
 
 # Create a form for NGO details
 with st.form("instrument_rental_form"):
@@ -33,10 +33,11 @@ with st.form("instrument_rental_form"):
         else:
             # Prepare the data for API
             rental_data = {
-                "Student ID": int(studentId),
-                "Instrument ID": int(instrumentId),
-                "Start Date": datetime(startDate),
+                "studentId": int(studentId),       # was studentID
+                "instrumentId": int(instrumentId), # was instrumentID
+                "startDate": startDate.strftime("%Y-%m-%d"),
             }
+
 
             try:
                 # Send POST request to API
@@ -48,7 +49,7 @@ with st.form("instrument_rental_form"):
                     st.rerun()
                 else:
                     st.error(
-                        f"Failed to submit request: {response.json().get('error', 'Unknown error')}"
+                        f"Failed to submit request: {response.text}"
                     )
 
             except requests.exceptions.RequestException as e:
