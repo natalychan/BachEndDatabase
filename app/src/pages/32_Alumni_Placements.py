@@ -24,7 +24,7 @@ if "dean_id" not in st.session_state:
 
 DEAN_ID = int(st.session_state["dean_id"])
 st.title("Alumni Job Placement")
-st.caption("As a dean, review alumni placement to evaluate how well departments prepare students for the future.")
+st.caption("As a dean, review alumni placement to evaluate how well courses prepare students for the future.")
 
 @st.cache_data(ttl=60, show_spinner=False)
 def _get(path, params=None):
@@ -66,11 +66,11 @@ with k3: st.metric("Total Alumni", f"{total:,}")
 
 st.divider()
 
-# Middle: By Department + Trend ---------------------------------------------
+# Middle: By Course + Trend ---------------------------------------------
 left, right = st.columns([1.4, 1.0], gap="large")
 
 with left:
-    st.subheader("Placement by Department")
+    st.subheader("Placement by Course")
     try:
         rows = _get(f"/metrics/deans/{DEAN_ID}/alumni/placement/by-course")
         df = pd.DataFrame(rows)
@@ -82,7 +82,7 @@ with left:
         st.info("No alumni placement data yet.")
     else:
         rename = {
-            "courseName": "Department",
+            "courseName": "Course",
             "alumniCount": "Alumni",
             "placed": "Placed",
             "placementRate": "Placement %",
@@ -100,7 +100,7 @@ with left:
 
         fig = px.bar(
             df_show.sort_values("Placement %", ascending=False),
-            x="Department", y="Placement %",
+            x="Course", y="Placement %",
             hover_data=["Alumni","Placed","Avg GPA"],
         )
         fig.update_layout(margin=dict(l=10, r=10, t=10, b=10))
@@ -136,15 +136,15 @@ if 'df' in locals() and not df.empty:
     low = df.sort_values(["placementRate","alumniCount"], ascending=[True, False]).head(5)
 
     with c1:
-        st.subheader("Top Departments (Placement)")
+        st.subheader("Top Course (Placement)")
         st.table(top[["courseName","placementRate","alumniCount","placed"]].rename(columns={
-            "courseName":"Department","placementRate":"Placement %","alumniCount":"Alumni","placed":"Placed"
+            "courseName":"Course","placementRate":"Placement %","alumniCount":"Alumni","placed":"Placed"
         }))
 
     with c2:
         st.subheader("Needs Attention")
         st.table(low[["courseName","placementRate","alumniCount","placed"]].rename(columns={
-            "courseName":"Department","placementRate":"Placement %","alumniCount":"Alumni","placed":"Placed"
+            "courseName":"Course","placementRate":"Placement %","alumniCount":"Alumni","placed":"Placed"
         }))
 else:
-    st.caption("No department highlights to show.")
+    st.caption("No Course highlights to show.")

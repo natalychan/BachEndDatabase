@@ -120,12 +120,12 @@ with right_top:
         st.plotly_chart(fig, use_container_width=True)
 
 # =====================
-# Middle: Department financial breakdown + recent donations
+# Middle: Course financial breakdown + recent donations
 # =====================
 left_mid, right_mid = st.columns([1.4, 0.6], gap="large")
 
 with left_mid:
-    st.subheader("Department Financial Breakdown")
+    st.subheader("Course Financial Breakdown")
     try:
         rows = _get(f"/metrics/deans/{DEAN_ID}/budget/by-course")
         df = pd.DataFrame(rows)
@@ -186,9 +186,9 @@ with right_mid:
         st.caption(f"No donations to show — {e}")
 
 # =====================
-# Bottom: Donations by Department bar
+# Bottom: Donations by Course bar
 # =====================
-st.subheader("Donations by Department")
+st.subheader("Donations by Course")
 try:
     rows = _get(f"/metrics/deans/{DEAN_ID}/budget/donations-by-course")
     d2 = pd.DataFrame(rows)
@@ -196,7 +196,7 @@ try:
         d2 = pd.DataFrame({"courseName": [], "donations": []})
     d2 = d2.rename(columns={"courseName": "Dept", "donations": "Donations"})
     d2["Donations"] = pd.to_numeric(d2["Donations"], errors="coerce").fillna(0)
-    fig = px.bar(d2, x="Dept", y="Donations", labels={"Dept": "Department", "Donations": "Donations ($)"})
+    fig = px.bar(d2, x="Dept", y="Donations", labels={"Dept": "Course", "Donations": "Donations ($)"})
     st.plotly_chart(fig, use_container_width=True)
 except Exception as e:
-    st.caption(f"Unable to load donations by department — {e}")
+    st.caption(f"Unable to load donations by course — {e}")
