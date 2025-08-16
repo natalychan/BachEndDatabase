@@ -568,7 +568,7 @@ with left_top:
                 st.caption("Mode: No professor assigned")
                 try:
                     params = {"college": dean_college} if dean_college else {}
-                    vac = pd.DataFrame(_get("/courses/vacancies", params=params))
+                    vac = pd.DataFrame(_get("/metrics/courses/vacancies", params=params))
                     if "is_vacant" in vac.columns:
                         vac = vac[vac["is_vacant"].astype(bool)]
                     else:
