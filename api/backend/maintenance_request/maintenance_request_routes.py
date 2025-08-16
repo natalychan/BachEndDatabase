@@ -67,6 +67,43 @@ def list_student_requests(userId):
     return response
 
 # ------------------------------------------------------------
+# POST /api/maintenance-requests
+# Purpose: Create a new maintenance request for a student
+@maintenance_api.route('/maintenance-requests', methods=['POST'])
+def create_maintenance_request():
+    # Get the request data
+    data = request.get_json()
+    
+    # Insert the maintenance request
+    insert_query = '''
+        INSERT INTO maintenance_request (address, problemType, description, studentId)
+        VALUES (%s, %s, %s, %s)
+    '''
+    
+    current_app.logger.info("POST /maintenance-requests")
+    cursor = db.get_db().cursor()
+    cursor.execute(insert_query, (
+        data['address'],
+        data['problemType'], 
+        data['description'],
+        data['studentId']
+    ))
+    
+    # Get the newly created orderId
+    new_order_id = cursor.lastrowid
+    
+    current_app.logger.info("POST /maintenance-requests : created orderId=%d", new_order_id)
+    
+    response_data = {
+        "orderId": new_order_id,
+        "message": "Maintenance request created successfully"
+    }
+    
+    response = make_response(jsonify(response_data))
+    response.status_code = 201
+    return response
+
+# ------------------------------------------------------------
 # PATCH /api/maintenance-requests/update/<requestId>
 # Purpose: Update fields on a maintenance request
 @maintenance_api.route('/maintenance-requests/update/<int:requestId>', methods=['PATCH'])
