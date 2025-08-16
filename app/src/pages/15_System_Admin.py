@@ -15,6 +15,8 @@ st.write('')
 st.write('### What would you like to do?')
 
 try:
+    # View students
+
     # Filters
     col1, col2 = st.columns(2)
     with col1:
@@ -37,6 +39,22 @@ try:
         
         if data:
             df = pd.DataFrame(data)
+
+            # Rename columns to capitalize words
+            df.rename(columns={
+                'userId': 'User ID',
+                'year': 'Year',
+                'housingStatus': 'Housing Status',
+                'race': 'Race',
+                'income': 'Income',
+                'origin': 'Origin',
+                'college': 'College',
+                'advisor': 'Advisor',
+                'firstName': 'First Name',
+                'lastName': 'Last Name',
+                'email': 'Email'
+            }, inplace=True)
+            
             st.dataframe(df, use_container_width=True)
             st.info(f"Total Students: {len(df)}")
         else:

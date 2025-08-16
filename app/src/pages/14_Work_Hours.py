@@ -30,6 +30,16 @@ try:
             
             if data and data.get('entries'):
                 df = pd.DataFrame(data['entries'])
+
+                # Rename columns to capitalize words
+                df.rename(columns={
+                    'orderId': 'Order ID',
+                    'workHours': 'Work Hours',
+                    'problemType': 'Problem Type',
+                    'state': 'State',
+                    'submitted': 'Submitted'
+                }, inplace=True)
+                
                 st.dataframe(df, use_container_width=True)
                 st.info(f"Total Work Entries: {len(df)}")
             else:
