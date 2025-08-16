@@ -26,6 +26,14 @@ try:
             
         if data:
             df = pd.DataFrame(data)
+
+            # Rename columns to capitalize words
+            df.rename(columns={
+                'lastMaintained': 'Last Maintained',
+                'roomNumber': 'Room Number'
+            }, inplace=True)
+            
+            st.dataframe(df, use_container_width=True)
             st.dataframe(df, use_container_width=True, hide_index=True)
             st.info(f"Classrooms Needing Maintenance: {len(df)}")
         else:

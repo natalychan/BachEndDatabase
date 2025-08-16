@@ -26,14 +26,13 @@ try:
         
         if data:
             df = pd.DataFrame(data)
-            
-            # Rename columns to capitalize words
-            column_mapping = {
-                'productName': 'Product Name',
-                'amount': 'Amount'
-            }
-            df_display = df.rename(columns=column_mapping)
 
+            # Rename columns to capitalize words
+            df.rename(columns={
+                    'productName': 'Product Name',
+                'amount': 'Amount'
+                }, inplace=True)
+            
             st.dataframe(df, use_container_width=True)
             st.dataframe(df, use_container_width=True, hide_index=True)
             st.info(f"Total Tools: {len(df)}")
