@@ -37,8 +37,6 @@ try:
             if cols_to_show:
                 st.subheader("Name and Email")
                 st.dataframe(df[cols_to_show], use_container_width=True)
-            st.subheader("Name and Email")
-            st.dataframe(df[['advisor_name', 'emailAddress']], use_container_width=True, hide_index=True)
         else:
             st.warning("No info found - API returned empty array")
     else:
