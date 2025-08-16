@@ -5,7 +5,7 @@ import os
 
 SideBarLinks(show_home=True)
 
-st.write("# About this App")
+st.write("#About")
 
 here = os.path.dirname(__file__)
 
