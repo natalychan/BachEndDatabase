@@ -9,7 +9,14 @@ st.write("# About this App")
 
 here = os.path.dirname(__file__)
 
-st.image("assets/JoinUPresident.png", width=2000)
+st.image("assets/JoinUPresident.png", width=500)
+
+st.write("- University President")
+
+st.write("")
+st.write("")
+st.write("")
+st.write("")
 
 
 
