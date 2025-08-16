@@ -56,7 +56,7 @@ with st.form("Classroom Booking Form"):
 
     # Required fields
     studentId = st.number_input("Student ID *", step=1, min_value=1, placeholder="Enter Student ID")
-    instrumentId = st.number_input("Instrument ID *", step=1, min_value=1, placeholder="Enter Instrument ID")
+    roomNumber = st.number_input("Room Number *", step=1, min_value=1, placeholder="Enter Room Number")
     startTime = st.time_input("Reservation Start Time *")
     endTime = st.time_input("Reservation End Time *")
 
@@ -65,7 +65,7 @@ with st.form("Classroom Booking Form"):
 
     if submitted:
         # Validate required fields
-        if not all([startDate, instrumentId, studentId]):
+        if not all([startTime, roomNumber, studentId]):
             st.error("Please fill in all required fields marked with *")
         elif startTime >= endTime:
             st.error("Start time must be before end time")
@@ -73,8 +73,8 @@ with st.form("Classroom Booking Form"):
             # Prepare the data for API
             rental_data = {
                 "Student ID": int(studentId),
-                "Instrument ID": int(instrumentId),
-                "Start Date": datetime(startDate),
+                "Room Number": int(roomNumber),
+                "Start Time": datetime(startTime),
             }
 
             try:
