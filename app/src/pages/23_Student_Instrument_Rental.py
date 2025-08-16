@@ -31,11 +31,14 @@ with st.form("instrument_rental_form"):
         elif studentId < 0: # Assuming studentId should be a positive integer
             st.error("Student ID must be a positive integer")
         else:
+            
+            returnDate = startDate + timedelta(days=30)
             # Prepare the data for API
             rental_data = {
                 "studentId": int(studentId),       # was studentID
                 "instrumentId": int(instrumentId), # was instrumentID
                 "startDate": startDate.strftime("%Y-%m-%d"),
+                "returnDate": returnDate.strftime("%Y-%m-%d"),
             }
 
 
