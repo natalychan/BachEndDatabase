@@ -54,8 +54,7 @@ try:
                 'lastName': 'Last Name',
                 'email': 'Email'
             }, inplace=True)
-            
-            st.dataframe(df, use_container_width=True)
+
             st.dataframe(df, use_container_width=True, hide_index=True)
             st.info(f"Total Students: {len(df)}")
         else:

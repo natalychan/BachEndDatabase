@@ -39,8 +39,7 @@ try:
                     'state': 'State',
                     'submitted': 'Submitted'
                 }, inplace=True)
-                
-                st.dataframe(df, use_container_width=True)
+
                 st.dataframe(df, use_container_width=True, hide_index=True)
                 st.info(f"Total Work Entries: {len(df)}")
             else:
