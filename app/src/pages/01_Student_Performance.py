@@ -148,7 +148,7 @@ try:
             })
 
             st.dataframe(df_display)
-            st.dataframe(df.sort_values(['college', 'gpa'], hide_index=True)
+            st.dataframe(df.sort_values(['college', 'gpa'], hide_index=True))
             
         else:
             st.error(f"Failed to fetch data: HTTP {response.status_code}")
