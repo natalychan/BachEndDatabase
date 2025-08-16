@@ -65,7 +65,7 @@ try:
     if st.button("Update Tool"):
         if update_product_name:
             update_data = {"amount": new_amount}
-            update_response = requests.patch(f"{API_URL}/{update_product_name}", json=update_data)
+            update_response = requests.put(f"{API_URL}/{update_product_name}", json=update_data)
             if update_response.status_code == 200:
                 st.success("Tool updated successfully")
                 st.rerun()
