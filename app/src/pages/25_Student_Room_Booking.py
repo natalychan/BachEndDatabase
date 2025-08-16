@@ -51,13 +51,13 @@ with st.form("Classroom Booking Form"):
     API_URL = "http://api:4000/api/reserves"
 
     # Required fields
-    studentID = st.number_input("Student ID *", step=1, min_value=1, placeholder="Enter Student ID")
+
     roomNumber = st.number_input("Room Number *", step=1, min_value=1, placeholder="Enter Room Number")
     startTime = st.time_input("Reservation Start Time *")
     endTime = st.time_input("Reservation End Time *")
 
     submitted = st.form_submit_button("Classroom Booking Request")
-
+    studentID = st.session_state.get("student_id")  # Pre-fill from session state
     if submitted:
         # Validate
         if not all([startTime, roomNumber, studentID]):
@@ -83,7 +83,7 @@ with st.form("Classroom Booking Form"):
                     st.rerun()
                 else:
                     # Do not parse JSON on failure; show raw text & status
-                    st.error(f"Failed to submit request: {getattr(response, 'text', 'Unknown error')} (status={response.status_code})")
+                    st.error(f"Failed to submit request: please check your inputs. Remember that the room must exist.")
 
             except requests.exceptions.RequestException as e:
                 st.error(f"Error connecting to the API: {e}")
