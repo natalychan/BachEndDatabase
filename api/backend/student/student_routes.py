@@ -112,31 +112,6 @@ def list_students():
     return response
 
 # ------------------------------------------------------------
-# POST /api/students
-# Purpose: Create a student
-@students_api.route('/students', methods=['POST'])
-def create_student():
-    payload = request.get_json(force=True, silent=True) or {}
-    query = '''
-        INSERT INTO students (userId, year, housingStatus, race, income, origin, college, advisor)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-    '''
-    current_app.logger.info("POST /students : payload=%s", payload)
-    cursor = db.get_db().cursor()
-    cursor.execute(query, (payload.get('userId'),
-                           payload.get('year'),
-                           payload.get('housingStatus'),
-                           payload.get('race'),
-                           payload.get('income'),
-                           payload.get('origin'),
-                           payload.get('college'),
-                           payload.get('advisor')))
-    db.get_db().commit()
-    response = make_response(jsonify({'created': True}))
-    response.status_code = 201
-    return response
-
-# ------------------------------------------------------------
 # PATCH /api/students/<int:userId>
 # Purpose: Update fields of a student
 @students_api.route('/students/<int:userId>', methods=['PATCH'])
