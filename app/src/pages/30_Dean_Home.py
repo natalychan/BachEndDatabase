@@ -558,43 +558,37 @@ with left_top:
 
         # --- Vacancies (left) ---
         with col_left:
-            st.caption("Vacancies")
-            mode = st.toggle(
-                "Show vacancies based on ENROLLMENT (off = based on PROFESSOR)",
-                value=False, key="vacancy_mode"
-            )
+            st.caption("Vacancies (no professor assigned)")
 
-            if not mode:
-                st.caption("Mode: No professor assigned")
-                try:
-                    params = {"college": dean_college} if dean_college else {}
-                    vac = pd.DataFrame(_get("/metrics/courses/vacancies", params=params))
-                    if "is_vacant" in vac.columns:
-                        vac = vac[vac["is_vacant"].astype(bool)]
-                    else:
-                        vac = pd.DataFrame(columns=["course_id", "course_name", "enrollment"])
-                    if selected_ids:
-                        vac = vac[vac["course_id"].isin(list(selected_ids))]
-                    show = vac[["course_id", "course_name", "enrollment"]].head(5) if not vac.empty else vac
-                    st.dataframe(
-                        show.rename(columns={"course_id": "Course ID", "course_name": "Course", "enrollment": "Enroll"}),
-                        use_container_width=True, hide_index=True
-                    )
-                except Exception as e:
-                    st.caption(f"Unable to load vacancies — {e}")
-            else:
-                st.caption("Mode: Low/Zero enrollment")
-                thresh = st.slider("Max enrollment to flag", 0, 50, 0, 1, key="vacancy_enroll_threshold")
-                low = enroll_df[enroll_df["enrolled_students"] <= thresh] \
-                        .sort_values("enrolled_students", ascending=True) \
-                        .head(5)
-                if low.empty:
-                    st.caption("No courses meet the enrollment threshold.")
+            try:
+                params = {"college": dean_college} if dean_college else {}
+                vac = pd.DataFrame(_get("/metrics/courses/vacancies", params=params))
+
+                # keep only rows explicitly marked vacant; tolerate missing column
+                if "is_vacant" in vac.columns:
+                    vac = vac[vac["is_vacant"].astype(bool)]
                 else:
-                    st.dataframe(
-                        low.rename(columns={"course_id": "Course ID", "course_name": "Course", "enrolled_students": "Enroll"}),
-                        use_container_width=True, hide_index=True
-                    )
+                    vac = pd.DataFrame(columns=["course_id", "course_name", "enrollment"])
+
+                # honor the multi-select filter
+                if selected_ids:
+                    vac = vac[vac["course_id"].isin(list(selected_ids))]
+
+                # show a small preview if there are many
+                show = vac[["course_id", "course_name", "enrollment"]].head(5) if not vac.empty else vac
+
+                st.dataframe(
+                    show.rename(columns={
+                        "course_id": "Course ID",
+                        "course_name": "Course",
+                        "enrollment": "Enroll"
+                    }),
+                    use_container_width=True,
+                    hide_index=True,
+                )
+            except Exception as e:
+                st.caption(f"Unable to load vacancies — {e}")
+
 
         # --- High GPA Students (right) ---
         with col_right:
