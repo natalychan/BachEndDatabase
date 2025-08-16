@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 from streamlit_extras.app_logo import add_logo
 from modules.nav import SideBarLinks
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 # Initialize sidebar
 SideBarLinks()
@@ -31,7 +31,7 @@ with st.form("instrument_rental_form"):
         elif studentId < 0: # Assuming studentId should be a positive integer
             st.error("Student ID must be a positive integer")
         else:
-            
+
             returnDate = startDate + timedelta(days=30)
             # Prepare the data for API
             rental_data = {
