@@ -47,7 +47,7 @@ try:
 
     # Update request form
     st.subheader("Update Request")
-    request_id = st.number_input("Request ID", min_value=1, step=1)
+    request_id = st.number_input("Order ID", min_value=1, step=1)
     address = st.text_input("Address")
     problem_type = st.text_input("Problem Type")
     description = st.text_area("Description")
@@ -70,7 +70,7 @@ try:
 
     # Delete request
     st.subheader("Delete Request")
-    delete_id = st.number_input("Request ID to Delete", min_value=1, step=1)
+    delete_id = st.number_input("Order ID to Delete", min_value=1, step=1)
     
     if st.button("Delete Request"):
         delete_response = requests.delete(f"{API_URL}/{delete_id}")
@@ -82,7 +82,7 @@ try:
 
     # Attach tool to request
     st.subheader("Attach Tool")
-    attach_request_id = st.number_input("Request ID for Tool", min_value=1, step=1)
+    attach_request_id = st.number_input("Order ID for Tool", min_value=1, step=1)
     tool_name = st.text_input("Tool Name")
     
     if st.button("Attach Tool"):
@@ -99,7 +99,7 @@ try:
 
     # Detach tool from request
     st.subheader("Detach Tool")
-    detach_request_id = st.number_input("Request ID for Detach", min_value=1, step=1)
+    detach_request_id = st.number_input("Order ID for Detach", min_value=1, step=1)
     detach_tool_name = st.text_input("Tool Name to Detach")
     
     if st.button("Detach Tool"):
