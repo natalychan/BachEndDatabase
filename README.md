@@ -1,5 +1,3 @@
-Update the ReadME file to describe your project, any information the user needs to build/start the containers (such as adding the secrets passwords files), etc.  Include each team member’s name somewhere in the README. 
-
 # BackEndDatabase 
 Authors: Nataly Chan, Xiangru (Dorian) Lin, Brian Mack, Juri Okamoto, Owen Sweetman
 
