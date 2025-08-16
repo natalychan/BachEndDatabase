@@ -19,8 +19,7 @@ st.write("Here you can view and manage maintenance requests.")
 
 try:
    # Display maintenance requests
-    user_id = st.session_state.get('user_id')
-    st.write(f"Debug: Looking for requests for user_id: {user_id}")  
+    user_id = st.session_state.get('user_id') 
     API_URL = f"http://web-api:4000/api/maintenance-requests/staff/{user_id}"
     response = requests.get(API_URL)
     
