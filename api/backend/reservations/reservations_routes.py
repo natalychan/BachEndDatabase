@@ -57,7 +57,7 @@ def create_reserve():
     '''
     current_app.logger.info("POST /reserves : payload=%s", payload)
     cursor = db.get_db().cursor()
-    cursor.execute(query, (payload.get('studentId'),
+    cursor.execute(query, (payload.get('studentID'),
                            payload.get('roomNumber'),
                            payload.get('startTime'),
                            payload.get('endTime')))

@@ -974,3 +974,36 @@ def president_budget_by_course():
     cur = db.get_db().cursor()
     cur.execute(q)
     return jsonify(cur.fetchall())
+
+maintenance_api = Blueprint("maintenance_api", __name__)
+
+#------------------------------------------------------------
+# POST /api/maintenance-requests
+# Purpose: Create a new maintenance request
+@maintenance_api.route('/maintenance-requests', methods=['POST'])
+def create_request():
+    try:
+        data = request.get_json()
+
+        # Accept both camelCase and human-readable keys from the form
+        address = data.get('address') or data.get('Address')
+        problem_type = data.get('problemType') or data.get('Problem Type')
+        student_id = data.get('studentId') or data.get('Student ID')
+        description = data.get('description') or data.get('Description')
+
+        if not (address and problem_type and student_id):
+            return make_response(jsonify({"error": "Missing required fields"}), 400)
+
+        cursor = db.get_db().cursor()
+        insert_query = '''
+            INSERT INTO maintenance_request (address, problemType, studentID, description)
+            VALUES (%s, %s, %s, %s)
+        '''
+        cursor.execute(insert_query, (address, problem_type, student_id, description))
+        db.get_db().commit()
+
+        return make_response(jsonify({"message": "Request created successfully"}), 201)
+
+    except Exception as e:
+        current_app.logger.error(f"POST /maintenance-requests failed: {str(e)}")
+        return make_response(jsonify({"error": str(e)}), 500)
