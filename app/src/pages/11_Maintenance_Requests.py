@@ -19,7 +19,9 @@ st.write("Here you can view and manage maintenance requests.")
 
 try:
    # Display maintenance requests
-    API_URL = "http://web-api:4000/api/maintenance-requests"
+    user_id = st.session_state.get('user_id')
+    st.write(f"Debug: Looking for requests for user_id: {user_id}")  
+    API_URL = f"http://web-api:4000/api/maintenance-requests/{user_id}"
     response = requests.get(API_URL)
     
     if response.status_code == 200:
@@ -42,7 +44,7 @@ try:
                 'tools': 'Tools'
             }, inplace=True)
             
-            st.dataframe(df, use_container_width=True)
+            st.dataframe(df, use_container_width=True, hide_index=True)
             st.info(f"Total Requests: {len(df)}")
         else:
             st.warning("No maintenance requests found")
