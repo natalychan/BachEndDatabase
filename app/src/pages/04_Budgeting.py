@@ -39,6 +39,16 @@ df_summary = pd.DataFrame(summary)
 
 if not df_summary.empty:
     st.subheader("Budget Overview by College")
+
+     # Rename columns to capitalize words
+    df_summary.rename(columns={
+        'college': 'College',
+        'totalBudget': 'Total Budget',
+        'totalDonations': 'Total Donations',
+        'budgetUsed': 'Budget Used',
+        'remaining': 'Remaining'
+    }, inplace=True)
+    
     for col in ["totalBudget", "totalDonations", "budgetUsed", "remaining"]:
         if col in df_summary.columns:
             df_summary[col] = pd.to_numeric(df_summary[col], errors="coerce").fillna(0).map("${:,.0f}".format)
