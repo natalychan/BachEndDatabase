@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 from streamlit_extras.app_logo import add_logo
 from modules.nav import SideBarLinks
-from datetime import datetime
+from datetime import datetime, date  # ← added date
 import pandas as pd
 import logging
 logger = logging.getLogger(__name__)
@@ -71,10 +71,14 @@ with st.form("Classroom Booking Form"):
             st.error("Start time must be before end time")
         else:
             # Prepare the data for API
+            start_dt = datetime.combine(date.today(), startTime)
+            end_dt = datetime.combine(date.today(), endTime)
             rental_data = {
-                "Student ID": int(studentId),
-                "Room Number": int(roomNumber),
-                "Start Time": datetime(startTime),
+                # ↓↓↓ match backend field names
+                "studentID": int(studentId),
+                "roomID": int(roomNumber),
+                "start_time": start_dt.strftime("%Y-%m-%d %H:%M:%S"),
+                "end_time": end_dt.strftime("%Y-%m-%d %H:%M:%S"),
             }
 
             try:
