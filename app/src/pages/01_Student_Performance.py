@@ -141,8 +141,13 @@ try:
             
             # show data
             st.subheader("Individual Student GPAs by College")
-            st.dataframe(df.sort_values(['college', 'gpa']))
-            
+
+            df_display = df.sort_values(['college', 'gpa']).rename(columns={
+                'college': 'College',
+                'gpa': 'Anonymous Student GPA'
+            })
+
+            st.dataframe(df_display)
         else:
             st.error(f"Failed to fetch data: HTTP {response.status_code}")
             
@@ -150,9 +155,6 @@ except requests.exceptions.RequestException as e:
     st.error(f"Error connecting to API: {str(e)}")
 except Exception as e:
     st.error(f"Error creating box plot: {str(e)}")
-
-    
-
 
 
 # College Rankings
@@ -165,6 +167,10 @@ try:
         data = response.json()
         if data: 
             df = pd.DataFrame(data)
+            df.rename(columns= {
+                'ranking': 'Ranking',
+                'schoolName': 'Univsersity Name'
+            }, inplace=True)
             st.dataframe(df, use_container_width=True)
 except requests.exceptions.RequestException as e:
         st.error(f"Error connecting to API: {str(e)}")
