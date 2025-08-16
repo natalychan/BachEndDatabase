@@ -88,13 +88,14 @@ try:
 
     # Attach tool to request
     st.subheader("Attach Tool")
+    st.write("!Make sure the tool to be attched actually exists in tools table!")
     attach_request_id = st.number_input("Order ID for Tool", min_value=1, step=1)
     tool_name = st.text_input("Tool Name")
     
     if st.button("Attach Tool"):
         if tool_name:
             tool_data = {"tool": tool_name}
-            attach_response = requests.post(f"{API_URL}/{attach_request_id}/tools", json=tool_data)
+            attach_response = requests.post(f"http://web-api:4000/api/maintenance-requests/{attach_request_id}/post/tools", json=tool_data)
             if attach_response.status_code == 201:
                 st.success("Tool attached successfully")
                 st.rerun()
@@ -110,7 +111,7 @@ try:
     
     if st.button("Detach Tool"):
         if detach_tool_name:
-            detach_response = requests.delete(f"{API_URL}/{detach_request_id}/tools/{detach_tool_name}")
+            detach_response = requests.delete(f"http://web-api:4000/api/maintenance-requests/{detach_request_id}/delete/tools/{detach_tool_name}")
             if detach_response.status_code == 204:
                 st.success("Tool detached successfully")
                 st.rerun()

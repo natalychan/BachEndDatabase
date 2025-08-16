@@ -108,7 +108,7 @@ def get_hours(staffId):
 # ------------------------------------------------------------
 # GET /api/maintenance-requests/<requestId>/tools
 # Purpose: List tools attached to a maintenance request
-@maintenance_api.route('/maintenance-requests/<int:requestId>/tools', methods=['GET'])
+@maintenance_api.route('/maintenance-requests/<int:requestId>/get/tools', methods=['GET'])
 def request_tools_list(requestId):
     query = '''
         SELECT mrt.tool, t.amount
@@ -128,7 +128,7 @@ def request_tools_list(requestId):
 # ------------------------------------------------------------
 # POST /api/maintenance-requests/<requestId>/tools
 # Purpose: Attach a tool to a maintenance request
-@maintenance_api.route('/maintenance-requests/<int:requestId>/tools', methods=['POST'])
+@maintenance_api.route('/maintenance-requests/<int:requestId>/post/tools', methods=['POST'])
 def request_tools_attach(requestId):
     payload = request.get_json(force=True, silent=True) or {}
     query = "INSERT INTO maintenance_request_tools (orderId, tool) VALUES (%s, %s)"
@@ -143,7 +143,7 @@ def request_tools_attach(requestId):
 # ------------------------------------------------------------
 # DELETE /api/maintenance-requests/<requestId>/tools/<tool>
 # Purpose: Detach a tool from a maintenance request
-@maintenance_api.route('/maintenance-requests/<int:requestId>/tools/<string:tool>', methods=['DELETE'])
+@maintenance_api.route('/maintenance-requests/<int:requestId>/delete/tools/<string:tool>', methods=['DELETE'])
 def request_tools_detach(requestId, tool):
     query = "DELETE FROM maintenance_request_tools WHERE orderId = %s AND tool = %s"
     current_app.logger.info("DELETE /maintenance-requests/%s/tools/%s", requestId, tool)
