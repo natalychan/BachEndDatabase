@@ -7,7 +7,7 @@ maintenance_api = Blueprint('maintenance_api', __name__)
 # ------------------------------------------------------------
 # GET /api/maintenance-requests?status=open|closed
 # Purpose: List maintenance requests (optionally filtered by state)
-@maintenance_api.route('/maintenance-requests/<int:userId>', methods=['GET'])
+@maintenance_api.route('/maintenance-requests/get/<int:userId>', methods=['GET'])
 def list_requests(userId):
     status = request.args.get('status')
     params = [userId]  # Staff ID parameter
@@ -46,9 +46,9 @@ def list_requests(userId):
     return response
 
 # ------------------------------------------------------------
-# PATCH /api/maintenance-requests/<requestId>
+# PATCH /api/maintenance-requests/update/<requestId>
 # Purpose: Update fields on a maintenance request
-@maintenance_api.route('/maintenance-requests/<int:requestId>', methods=['PATCH'])
+@maintenance_api.route('/maintenance-requests/update/<int:requestId>', methods=['PATCH'])
 def update_request(requestId):
     payload = request.get_json(force=True, silent=True) or {}
     fields, params = [], []
@@ -71,9 +71,9 @@ def update_request(requestId):
     return response
 
 # ------------------------------------------------------------
-# DELETE /api/maintenance-requests/<requestId>
+# DELETE /api/maintenance-requests/delete/<requestId>
 # Purpose: Delete a maintenance request
-@maintenance_api.route('/maintenance-requests/<int:requestId>', methods=['DELETE'])
+@maintenance_api.route('/maintenance-requests/delete/<int:requestId>', methods=['DELETE'])
 def delete_request(requestId):
     query = "DELETE FROM maintenance_request WHERE orderId = %s"
     current_app.logger.info("DELETE /maintenance-requests/%s", requestId)

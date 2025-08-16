@@ -21,7 +21,7 @@ try:
    # Display maintenance requests
     user_id = st.session_state.get('user_id')
     st.write(f"Debug: Looking for requests for user_id: {user_id}")  
-    API_URL = f"http://web-api:4000/api/maintenance-requests/{user_id}"
+    API_URL = f"http://web-api:4000/api/maintenance-requests/get/{user_id}"
     response = requests.get(API_URL)
     
     if response.status_code == 200:
@@ -65,7 +65,7 @@ try:
         if description: update_data['description'] = description
         
         if update_data:
-            update_response = requests.patch(f"{API_URL}/{request_id}", json=update_data)
+            update_response = requests.patch(f"http://web-api:4000/api/maintenance-requests/update/{request_id}", json=update_data)
             if update_response.status_code == 200:
                 st.success("Request updated successfully")
                 st.rerun()
@@ -79,7 +79,7 @@ try:
     delete_id = st.number_input("Order ID to Delete", min_value=1, step=1)
     
     if st.button("Delete Request"):
-        delete_response = requests.delete(f"{API_URL}/{delete_id}")
+        delete_response = requests.delete(f"http://web-api:4000/api/maintenance-requests/update/{request_id}", json=update_data)
         if delete_response.status_code == 204:
             st.success("Request deleted successfully")
             st.rerun()
