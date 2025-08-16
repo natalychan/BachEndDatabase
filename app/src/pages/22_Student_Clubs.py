@@ -25,6 +25,18 @@ with main_col:
             data = response.json()
             if data: 
                 df = pd.DataFrame(data)
+                friendly_names = {
+                    "name": "Club Name",
+                    "location": "Location",
+                    "description": "Description"
+                }
+
+                st.dataframe(
+                    df[["name", "location", "description"]]
+                    .rename(columns=friendly_names),
+                    use_container_width=True,
+                    hide_index=True
+                )
                 st.subheader("All Clubs")
                 st.write("Here is a list of all clubs available:")
                 categories = ['All'] + sorted(df['category'].unique())
@@ -36,7 +48,13 @@ with main_col:
                     filtered_df = df
 
                 st.write(f"Showing {len(filtered_df)} clubs:")
-                st.dataframe(df[['name','location','description']], use_container_width=True, hide_index=True)
+                st.dataframe(
+                    filtered_df[["name", "location", "description"]]
+                    .rename(columns=friendly_names),
+                    use_container_width=True,
+                    hide_index=True
+                )
+
             else: 
                 st.info("No clubs data available.")
         else:
@@ -59,6 +77,10 @@ with right_col:
         data = response.json()
         if data:
             df = pd.DataFrame(data)
+            df.rename(columns={
+                "clubName" : "Club Name",
+                "role": "Role",
+            }, inplace=True)
             st.subheader("Current Membership")
             st.dataframe(df, use_container_width=True, hide_index=True)
             st.write("You are currently a member of the following clubs:")
