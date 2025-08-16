@@ -5,13 +5,41 @@ from backend.db_connection import db
 maintenance_api = Blueprint('maintenance_api', __name__)
 
 # ------------------------------------------------------------
-# GET /api/maintenance-requests?status=open|closed
-# Purpose: List maintenance requests (optionally filtered by state)
-@maintenance_api.route('/maintenance-requests/get/<int:userId>', methods=['GET'])
-def list_requests(userId):
-    status = request.args.get('status')
-    params = [userId]  # Staff ID parameter
+# GET /api/maintenance-requests/staff/<int:userId>
+# Purpose: List maintenance requests of a staff
+@maintenance_api.route('/maintenance-requests/staff/<int:userId>', methods=['GET'])
+def list_staff_requests(userId):
+    # Main query with LEFT JOINs to get maintenance requests assigned to this staff member
+    query = '''
+        SELECT mr.orderId, mr.address, mr.problemType, mr.state, mr.submitted, mr.description,
+               ms.staffId,
+               u.firstName, u.lastName,
+               GROUP_CONCAT(mrt.tool SEPARATOR ', ') as tools
+        FROM maintenance_request AS mr
+        LEFT JOIN maintenance_staffs_maintenance_request AS msmr ON mr.orderId = msmr.orderId
+        LEFT JOIN maintenance_staffs AS ms ON msmr.staffId = ms.staffId
+        LEFT JOIN users AS u ON mr.studentId = u.userId
+        LEFT JOIN maintenance_request_tools AS mrt ON mr.orderId = mrt.orderId
+        WHERE ms.staffId = %s
+        GROUP BY mr.orderId, mr.address, mr.problemType, mr.state, mr.submitted, 
+                 mr.description, ms.staffId, u.firstName, u.lastName
+        ORDER BY mr.submitted DESC
+    '''
     
+    current_app.logger.info("GET /maintenance-requests/%s", userId)
+    cursor = db.get_db().cursor()
+    cursor.execute(query, (userId,))
+    theData = cursor.fetchall()
+    current_app.logger.info("GET /maintenance-requests/%s : rows=%d", userId, len(theData))
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+
+# ------------------------------------------------------------
+# GET /api/maintenance-requests/student/<int:userId>
+# Purpose: List maintenance requests submitted by a student
+@maintenance_api.route('/maintenance-requests/student/<int:userId>', methods=['GET'])
+def list_student_requests(userId):
     # Main query with LEFT JOINs to get maintenance requests assigned to this staff member
     query = '''
         SELECT mr.orderId, mr.address, mr.problemType, mr.state, mr.submitted, mr.description,
@@ -23,22 +51,15 @@ def list_requests(userId):
         LEFT JOIN maintenance_staffs AS ms ON msmr.staffId = ms.staffId
         LEFT JOIN users AS u ON ms.staffId = u.userId
         LEFT JOIN maintenance_request_tools AS mrt ON mr.orderId = mrt.orderId
-        WHERE ms.staffId = %s
-    '''
-    
-    if status in ('open','closed'):
-        query += " AND mr.state = %s"
-        params.append(True if status == 'open' else False)
-    
-    query += '''
+        WHERE mr.studentId = %s
         GROUP BY mr.orderId, mr.address, mr.problemType, mr.state, mr.submitted, 
                  mr.description, ms.staffId, u.firstName, u.lastName
         ORDER BY mr.submitted DESC
     '''
     
-    current_app.logger.info("GET /maintenance-requests/%s : status=%s", userId, status)
+    current_app.logger.info("GET /maintenance-requests/%s", userId)
     cursor = db.get_db().cursor()
-    cursor.execute(query, tuple(params))
+    cursor.execute(query, (userId,))
     theData = cursor.fetchall()
     current_app.logger.info("GET /maintenance-requests/%s : rows=%d", userId, len(theData))
     response = make_response(jsonify(theData))
