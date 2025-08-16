@@ -31,7 +31,7 @@ try:
                 }, inplace=True)
             if "lastMaintained" in df.columns:
                 df = df.drop(columns=["lastMaintained"])
-            st.subheader("Classroom Availability")
+            st.subheader("Available Classrooms for Booking")
             st.dataframe(df, use_container_width=True, hide_index=True)
             st.info(f"Total Available Classrooms: {len(df)}")
         else:
