@@ -29,6 +29,13 @@ try:
             
             if data:
                 df = pd.DataFrame(data)
+                df.rename(columns={
+                    "course_id": "Course ID",
+                    "course_name": "Course Name",
+                    "enrollment" : "Students Enrolled",
+                    "roomNumber" : "RoomNumber",
+                    "time" : "Time"
+                }, inplace=True)
                 st.subheader("Student Schedule")
                 st.dataframe(df, use_container_width=True, hide_index=True)
                 st.write("This is your current class schedule.")
