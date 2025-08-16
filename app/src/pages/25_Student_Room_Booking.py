@@ -27,7 +27,7 @@ try:
         if data:
             df = pd.DataFrame(data)
             df.rename(columns={
-                    "roomnumber": "Room Number",
+                    "roomNumber": "Room Number",
                 }, inplace=True)
             if "lastMaintained" in df.columns:
                 df = df.drop(columns=["lastMaintained"])
