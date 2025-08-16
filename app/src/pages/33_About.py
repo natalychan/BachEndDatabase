@@ -5,7 +5,7 @@ import os
 
 SideBarLinks(show_home=True)
 
-st.write("About")
+st.write("About The Site")
 
 here = os.path.dirname(__file__)
 
