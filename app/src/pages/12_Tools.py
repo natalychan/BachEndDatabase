@@ -26,6 +26,11 @@ try:
         
         if data:
             df = pd.DataFrame(data)
+            # Rename columns to capitalize words
+            column_mapping = {
+                'productName': 'Product Name',
+                'amount': 'Amount'
+            }
             st.dataframe(df, use_container_width=True)
             st.info(f"Total Tools: {len(df)}")
         else:
