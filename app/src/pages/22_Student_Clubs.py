@@ -36,7 +36,7 @@ with main_col:
                     filtered_df = df
 
                 st.write(f"Showing {len(filtered_df)} clubs:")
-                st.dataframe(df[['name','location','description']], use_container_width=True, hide_index=True
+                st.dataframe(df[['name','location','description']], use_container_width=True, hide_index=True)
             else: 
                 st.info("No clubs data available.")
         else:
@@ -61,6 +61,9 @@ with right_col:
             df = pd.DataFrame(data)
             st.subheader("Current Membership")
             st.dataframe(df, use_container_width=True, hide_index=True)
+            st.write("You are currently a member of the following clubs:")
+            st.write(f"Total Clubs: {len(df)}")
+            st.write("If you wish to leave a club, please contact the club president or advisor.")
         else:
             st.info("You are not part of any clubs.")
     else:
